@@ -6,44 +6,169 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Konsili Vatikan II</h1>
-    <p class="text-dkc-muted mb-8">16 Dokumen Konsili Vatikan II — Konstitusi, Dekrit, Deklarasi</p>
 
-    <div class="space-y-3">
-      {[
-        {cat: "Konstitusi", docs: [
-          {title: "Sacrosanctum Concilium", sub: "Liturgi Suci (SC)", date: "1963"},
-          {title: "Lumen Gentium", sub: "Gereja (LG)", date: "1964"},
-          {title: "Dei Verbum", sub: "Wahyu Ilahi (DV)", date: "1965"},
-          {title: "Gaudium et Spes", sub: "Gereja di Dunia Modern (GS)", date: "1965"},
-        ]},
-        {cat: "Dekrit", docs: [
-          {title: "Unitatis Redintegratio", sub: "Ekumenisme", date: "1964"},
-          {title: "Presbyterorum Ordinis", sub: "Imamat (PO)", date: "1965"},
-          {title: "Apostolicam Actuositatem", sub: "Kerasulan Awam (AA)", date: "1965"},
-        ]},
-      ].flatMap(c => [
-        <h2 class="text-dkc-gold font-bold text-sm mt-4 mb-2">{c.cat}</h2>,
-        ...c.docs.map(d => (
-          <a href="#" class="glass-card p-4 flex items-center gap-3 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
-            <span class="text-xl">📜</span>
-            <div class="flex-1">
-              <h3 class="text-white font-medium text-sm">{d.title}</h3>
-              <p class="text-dkc-muted text-xs">{d.sub} · {d.date}</p>
-            </div>
-            <span class="text-dkc-gold">→</span>
-          </a>
-        ))
-      ])}
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <div class="text-center mb-8">
+      <span class="text-4xl">📜</span>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Konsili Vatikan II</h1>
+      <p class="text-dkc-muted text-sm mt-1">Dokumen-dokumen resmi Konsili Vatikan II</p>
     </div>
+
+    <!-- Document selector -->
+    <div id="kvii-docs" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+    </div>
+
+    <!-- Paragraph search -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex gap-2">
+        <input
+          id="kvii-search"
+          type="text"
+          placeholder="Cari nomor: 1, 5-10, 100-105 ..."
+          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
+          autocomplete="off"
+        />
+        <button id="kvii-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">
+          Cari
+        </button>
+      </div>
+    </div>
+
+    <div id="kvii-results" class="space-y-3"></div>
   </main>
 
   <Footer />
 </BaseLayout>
 
-<slot name="head">
-  <title>Konsili Vatikan II — Damai Kasih Channel</title>
-  <meta name="description" content="16 Dokumen Konsili Vatikan II lengkap — Sacrosanctum Concilium, Lumen Gentium, Dei Verbum, Gaudium et Spes, dan lainnya." />
-</slot>
+<script define:vars={{}}>
+  let allData = null;
+  let currentDoc = null;
+
+  const DOC_LABELS = {
+    'Dei_Verbum': 'Dei Verbum (Wahyu Ilahi)',
+    'Lumen_Gentium': 'Lumen Gentium (Gereja)',
+    'Gaudium_et_Spes': 'Gaudium et Spes (Gereja & Dunia)',
+    'Sacrosanctum_Concilium': 'Sacrosanctum Concilium (Liturgi)',
+    'Dignitatis_Humanae': 'Dignitatis Humanae (Kebebasan Beragama)',
+    'Nostra_Aetate': 'Nostra Aetate (Agama Non-Kristen)',
+    'Unitatis_Redintegratio': 'Unitatis Redintegratio (Ekumenisme)',
+    'Ad_Gentes': 'Ad Gentes (Misi)',
+    'Presbyterorum_Ordinis': 'Presbyterorum Ordinis (Imam)',
+    'Optatam_Totius': 'Optatam Totius (Pelatihan Imam)',
+    'Perfectae_Caritatis': 'Perfectae Caritatis (Biara)',
+    'Apostolicam_Actuositatem': 'Apostolicam Actuositatem (Awam)',
+    'Inter_Mirifica': 'Inter Mirifica (Media)',
+    'Christus_Dominus': 'Christus Dominus (Uskup)',
+    'Orientalium_Ecclesiarum': 'Orientalium Ecclesiarum (Gereja Timur)',
+    'Redemptionis_Sacramentum': 'Redemptionis Sacramentum (Ekaristi)',
+    'Dominus_Iesus': 'Dominus Iesus (Yesus Kristus)',
+    'Musicam_Sacram': 'Musicam Sacram (Musik Liturgi)',
+    'Pedoman_Umum_Misale_Romawi': 'Pedoman Umum Misale Romawi',
+    'Pedoman_Pastoral_Misa_Dengan_Anak-Anak': 'Pedoman Pastoral Misa Anak',
+    'Ecclesia_de_Eucharistia': 'Ecclesia de Eucharistia',
+    'Sacramentum_Caritatis': 'Sacramentum Caritatis',
+    ' Mane_Nobiscum_Domine': 'Mane Nobiscum Domine'
+  };
+
+  function decodeText(t) {
+    if (!t) return '';
+    return decodeURIComponent(t.replace(/%20/g,' ').replace(/%2C/g,',').replace(/%2E/g,'.').replace(/%3B/g,';').replace(/%3A/g,':').replace(/%21/g,'!').replace(/%3F/g,'?').replace(/%22/g,'"').replace(/%27/g,"'").replace(/%28/g,'(').replace(/%29/g,')'));
+  }
+
+  function parseNumbers(query) {
+    if (!query?.trim()) return [];
+    query = query.replace(/,/g, ';');
+    const parts = query.split(';').filter(p => p.trim());
+    let numbers = [];
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (trimmed.includes('-')) {
+        const [s, e] = trimmed.split('-').map(n => parseInt(n.trim()));
+        if (!isNaN(s) && !isNaN(e)) {
+          const lo = Math.min(s, e), hi = Math.max(s, e);
+          if (hi - lo > 500) continue;
+          for (let i = lo; i <= hi; i++) numbers.push(i);
+        }
+      } else {
+        const n = parseInt(trimmed);
+        if (!isNaN(n)) numbers.push(n);
+      }
+    }
+    return [...new Set(numbers)].sort((a, b) => a - b);
+  }
+
+  async function loadData() {
+    if (allData) return allData;
+    const res = await fetch('/assets/data/kvii.json');
+    allData = await res.json();
+    return allData;
+  }
+
+  async function renderDocList() {
+    const data = await loadData();
+    const docs = document.getElementById('kvii-docs');
+    docs.innerHTML = Object.keys(data).map(key => {
+      const label = DOC_LABELS[key] || key.replace(/_/g, ' ');
+      const count = Object.keys(data[key]).length;
+      return `<button data-doc="${key}" class="doc-btn glass-card p-3 text-left transition-all hover:border-dkc-gold/40">
+        <span class="text-dkc-gold font-semibold text-sm block">${label}</span>
+        <span class="text-dkc-muted text-xs">${count} paragraf</span>
+      </button>`;
+    }).join('');
+
+    docs.querySelectorAll('.doc-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentDoc = btn.dataset.doc;
+        document.querySelectorAll('.doc-btn').forEach(b => b.classList.remove('border-dkc-gold/60'));
+        btn.classList.add('border-dkc-gold/60');
+        const input = document.getElementById('kvii-search');
+        input.value = '1-20';
+        doSearch('1-20');
+        history.replaceState(null, '', '#' + currentDoc);
+      });
+    });
+  }
+
+  async function doSearch(query) {
+    if (!currentDoc) {
+      document.getElementById('kvii-results').innerHTML = '<div class="text-center text-dkc-muted py-8">Pilih dokumen terlebih dahulu</div>';
+      return;
+    }
+    const data = await loadData();
+    const doc = data[currentDoc];
+    if (!doc) return;
+
+    const ids = parseNumbers(query);
+    const items = ids.map(id => ({ id: String(id), text: decodeText(doc[String(id)]) })).filter(d => d.text);
+
+    const container = document.getElementById('kvii-results');
+    if (!items.length) {
+      container.innerHTML = '<div class="text-center text-dkc-muted py-8">Tidak ditemukan</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="glass-card p-4">
+        <div class="flex items-start gap-3">
+          <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">§${item.id}</span>
+          <p class="text-dkc-text text-sm leading-relaxed">${item.text}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('kvii-search-btn').addEventListener('click', () => doSearch(document.getElementById('kvii-search').value));
+  document.getElementById('kvii-search').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(e.target.value); });
+
+  renderDocList();
+  if (location.hash) {
+    const doc = location.hash.slice(1);
+    if (doc) {
+      await loadData();
+      if (allData[doc]) {
+        currentDoc = doc;
+        const btn = document.querySelector(`[data-doc="${doc}"]`);
+        if (btn) btn.click();
+      }
+    }
+  }
+</script>

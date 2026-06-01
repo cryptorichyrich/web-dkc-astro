@@ -1,46 +1,10 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import Navbar from "@/components/Navbar.astro";
-import Footer from "@/components/Footer.astro";
+import ReferenceReader from "@/components/ReferenceReader.astro";
 ---
-
-<BaseLayout>
-  <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Katekismus</h1>
-    <p class="text-dkc-muted mb-8">Katekismus Gereja Katolik (KGK) — ajaran resmi Gereja</p>
-
-    <!-- Search -->
-    <div class="glass-card p-4 mb-6 flex gap-3">
-      <input type="text" placeholder="Cari dalam KGK..." class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1" />
-      <button class="bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-sm">Cari</button>
-    </div>
-
-    <!-- Main sections -->
-    <div class="grid gap-3">
-      {[
-        {num: 1, title: "Aku Percaya — Pengakuan Iman", range: "1–1065", icon: "✝️"},
-        {num: 2, title: "Perayaan Misteri Kristiani — Sakramen", range: "1066–1690", icon: "🕯️"},
-        {num: 3, title: "Hidup dalam Kristus — Moral", range: "1691–2557", icon: "❤️"},
-        {num: 4, title: "Doa Kristiani", range: "2558–2865", icon: "🙏"},
-      ].map(s => (
-        <a href={`/katekismus/${s.num}`} class="glass-card p-4 flex items-center gap-4 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
-          <span class="text-2xl">{s.icon}</span>
-          <div class="flex-1 min-w-0">
-            <h3 class="text-dkc-gold font-semibold text-sm">Bagian {s.num}: {s.title}</h3>
-            <p class="text-dkc-muted text-xs">Paragraf {s.range}</p>
-          </div>
-          <span class="text-dkc-gold text-lg">→</span>
-        </a>
-      ))}
-    </div>
-  </main>
-
-  <Footer />
-</BaseLayout>
-
-<slot name="head">
-  <title>Katekismus Gereja Katolik — Damai Kasih Channel</title>
-  <meta name="description" content="Katekismus Gereja Katolik (KGK) lengkap online. Baca dan cari ajaran resmi Gereja Katolik." />
-</slot>
+<ReferenceReader
+  title="Katekismus Gereja Katolik"
+  subtitle="KGK — Ajaran resmi Gereja Katolik"
+  icon="📕"
+  dataUrl="/assets/data/kgk.json"
+  totalCount={2865}
+/>

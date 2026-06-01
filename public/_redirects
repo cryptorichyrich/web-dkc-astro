@@ -1,7 +1,6 @@
-# Legacy Jekyll blog URLs (YYYY/MM/DD/slug → /blog/slug)
-# Note: CF Pages serves /blog/slug/ as /blog/slug/index.html automatically
-# No trailing-slash redirects needed — Astro builds with directory format
+# Blog index redirect
+/blog/ /blog/1 301
+/blog /blog/1 301
 
-# Old Jekyll blog post permalinks
-# These are handled by CF Pages _redirects (plain text format)
-# /YYYY/MM/DD/slug/ → /blog/slug/
+# Legacy Jekyll blog URLs (YYYY/MM/DD/slug → /blog/slug)
+# CF Pages handles /blog/slug/ as /blog/slug/index.html automatically

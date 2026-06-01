@@ -3,22 +3,37 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
+import fs from "fs";
+import path from "path";
 
 const allPosts = await getCollection("blog");
-const latestPosts = allPosts
-  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime())
-  .slice(0, 8);
+const sorted = allPosts
+  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+const latestPosts = sorted.slice(0, 8);
+const featuredPosts = sorted.filter(p => p.data.tags?.some(t => ["Apologetika", "Dogma", "Teologi"].includes(t))).slice(0, 3);
+
+// Load rosary data for today's mystery widget
+const rosaryData = JSON.parse(
+  fs.readFileSync(path.resolve("public/assets/data/rosario.json"), "utf-8")
+);
+const dailyMysteries = rosaryData.daily_mysteries;
+const days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+const today = new Date();
+const todayKey = days[today.getDay()];
+const todayMystery = dailyMysteries[todayKey];
+const mysteryData = rosaryData.mysteries[todayMystery];
+const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "👑" };
 ---
 
 <BaseLayout>
   <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+
+  <main class="max-w-6xl mx-auto px-4 pt-8 pb-24">
     <!-- Hero -->
-    <section class="text-center py-12 md:py-20">
-      <img 
-        src="/assets/img/avatar-icon.webp" 
-        alt="Damai Kasih Channel" 
+    <section class="text-center py-12 md:py-16">
+      <img
+        src="/assets/img/avatar-icon.webp"
+        alt="Damai Kasih Channel"
         class="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-dkc-gold/40 mx-auto mb-6"
       />
       <h1 class="text-3xl md:text-5xl font-bold text-dkc-gold mb-4">Damai Kasih Channel</h1>
@@ -27,8 +42,8 @@ const latestPosts = allPosts
       </p>
     </section>
 
-    <!-- Quick Access Grid -->
-    <section class="mb-12">
+    <!-- Quick Access -->
+    <section class="mb-10">
       <h2 class="section-title">Akses Cepat</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
@@ -50,54 +65,149 @@ const latestPosts = allPosts
       </div>
     </section>
 
-    <!-- Latest Articles -->
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="section-title mb-0">Artikel Terbaru</h2>
-        <a href="/blog" class="text-dkc-gold text-sm hover:underline">Lihat semua →</a>
-      </div>
-      <div class="grid gap-4 md:grid-cols-2">
-        {latestPosts.map(post => {
-          const img = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
-          const date = post.data.publishedAt
-            ? new Date(post.data.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-            : '';
-          return (
-            <a href={`/blog/${post.id}`} class="glass-card overflow-hidden group transition-all hover:border-dkc-gold/40">
-              {img && (
-                <div class="aspect-video bg-dkc-card overflow-hidden">
-                  <img
-                    src={img}
-                    alt={post.data.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                    onerror="this.parentElement.style.display='none'"
-                  />
-                </div>
-              )}
-              <div class="p-4">
-                <h3 class="text-dkc-text font-semibold text-sm leading-snug line-clamp-2 group-hover:text-dkc-gold transition-colors">
-                  {post.data.title}
-                </h3>
-                <div class="flex items-center gap-2 mt-2 text-xs text-dkc-muted">
-                  <span>{post.data.author}</span>
-                  {date && <><span>·</span><time>{date}</time></>}
-                </div>
-                {post.data.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-1 mt-2">
-                    {post.data.tags.slice(0, 3).map(tag => (
-                      <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
-                        {tag}
-                      </span>
-                    ))}
+    <!-- 2-column layout: Widgets + Articles -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Main: Articles -->
+      <div class="lg:col-span-2">
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="section-title mb-0">Artikel Terbaru</h2>
+            <a href="/blog" class="text-dkc-gold text-sm hover:underline">Lihat semua →</a>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            {latestPosts.map(post => {
+              const img = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
+              const date = post.data.publishedAt
+                ? new Date(post.data.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                : '';
+              return (
+                <a href={`/blog/${post.id}`} class="glass-card overflow-hidden group transition-all hover:border-dkc-gold/40">
+                  {img && (
+                    <div class="aspect-video bg-dkc-card overflow-hidden">
+                      <img
+                        src={img}
+                        alt={post.data.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                        onerror="this.parentElement.style.display='none'"
+                      />
+                    </div>
+                  )}
+                  <div class="p-4">
+                    <h3 class="text-dkc-text font-semibold text-sm leading-snug line-clamp-2 group-hover:text-dkc-gold transition-colors">
+                      {post.data.title}
+                    </h3>
+                    <div class="flex items-center gap-2 mt-2 text-xs text-dkc-muted">
+                      <span>{post.data.author}</span>
+                      {date && <><span>·</span><time>{date}</time></>}
+                    </div>
+                    {post.data.tags.length > 0 && (
+                      <div class="flex flex-wrap gap-1 mt-2">
+                        {post.data.tags.slice(0, 3).map(tag => (
+                          <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </a>
-          );
-        })}
+                </a>
+              );
+            })}
+          </div>
+        </section>
       </div>
-    </section>
+
+      <!-- Sidebar: Widgets -->
+      <aside class="space-y-4">
+
+        <!-- Widget: Doa Berdasarkan Waktu -->
+        <div class="glass-card p-4" id="widget-doa">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
+            <span>🙏</span> Doa Berdasarkan Waktu
+          </h3>
+          <div id="prayer-time-display">
+            <div class="text-center py-3">
+              <span id="current-time" class="text-2xl font-bold text-dkc-gold"></span>
+              <p id="current-period" class="text-dkc-text text-sm mt-1"></p>
+              <p id="current-prayer" class="text-dkc-muted text-xs mt-1"></p>
+            </div>
+          </div>
+          <a href="/renungan" class="block text-center text-xs text-dkc-gold hover:underline mt-2">Buka Ibadat →</a>
+        </div>
+
+        <!-- Widget: Misteri Doa Rosario (Hari Ini) -->
+        <div class="glass-card p-4">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
+            <span>📿</span> Misteri Rosario Hari Ini
+          </h3>
+          <div class="bg-dkc-surface rounded-lg p-3 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">{mysteryIcon[todayMystery]}</span>
+              <div>
+                <p class="text-dkc-gold font-semibold text-sm">{mysteryData?.title || todayMystery}</p>
+                <p class="text-dkc-muted text-xs">{mysteryData?.subtitle || ''}</p>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            {(mysteryData?.mysteries || []).slice(0, 5).map((m, i) => (
+              <div class="flex items-start gap-2 text-xs">
+                <span class="text-dkc-gold font-bold shrink-0">{m.number || i + 1}.</span>
+                <p class="text-dkc-text leading-relaxed line-clamp-2">{m.title}</p>
+              </div>
+            ))}
+          </div>
+          <a href="/rosario" class="block text-center text-xs text-dkc-gold hover:underline mt-3">Doa Rosario Lengkap →</a>
+        </div>
+
+        <!-- Widget: Artikel Pilihan -->
+        <div class="glass-card p-4">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
+            <span>⭐</span> Artikel Pilihan
+          </h3>
+          <div class="space-y-3">
+            {featuredPosts.map(post => (
+              <a href={`/blog/${post.id}`} class="flex gap-3 group">
+                <div class="w-16 h-16 rounded-lg bg-dkc-card overflow-hidden shrink-0">
+                  {(() => {
+                    const img = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
+                    return img ? <img src={img} alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" /> : <div class="w-full h-full flex items-center justify-center text-lg">📄</div>;
+                  })()}
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-dkc-text text-xs font-medium leading-snug line-clamp-2 group-hover:text-dkc-gold transition-colors">{post.data.title}</h4>
+                  <p class="text-dkc-muted text-[10px] mt-1">{post.data.author}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Widget: Diagnosa Bidat -->
+        <a href="/diagnosa/ajaran-bidat" class="glass-card p-4 block group">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-2">
+            <span>⚔️</span> Diagnosa Ajaran Bidat
+          </h3>
+          <p class="text-dkc-muted text-xs leading-relaxed">Uji dan identifikasi apakah suatu ajaran sesuai dengan iman Katolik atau termasuk ajaran sesat.</p>
+          <span class="text-dkc-gold text-xs mt-2 block group-hover:underline">Mulai diagnosa →</span>
+        </a>
+
+        <!-- Widget: Kalender Liturgi -->
+        <div class="glass-card p-4" id="widget-liturgi">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
+            <span>📅</span> Kalender Liturgi
+          </h3>
+          <div id="liturgi-today" class="text-center py-2">
+            <p id="liturgi-date" class="text-dkc-gold font-semibold"></p>
+            <p id="liturgi-season" class="text-dkc-text text-sm mt-1"></p>
+            <p id="liturgi-color" class="text-dkc-muted text-xs mt-1"></p>
+          </div>
+          <a href="/kalender-liturgi" class="block text-center text-xs text-dkc-gold hover:underline mt-2">Kalender Lengkap →</a>
+        </div>
+
+      </aside>
+    </div>
   </main>
 
   <Footer />
@@ -107,3 +217,82 @@ const latestPosts = allPosts
   <title>Damai Kasih channel — Belajar Iman Katolik</title>
   <meta name="description" content="Sumber belajar iman Katolik Indonesia. Kitab Suci, Katekismus, Doa, Apologetika." />
 </slot>
+
+<script>
+  // === DOA BERDASARKAN WAKTU ===
+  const periods = [
+    { name: "Laudes (Pagi)", range: [5, 8], prayer: "Ibadat Pagi — pujian pagi kepada Tuhan", icon: "🌅" },
+    { name: "Tertia (Jam 9)", range: [8, 11], prayer: "Ibadat Jam Ketiga — doa tengah pagi", icon: "☀️" },
+    { name: "Sexta (Siang)", range: [11, 14], prayer: "Ibadat Jam Keenam — doa tengah hari", icon: "🌞" },
+    { name: "Nona (Jam 3)", range: [14, 17], prayer: "Ibadat Jam Kesembilan — doa sore", icon: "🌤" },
+    { name: "Vesper (Petang)", range: [17, 20], prayer: "Ibadat Sore — pujian petang", icon: "🌇" },
+    { name: "Kompletorium (Malam)", range: [20, 23], prayer: "Ibadat Penutup — doa sebelum tidur", icon: "🌙" },
+    { name: "Matutinum (Tengah Malam)", range: [23, 5], prayer: "Ibadat Bacaan — doa malam hari", icon: "🌑" },
+  ];
+
+  function updatePrayerTime() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    const el = document.getElementById("current-time");
+    const periodEl = document.getElementById("current-period");
+    const prayerEl = document.getElementById("current-prayer");
+    if (el) el.textContent = timeStr;
+
+    const period = periods.find(p => {
+      if (p.range[0] < p.range[1]) return h >= p.range[0] && h < p.range[1];
+      return h >= p.range[0] || h < p.range[1];
+    });
+    if (periodEl && period) periodEl.textContent = `${period.icon} ${period.name}`;
+    if (prayerEl && period) prayerEl.textContent = period.prayer;
+  }
+  updatePrayerTime();
+  setInterval(updatePrayerTime, 60000);
+
+  // === KALENDER LITURGI ===
+  function computeLiturgi() {
+    const now = new Date();
+    const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    document.getElementById("liturgi-date").textContent =
+      `${dayNames[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    // Compute liturgical season based on Easter
+    const year = now.getFullYear();
+    function computeEaster(y) {
+      const a = y % 19, b = Math.floor(y / 100), c = y % 100;
+      const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const month = Math.floor((h + l - 7 * m + 114) / 31);
+      const day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(y, month - 1, day);
+    }
+    const easter = computeEaster(year);
+    const ashWednesday = new Date(easter); ashWednesday.setDate(easter.getDate() - 46);
+    const christmas = new Date(year, 11, 25);
+    const adventStart = new Date(christmas); adventStart.setDate(christmas.getDate() - (christmas.getDay() === 0 ? 28 : 21 + christmas.getDay()));
+
+    let season = "Waktu Biasa";
+    let color = "Hijau";
+    if (now >= ashWednesday && now < easter) {
+      season = "Prapaskah"; color = "Ungu";
+    } else if (now >= easter && now < new Date(easter.getTime() + 50 * 86400000)) {
+      season = "Paskah"; color = "Putih";
+    } else if (now >= adventStart && now < christmas) {
+      season = "Adven"; color = "Ungu";
+    } else if (now >= christmas && now < new Date(year, 0, 6)) {
+      season = "Natal"; color = "Putih";
+    }
+    // Christmas to Epiphany
+    if (now.getMonth() === 11 && now.getDate() >= 25 || (now.getMonth() === 0 && now.getDate() <= 6)) {
+      season = "Natal"; color = "Putih";
+    }
+
+    document.getElementById("liturgi-season").textContent = season;
+    document.getElementById("liturgi-color").textContent = `Warna liturgi: ${color}`;
+  }
+  computeLiturgi();
+</script>

@@ -1,0 +1,237 @@
+---
+// Shared Reference Reader — KGK, KHK, Summa style
+// Props: title, icon, dataUrl, totalCount, color
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  icon: string;
+  dataUrl: string;
+  totalCount: number;
+  color?: string;
+}
+
+const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro.props;
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <span class="text-4xl">{icon}</span>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">{title}</h1>
+      <p class="text-dkc-muted text-sm mt-1">{subtitle} · {totalCount} paragraf</p>
+    </div>
+
+    <!-- Smart Search -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex gap-2">
+        <input
+          id="ref-search"
+          type="text"
+          placeholder="Cari nomor: 1, 5-10, 100,200-205 ..."
+          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
+          autocomplete="off"
+        />
+        <button id="ref-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">
+          Cari
+        </button>
+      </div>
+      <div class="flex gap-3 mt-2 text-xs text-dkc-muted">
+        <span>Contoh:</span>
+        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="1">1</button>
+        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="5-10">5-10</button>
+        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="8,15,22">8,15,22</button>
+        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="100-105,200">100-105,200</button>
+      </div>
+    </div>
+
+    <!-- Full-text search -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex gap-2">
+        <input
+          id="ref-text-search"
+          type="text"
+          placeholder="Cari teks dalam paragraf..."
+          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
+          autocomplete="off"
+        />
+        <button id="ref-text-search-btn" class="px-4 py-2.5 bg-dkc-card text-dkc-muted rounded-lg text-sm font-medium hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors border border-dkc-border">
+          Teks
+        </button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="ref-results" class="space-y-3">
+      <div class="text-center text-dkc-muted py-12">
+        <span class="text-4xl block mb-3">{icon}</span>
+        <p>Masukkan nomor paragraf atau teks untuk mulai membaca</p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="ref-nav" class="hidden flex justify-between items-center mt-6">
+      <button id="ref-prev" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
+        ← Sebelumnya
+      </button>
+      <span id="ref-range" class="text-sm text-dkc-muted"></span>
+      <button id="ref-next" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
+        Selanjutnya →
+      </button>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script define:vars={{ dataUrl }}>
+  let allData = null;
+  let currentIds = [];
+  let currentRange = { start: 0, count: 20 };
+
+  // Load data
+  async function loadData() {
+    if (allData) return allData;
+    const res = await fetch(dataUrl);
+    allData = await res.json();
+    // Normalize keys
+    return allData.map(item => ({
+      id: String(item.id || item.ID),
+      text: item.text || decodeURIComponent((item.TEXT || '').replace(/%20/g, ' ').replace(/%2C/g, ',').replace(/%2E/g, '.').replace(/%3B/g, ';').replace(/%3A/g, ':').replace(/%21/g, '!').replace(/%3F/g, '?').replace(/%22/g, '"').replace(/%27/g, "'").replace(/%28/g, '(').replace(/%29/g, ')').replace(/%C2%A0/g, ' '))
+    }));
+  }
+
+  // Parse range expressions: "2-10,8,9-100"
+  function parseNumbers(query) {
+    if (!query?.trim()) return [];
+    query = query.replace(/,/g, ';');
+    const parts = query.split(';').filter(p => p.trim());
+    let numbers = [];
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (trimmed.includes('-')) {
+        const [s, e] = trimmed.split('-').map(n => parseInt(n.trim()));
+        if (!isNaN(s) && !isNaN(e)) {
+          const lo = Math.min(s, e), hi = Math.max(s, e);
+          if (hi - lo > 500) continue; // safety cap
+          for (let i = lo; i <= hi; i++) numbers.push(i);
+        }
+      } else {
+        const n = parseInt(trimmed);
+        if (!isNaN(n)) numbers.push(n);
+      }
+    }
+    return [...new Set(numbers)].sort((a, b) => a - b);
+  }
+
+  function highlightText(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark class="bg-dkc-gold/30 text-dkc-text rounded px-0.5">$1</mark>');
+  }
+
+  function renderParagraphs(items, query) {
+    const container = document.getElementById('ref-results');
+    if (!items.length) {
+      container.innerHTML = '<div class="text-center text-dkc-muted py-8"><p>Tidak ditemukan</p></div>';
+      document.getElementById('ref-nav').classList.add('hidden');
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="glass-card p-4 ref-item" data-id="${item.id}">
+        <div class="flex items-start gap-3">
+          <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">
+            §${item.id}
+          </span>
+          <p class="text-dkc-text text-sm leading-relaxed flex-1">${highlightText(item.text, query)}</p>
+        </div>
+      </div>
+    `).join('');
+
+    // Setup nav
+    const maxId = Math.max(...allData.map(d => parseInt(d.id)));
+    const minId = Math.min(...allData.map(d => parseInt(d.id)));
+    const lastShown = parseInt(items[items.length - 1].id);
+    const firstShown = parseInt(items[0].id);
+    const nav = document.getElementById('ref-nav');
+    const prev = document.getElementById('ref-prev');
+    const next = document.getElementById('ref-next');
+    document.getElementById('ref-range').textContent = `§${firstShown} — §${lastShown}`;
+
+    prev.disabled = firstShown <= minId;
+    next.disabled = lastShown >= maxId;
+    prev.classList.toggle('opacity-40', firstShown <= minId);
+    next.classList.toggle('opacity-40', lastShown >= maxId);
+    nav.classList.remove('hidden');
+    nav.classList.add('flex');
+
+    prev.onclick = () => searchByIds(Array.from({length: 20}, (_, i) => firstShown - 20 + i).filter(n => n >= minId));
+    next.onclick = () => searchByIds(Array.from({length: 20}, (_, i) => lastShown + 1 + i).filter(n => n <= maxId));
+  }
+
+  async function searchByIds(ids) {
+    const data = await loadData();
+    const items = ids.map(id => data.find(d => parseInt(d.id) === id)).filter(Boolean);
+    renderParagraphs(items);
+    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  async function searchByNumbers(query) {
+    const ids = parseNumbers(query);
+    if (!ids.length) return;
+    await searchByIds(ids);
+    // Update URL hash
+    history.replaceState(null, '', '#' + query);
+  }
+
+  async function searchByText(query) {
+    if (!query?.trim()) return;
+    const data = await loadData();
+    const lower = query.toLowerCase();
+    const items = data.filter(d => d.text.toLowerCase().includes(lower)).slice(0, 50);
+    renderParagraphs(items, query);
+    document.getElementById('ref-range').textContent = `${items.length} hasil ditemukan`;
+    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  // Event listeners
+  const numInput = document.getElementById('ref-search');
+  const numBtn = document.getElementById('ref-search-btn');
+  const textInput = document.getElementById('ref-text-search');
+  const textBtn = document.getElementById('ref-text-search-btn');
+
+  numBtn.addEventListener('click', () => searchByNumbers(numInput.value));
+  numInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByNumbers(numInput.value); });
+  textBtn.addEventListener('click', () => searchByText(textInput.value));
+  textInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByText(textInput.value); });
+
+  // Example buttons
+  document.querySelectorAll('.example-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      numInput.value = btn.dataset.q;
+      searchByNumbers(btn.dataset.q);
+    });
+  });
+
+  // Handle URL hash
+  if (location.hash) {
+    const q = location.hash.slice(1);
+    numInput.value = q;
+    searchByNumbers(q);
+  }
+
+  // Preload
+  loadData();
+</script>
+
+<style>
+  mark { border-radius: 2px; }
+  #ref-results .ref-item:hover { border-color: var(--color-dkc-gold, #c9a84c) !important; }
+  #ref-results .ref-item { transition: border-color 0.2s; }
+</style>

@@ -1,7 +1,13 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
+
+const allPosts = await getCollection("blog");
+const latestPosts = allPosts
+  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime())
+  .slice(0, 8);
 ---
 
 <BaseLayout>
@@ -44,13 +50,52 @@ import Footer from "@/components/Footer.astro";
       </div>
     </section>
 
-    <!-- Featured Articles (placeholder — will pull from Content Collections) -->
+    <!-- Latest Articles -->
     <section>
-      <h2 class="section-title">Artikel Terbaru</h2>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="section-title mb-0">Artikel Terbaru</h2>
+        <a href="/blog" class="text-dkc-gold text-sm hover:underline">Lihat semua →</a>
+      </div>
       <div class="grid gap-4 md:grid-cols-2">
-        <p class="text-dkc-muted text-sm col-span-2">
-          Artikel akan muncul di sini setelah migrasi konten dari 476 posting Jekyll.
-        </p>
+        {latestPosts.map(post => {
+          const img = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
+          const date = post.data.publishedAt
+            ? new Date(post.data.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+            : '';
+          return (
+            <a href={`/blog/${post.id}`} class="glass-card overflow-hidden group transition-all hover:border-dkc-gold/40">
+              {img && (
+                <div class="aspect-video bg-dkc-card overflow-hidden">
+                  <img
+                    src={img}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onerror="this.parentElement.style.display='none'"
+                  />
+                </div>
+              )}
+              <div class="p-4">
+                <h3 class="text-dkc-text font-semibold text-sm leading-snug line-clamp-2 group-hover:text-dkc-gold transition-colors">
+                  {post.data.title}
+                </h3>
+                <div class="flex items-center gap-2 mt-2 text-xs text-dkc-muted">
+                  <span>{post.data.author}</span>
+                  {date && <><span>·</span><time>{date}</time></>}
+                </div>
+                {post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1 mt-2">
+                    {post.data.tags.slice(0, 3).map(tag => (
+                      <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </a>
+          );
+        })}
       </div>
     </section>
   </main>
@@ -59,6 +104,6 @@ import Footer from "@/components/Footer.astro";
 </BaseLayout>
 
 <slot name="head">
-  <title>Damai Kasih Channel — Belajar Iman Katolik</title>
+  <title>Damai Kasih channel — Belajar Iman Katolik</title>
   <meta name="description" content="Sumber belajar iman Katolik Indonesia. Kitab Suci, Katekismus, Doa, Apologetika." />
 </slot>

@@ -7,9 +7,6 @@ import Footer from "@/components/Footer.astro";
 <BaseLayout>
   <Navbar />
 
-  <!-- Progress Bar -->
-  <div id="reading-progress" class="fixed top-0 left-0 h-0.5 bg-dkc-gold/60 z-[60] transition-all duration-150" style="width:0%"></div>
-
   <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
     <!-- Header -->
     <div class="text-center mb-6">
@@ -217,7 +214,6 @@ import Footer from "@/components/Footer.astro";
   const testamentTitle = document.getElementById("testament-title")!;
   const bookTitle = document.getElementById("book-title")!;
   const verseTitle = document.getElementById("verse-title")!;
-  const progressBar = document.getElementById("reading-progress")!;
   const citationInput = document.getElementById("citation-input") as HTMLInputElement;
 
   // Show/hide steps
@@ -494,8 +490,6 @@ import Footer from "@/components/Footer.astro";
   document.getElementById("share-tg")!.addEventListener("click", () => window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(shareText())}`,"_blank"));
   document.getElementById("share-copy")!.addEventListener("click", () => { navigator.clipboard.writeText(shareUrl()); const b=document.getElementById("share-copy")!; b.style.borderColor="rgba(201,168,76,0.6)"; setTimeout(()=>b.style.borderColor="",1500); });
 
-  // Progress bar
-  window.addEventListener("scroll", () => { const h=document.documentElement; progressBar.style.width = Math.min((h.scrollTop/(h.scrollHeight-h.clientHeight))*100,100)+"%"; });
 
   // Version tabs
   function updateVersionTabs() {

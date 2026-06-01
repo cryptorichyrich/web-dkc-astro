@@ -24,10 +24,6 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
 <BaseLayout>
   <Navbar />
 
-  <!-- Reading progress bar -->
-  <div id="progress-bar" class="fixed top-0 left-0 h-[3px] z-[100] transition-[width] duration-150 ease-out"
-    style="width:0%;background:linear-gradient(90deg,var(--color-dkc-gold,#c9a84c),#e8c974);box-shadow:0 0 8px rgba(201,168,76,0.4)"></div>
-
   <main class="max-w-6xl mx-auto px-4 pt-8 pb-24">
     <!-- Header -->
     <div class="text-center mb-6">
@@ -714,13 +710,6 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
     document.getElementById('font-size-label').textContent = `Teks ${FONT_SIZE_LABELS[currentFontSizeIndex]}`;
   }
 
-  // ─── Progress Bar ─────────────────────────────────────────
-  function updateProgressBar() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
-    document.getElementById('progress-bar').style.width = `${progress}%`;
-  }
 
   // ─── Social Share ─────────────────────────────────────────
   function shareUrl(platform) {
@@ -820,9 +809,6 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
     document.querySelectorAll('.share-btn').forEach(btn => {
       btn.addEventListener('click', () => shareUrl(btn.dataset.share));
     });
-
-    // Progress bar
-    window.addEventListener('scroll', updateProgressBar, { passive: true });
 
     // Handle URL hash
     if (location.hash) {

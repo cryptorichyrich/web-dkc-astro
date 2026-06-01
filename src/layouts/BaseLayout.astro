@@ -21,5 +21,145 @@ import "@/styles/global.css";
   </head>
   <body>
     <slot />
+
+    <!-- Global Reading Progress Bar (hidden on index page) -->
+    <div id="global-progress-bar" class="fixed top-0 left-0 w-full h-[3px] z-[70] bg-dkc-surface/30 pointer-events-none">
+      <div id="global-progress-fill" class="h-full bg-gradient-to-r from-dkc-gold/80 to-dkc-gold/50 transition-[width] duration-150 ease-out" style="width:0%"></div>
+    </div>
+
+    <!-- Global TTS Floating Button -->
+    <button id="global-tts-btn" class="fixed bottom-20 md:bottom-6 right-4 z-[55] w-10 h-10 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all shadow-lg shadow-black/20 active:scale-95" title="Bacakan halaman ini" aria-label="Text-to-Speech">
+      <svg id="global-tts-icon-play" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      <svg id="global-tts-icon-stop" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+    </button>
   </body>
 </html>
+
+<style>
+  /* Hide progress bar on index page */
+  :root[data-page="index"] #global-progress-bar,
+  body:not(:has(main)) #global-progress-bar {
+    display: none;
+  }
+</style>
+
+<script>
+  // ===== Global Reading Progress Bar =====
+  (function() {
+    const fill = document.getElementById('global-progress-fill');
+    const bar = document.getElementById('global-progress-bar');
+    if (!fill || !bar) return;
+
+    // Hide on index page
+    const path = window.location.pathname;
+    if (path === '/') {
+      bar.style.display = 'none';
+      return;
+    }
+
+    function updateProgress() {
+      const h = document.documentElement;
+      const pct = Math.min((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100, 100);
+      fill.style.width = pct + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  })();
+
+  // ===== Global TTS Button =====
+  (function() {
+    const btn = document.getElementById('global-tts-btn');
+    const iconPlay = document.getElementById('global-tts-icon-play');
+    const iconStop = document.getElementById('global-tts-icon-stop');
+    if (!btn || !iconPlay || !iconStop) return;
+
+    let playing = false;
+    let utterance: SpeechSynthesisUtterance | null = null;
+
+    function getMainText(): string {
+      // Try multiple selectors to find page content
+      const selectors = [
+        '#article-body',           // Blog articles
+        '#reading-content',        // Bible / interlinear
+        '#ref-results',            // Reference reader (KHK, KGK)
+        '#kvii-content',           // KV2
+        '.prayer-content',         // Prayer pages
+        'main',                    // Fallback: any main element
+      ];
+
+      for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el && el.textContent && el.textContent.trim().length > 50) {
+          return el.textContent.trim();
+        }
+      }
+      return '';
+    }
+
+    function stopTTS() {
+      window.speechSynthesis.cancel();
+      playing = false;
+      iconPlay.classList.remove('hidden');
+      iconStop.classList.add('hidden');
+      btn.classList.remove('text-dkc-gold', 'border-dkc-gold/30');
+    }
+
+    function startTTS() {
+      const text = getMainText();
+      if (!text) return;
+
+      window.speechSynthesis.cancel();
+      playing = true;
+      iconPlay.classList.add('hidden');
+      iconStop.classList.remove('hidden');
+      btn.classList.add('text-dkc-gold', 'border-dkc-gold/30');
+
+      // Truncate to ~5000 chars for reasonable TTS length
+      const maxLen = 5000;
+      const ttsText = text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
+
+      utterance = new SpeechSynthesisUtterance(ttsText);
+
+      // Detect language from page content
+      const isGreekPage = window.location.pathname.includes('interlinear-greek');
+      const isLatinPage = window.location.pathname.includes('vulgata');
+
+      if (isGreekPage) {
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+      } else if (isLatinPage) {
+        utterance.lang = 'la';
+        utterance.rate = 0.8;
+      } else {
+        utterance.lang = 'id-ID';
+        utterance.rate = 0.95;
+      }
+
+      // Try to find a matching voice
+      const voices = window.speechSynthesis.getVoices();
+      if (utterance.lang === 'id-ID') {
+        const idVoice = voices.find(v => v.lang.startsWith('id'));
+        if (idVoice) utterance.voice = idVoice;
+      }
+
+      utterance.onend = () => stopTTS();
+      utterance.onerror = () => stopTTS();
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    btn.addEventListener('click', () => {
+      if (playing) {
+        stopTTS();
+      } else {
+        startTTS();
+      }
+    });
+
+    // Stop TTS when leaving page
+    window.addEventListener('beforeunload', () => {
+      if (playing) window.speechSynthesis.cancel();
+    });
+  })();
+</script>

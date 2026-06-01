@@ -8,11 +8,6 @@ import Footer from "@/components/Footer.astro";
   <Navbar />
 
   <main class="max-w-5xl mx-auto px-4 pt-6 pb-24">
-    <!-- Reading Progress Bar -->
-    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-dkc-surface/50">
-      <div id="progress-bar" class="h-full bg-dkc-gold/60 transition-all duration-300" style="width:0%"></div>
-    </div>
-
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div>
@@ -252,21 +247,22 @@ import Footer from "@/components/Footer.astro";
     margin-right: 0.3em;
     vertical-align: top;
   }
+  /* Interlinear colors — Greek (red), Transliteration (gray), English (teal) like Jekyll */
   #reading-content .word-greek {
     font-family: 'Lora', 'Times New Roman', serif;
-    color: var(--color-dkc-text);
+    color: #ef5350;
     line-height: 1.5;
   }
   #reading-content .word-translit {
     font-size: 0.6em;
-    color: rgba(201, 168, 76, 0.55);
+    color: #9e9e9e;
     line-height: 1.1;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
   }
   #reading-content .word-english {
     font-size: 0.65em;
-    color: var(--color-dkc-muted);
+    color: #4fc3f7;
     line-height: 1.2;
     font-family: 'Inter', sans-serif;
     font-style: italic;
@@ -275,12 +271,12 @@ import Footer from "@/components/Footer.astro";
   /* Greek-only mode */
   #reading-content .greek-only-text {
     font-family: 'Lora', 'Times New Roman', serif;
-    color: var(--color-dkc-text);
+    color: #ef5350;
     line-height: 1.9;
   }
   /* English-only mode */
   #reading-content .english-only-text {
-    color: var(--color-dkc-muted);
+    color: #4fc3f7;
     line-height: 1.9;
     font-family: 'Inter', sans-serif;
   }
@@ -342,7 +338,6 @@ import Footer from "@/components/Footer.astro";
   const readingSubtitle = $id("reading-subtitle") as HTMLElement;
   const readingLoading = $id("reading-loading");
   const readingContent = $id("reading-content");
-  const progressBar = $id("progress-bar") as HTMLElement;
   const breadcrumb = $id("breadcrumb");
 
   // Breadcrumb
@@ -463,7 +458,6 @@ import Footer from "@/components/Footer.astro";
     renderBookGrid(); // keep grid updated
     updateBreadcrumb();
     renderVerses();
-    updateProgress();
 
     // Hash
     const hash = verses?.length
@@ -530,43 +524,6 @@ import Footer from "@/components/Footer.astro";
     readingContent.classList.remove("hidden");
   }
 
-  // ===== Progress bar =====
-  function updateProgress() {
-    if (!bibleData) return;
-    const allBooks = BOOK_ORDER.filter(k => bibleData[k]);
-    let readChapters = 0;
-    let totalChapters = 0;
-    let foundCurrent = false;
-
-    for (const bk of allBooks) {
-      const chCount = Object.keys(bibleData[bk]).length;
-      totalChapters += chCount;
-      if (!foundCurrent) {
-        if (bk === currentBook) {
-          const chapters = Object.keys(bibleData[bk]).map(Number).sort((a, b) => a - b);
-          const idx = chapters.indexOf(currentChapter);
-          readChapters += idx + 1;
-          foundCurrent = true;
-        } else {
-          readChapters += chCount;
-        }
-      }
-    }
-
-    const pct = totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
-    progressBar.style.width = pct + "%";
-  }
-
-  // ===== Scroll-based progress =====
-  function updateScrollProgress() {
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (docHeight <= 0) return;
-    const scrolled = window.scrollY / docHeight;
-    const existing = parseFloat(progressBar.style.width) || 0;
-    // Take the max of chapter-position progress and scroll progress
-    const combined = Math.max(existing, scrolled * 100);
-    progressBar.style.width = combined + "%";
-  }
 
   // ===== Adjacent chapter =====
   function getAdjacentChapter(delta: number) {
@@ -774,9 +731,6 @@ import Footer from "@/components/Footer.astro";
   $id("font-dec").addEventListener("click", () => changeFontSize(-1));
   $id("font-inc-m").addEventListener("click", () => changeFontSize(1));
   $id("font-dec-m").addEventListener("click", () => changeFontSize(-1));
-
-  // Scroll progress
-  window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
   // Keyboard nav
   document.addEventListener("keydown", (e) => {

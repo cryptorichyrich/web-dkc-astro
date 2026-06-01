@@ -29,9 +29,12 @@ const posts = allPosts
       {posts.map(post => (
         <a href={`/blog/${post.id}`} class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
           <div class="flex gap-3">
-            {post.data.thumbnailImage && (
-              <img src={post.data.thumbnailImage} alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />
-            )}
+            {(() => {
+              const thumb = post.data.thumbnailImage || post.data.coverImage || post.data.heroImage;
+              return thumb ? (
+                <img src={thumb} alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" onerror="this.style.display='none'" />
+              ) : null;
+            })()}
             <div class="min-w-0">
               <h2 class="text-white font-medium text-sm line-clamp-2">{post.data.title}</h2>
               <div class="flex items-center gap-3 mt-1 text-xs text-dkc-muted">

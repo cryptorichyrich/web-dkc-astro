@@ -35,9 +35,12 @@ const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
         {posts.map(post => (
           <a href={`/blog/${post.id}`} class="glass-card p-5 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
             <div class="flex gap-4">
-              {post.data.thumbnailImage && (
-                <img src={post.data.thumbnailImage} alt="" class="w-20 h-20 rounded-lg object-cover shrink-0" loading="lazy" />
-              )}
+              {(() => {
+                const thumb = post.data.thumbnailImage || post.data.coverImage || post.data.heroImage;
+                return thumb ? (
+                  <img src={thumb} alt="" class="w-20 h-20 rounded-lg object-cover shrink-0" loading="lazy" onerror="this.style.display='none'" />
+                ) : null;
+              })()}
               <div class="min-w-0">
                 <span class="text-xs text-dkc-gold font-medium">{post.data.category || 'Umum'}</span>
                 <h2 class="text-white font-semibold mt-1 line-clamp-2">{post.data.title}</h2>

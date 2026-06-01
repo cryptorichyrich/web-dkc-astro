@@ -1,73 +1,118 @@
 ---
 const currentPath = Astro.url.pathname;
 
-const navItems = [
-  { href: "/", label: "Beranda", icon: "home" },
-  { href: "/blog", label: "Artikel", icon: "article" },
-  { href: "/kitabsuci", label: "Kitab Suci", icon: "bible" },
-  { href: "/renungan", label: "Renungan", icon: "clock" },
-  { href: "/katekismus", label: "Katekismus", icon: "book" },
+// ===== DATA: Each nav item with its submenu =====
+const navGroups = [
+  {
+    id: "beranda",
+    label: "Beranda",
+    href: "/",
+    mobileIcon: "home",
+    hasSubmenu: false,
+  },
+  {
+    id: "artikel",
+    label: "Artikel",
+    href: "/blog",
+    mobileIcon: "book",
+    hasSubmenu: true,
+    style: "artikel",
+    submenu: [
+      { href: "/blog", icon: "📝", label: "Semua Artikel", desc: "Daftar artikel terbaru" },
+      { href: "/blog/tag/Apologetika", icon: "🛡️", label: "Apologetika", desc: "Pembelaan iman Katolik" },
+      { href: "/blog/tag/Katolik", icon: "✝️", label: "Katolik", desc: "Doktrin & ajaran Gereja" },
+      { href: "/blog/tag/Protestant", icon: "📖", label: "Dialog", desc: "Dengan Protestan" },
+      { href: "/blog/tag/Dogma", icon: "📕", label: "Dogma", desc: "Dogma Gereja Katolik" },
+      { href: "/blog/tag/Maria", icon: "👑", label: "Mariologi", desc: "Bunda Maria" },
+      { href: "/blog/tag/Alkitab", icon: "📜", label: "Alkitab", desc: "Kajian & tafsir" },
+      { href: "/blog/tag/Sejarah", icon: "🏛️", label: "Sejarah", desc: "Sejarah Gereja" },
+      { href: "/search", icon: "🔍", label: "Cari Artikel", desc: "Pencarian lengkap", highlight: true },
+    ],
+  },
+  {
+    id: "kitabsuci",
+    label: "Kitab Suci",
+    href: "/kitabsuci",
+    mobileIcon: "bible",
+    hasSubmenu: true,
+    style: "kitabsuci",
+    submenu: [
+      { href: "/kitabsuci", icon: "📖", label: "Alkitab Deuterokanonika", desc: "Bacaan KS lengkap dengan deuterokanonika" },
+      { href: "/blog/tag/Alkitab", icon: "📚", label: "Kajian Alkitab", desc: "Artikel tafsir & studi" },
+      { href: "/blog/tag/Refleksi", icon: "💭", label: "Refleksi", desc: "Renungan dari Kitab Suci" },
+    ],
+  },
+  {
+    id: "renungan",
+    label: "Renungan",
+    href: "/renungan",
+    mobileIcon: "clock",
+    hasSubmenu: true,
+    style: "renungan",
+    submenu: [
+      { href: "/renungan", icon: "🕐", label: "Renungan Harian", desc: "Doa pada jam tertentu — semua ibadat lengkap" },
+      { href: "/rosario", icon: "📿", label: "Rosario", desc: "Misteri Gembira, Sedih, Mulia, Terang" },
+      { href: "/jalan-salib", icon: "✝️", label: "Jalan Salib", desc: "14 Perhentian lengkap" },
+      { href: "/kalender-liturgi", icon: "📅", label: "Kalender Liturgi", desc: "Kalender Gereja — pesta & peringatan" },
+    ],
+  },
+  {
+    id: "katekismus",
+    label: "Katekismus",
+    href: "/katekismus",
+    mobileIcon: "book",
+    hasSubmenu: true,
+    style: "katekismus",
+    submenu: [
+      { href: "/katekismus", icon: "📕", label: "KGK", desc: "Katekismus Gereja Katolik — lengkap" },
+      { href: "/khk", icon: "⚖️", label: "Hukum Kanonik (KHK)", desc: "Kitab Hukum Gereja" },
+      { href: "/kvii", icon: "📜", label: "Konsili Vatikan II", desc: "Dokumen lengkap KV II" },
+      { href: "/summa", icon: "📚", label: "Summa Theologiae", desc: "St. Thomas Aquinas — teologi sistematis" },
+      { href: "/diagnosa/ajaran-bidat", icon: "⚔️", label: "Diagnosa Bidat", desc: "Uji & identifikasi ajaran sesat" },
+      { href: "/diagnosa/sedevacantisme", icon: "🛡️", label: "Diagnosa Sedevacantisme", desc: "Uji paham sedevacantisme" },
+    ],
+  },
+  {
+    id: "lainnya",
+    label: "Lainnya",
+    href: "#",
+    mobileIcon: "more",
+    hasSubmenu: true,
+    style: "lainnya",
+    submenu: [
+      { href: "/suksesi-kepausan", icon: "♚", label: "Suksesi Kepausan", desc: "Rantai Paus dari St Petrus" },
+      { href: "/flix", icon: "🎥", label: "Flix — Video", desc: "Galeri video DKC" },
+      { href: "/blog/tag/Live", icon: "🔴", label: "Live DKC", desc: "Rekaman live streaming" },
+      { href: "/tags", icon: "🏷️", label: "Semua Topik", desc: "Jelajahi per topik" },
+      { href: "/tentang", icon: "ℹ️", label: "Tentang DKC", desc: "Tentang Damai Kasih Channel" },
+      { href: "/search", icon: "🔍", label: "Pencarian", desc: "Cari seluruh situs" },
+    ],
+  },
 ];
 
-const megaMenuSections = [
-  {
-    title: "Ibadah & Doa",
-    items: [
-      { href: "/renungan", icon: "🕐", label: "Renungan Harian", desc: "Doa pada jam tertentu" },
-      { href: "/rosario", icon: "📿", label: "Rosario", desc: "Misteri & doa lengkap" },
-      { href: "/jalan-salib", icon: "✝️", label: "Jalan Salib", desc: "14 Perhentian" },
-      { href: "/kalender-liturgi", icon: "📅", label: "Kalender Liturgi", desc: "Kalender Gereja" },
-    ],
-  },
-  {
-    title: "Referensi",
-    items: [
-      { href: "/kitabsuci", icon: "📖", label: "Alkitab (Deuterokanonika)", desc: "KS lengkap dengan deuterokanonika" },
-      { href: "/katekismus", icon: "📕", label: "KGK", desc: "Katekismus Gereja Katolik" },
-      { href: "/khk", icon: "⚖️", label: "Hukum Kanonik", desc: "Kitab Hukum Gereja" },
-      { href: "/kvii", icon: "📜", label: "Konsili Vatikan II", desc: "Dokumen lengkap" },
-      { href: "/summa", icon: "📚", label: "Summa Theologiae", desc: "St. Thomas Aquinas" },
-    ],
-  },
-  {
-    title: "Apologetika",
-    items: [
-      { href: "/diagnosa/ajaran-bidat", icon: "⚔️", label: "Diagnosa Bidat", desc: "Uji ajaran sesat" },
-      { href: "/diagnosa/sedevacantisme", icon: "🛡️", label: "Diagnosa Sedevacantisme", desc: "Uji paham" },
-      { href: "/suksesi-kepausan", icon: "♚", label: "Suksesi Kepausan", desc: "Rantai Paus dari Petrus" },
-      { href: "/blog/tag/Apologetika", icon: "🧭", label: "Artikel Apologetika", desc: "Pembelaan iman" },
-    ],
-  },
-  {
-    title: "Lainnya",
-    items: [
-      { href: "/flix", icon: "🎥", label: "Flix — Video", desc: "Galeri Video DKC" },
-      { href: "/search", icon: "🔍", label: "Pencarian", desc: "Cari artikel & topik" },
-      { href: "/tags", icon: "🏷️", label: "Topik / Tag", desc: "Jelajahi per topik" },
-      { href: "/tentang", icon: "ℹ️", label: "Tentang DKC", desc: "Tentang kami" },
-    ],
-  },
-];
+const mobilePrimary = navGroups.filter(g => g.hasSubmenu);
 
 function isActive(href: string): boolean {
   if (href === "/") return currentPath === "/";
+  if (href === "#") return false;
   return currentPath.startsWith(href);
 }
 
-function isMegaActive(): boolean {
-  const megaPaths = ["/renungan", "/rosario", "/jalan-salib", "/kalender-liturgi", "/khk", "/kvii", "/summa", "/suksesi-kepausan", "/diagnosa", "/flix", "/search", "/tags", "/tentang"];
-  return megaPaths.some(p => currentPath.startsWith(p));
+function activeClass(href: string): string {
+  if (href === "/") return currentPath === "/" ? "active" : "";
+  if (href === "#") return "";
+  return currentPath.startsWith(href) ? "active" : "";
 }
 ---
 
-<!-- ========== DESKTOP NAV ========== -->
+<!-- ==================== DESKTOP ==================== -->
 <header class="hidden md:block sticky top-0 z-50">
-  <nav class="bg-dkc-surface/90 backdrop-blur-xl border-b border-dkc-border/60">
+  <div class="bg-dkc-surface/90 backdrop-blur-xl border-b border-dkc-border/60">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 h-14">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-3 group">
+      <a href="/" class="flex items-center gap-3 group shrink-0">
         <div class="relative">
-          <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md group-hover:bg-dkc-gold/30 transition-all"></div>
+          <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md group-hover:bg-dkc-gold/30 transition-all duration-300"></div>
           <img src="/assets/img/avatar-icon.webp" alt="DKC" class="relative w-9 h-9 rounded-full border border-dkc-gold/40 group-hover:border-dkc-gold/70 transition-all" />
         </div>
         <div class="flex flex-col">
@@ -76,266 +121,350 @@ function isMegaActive(): boolean {
         </div>
       </a>
 
-      <!-- Nav links -->
-      <div class="flex items-center gap-1">
-        {navItems.map(item => (
-          <a
-            href={item.href}
-            class:list={[
-              "px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-              isActive(item.href)
-                ? "text-dkc-gold bg-dkc-gold/10"
-                : "text-dkc-muted hover:text-dkc-text hover:bg-dkc-card",
-            ]}
+      <!-- Nav items + mega panel container -->
+        <div class="flex items-center" id="desktop-nav-links">
+        {navGroups.map(group => (
+          <div
+            data-nav-group={group.id}
+            class="nav-group relative"
           >
-            {item.label}
-          </a>
-        ))}
-
-        <!-- Mega menu trigger -->
-        <button
-          id="mega-trigger"
-          class:list={[
-            "px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-1.5",
-            isMegaActive()
-              ? "text-dkc-gold bg-dkc-gold/10"
-              : "text-dkc-muted hover:text-dkc-text hover:bg-dkc-card",
-          ]}
-        >
-          Lainnya
-          <svg class="w-3.5 h-3.5 transition-transform duration-300" id="mega-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ========== MEGA MENU DROPDOWN ========== -->
-  <div id="mega-panel" class="absolute left-0 right-0 top-full z-40 opacity-0 invisible translate-y-2 transition-all duration-300 ease-out pointer-events-none">
-    <!-- Backdrop blur layer -->
-    <div class="absolute inset-0 bg-dkc-deep/80 backdrop-blur-2xl"></div>
-    <!-- Top gold line -->
-    <div class="relative h-px bg-gradient-to-r from-transparent via-dkc-gold/40 to-transparent"></div>
-
-    <div class="relative max-w-6xl mx-auto px-6 py-8">
-      <div class="grid grid-cols-4 gap-8">
-        {megaMenuSections.map(section => (
-          <div>
-            <h3 class="text-dkc-gold font-serif font-semibold text-sm mb-4 uppercase tracking-wider flex items-center gap-2">
-              <span class="w-6 h-px bg-dkc-gold/40"></span>
-              {section.title}
-            </h3>
-            <ul class="space-y-1">
-              {section.items.map(item => (
-                <li>
-                  <a
-                    href={item.href}
-                    class:list={[
-                      "flex items-start gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group",
-                      isActive(item.href) ? "bg-dkc-gold/10" : "hover:bg-dkc-card",
-                    ]}
-                  >
-                    <span class="text-lg mt-0.5 shrink-0 group-hover:scale-110 transition-transform duration-200">{item.icon}</span>
-                    <div class="min-w-0">
-                      <span class:list={[
-                        "text-sm font-medium block leading-tight",
-                        isActive(item.href) ? "text-dkc-gold" : "text-dkc-text group-hover:text-dkc-gold",
-                      ]}>{item.label}</span>
-                      <span class="text-[11px] text-dkc-muted block mt-0.5 leading-tight">{item.desc}</span>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <a
+              href={group.href}
+              data-nav-id={group.id}
+              class:list={[
+                "nav-trigger inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer",
+                activeClass(group.href),
+              ]}
+            >
+              {group.label}
+              {group.hasSubmenu && (
+                <svg class="nav-chevron w-3.5 h-3.5 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              )}
+            </a>
           </div>
         ))}
       </div>
+    </div>
+  </div>
 
-      <!-- Bottom decorative bar -->
-      <div class="mt-6 pt-4 border-t border-dkc-border/40 flex items-center justify-between">
-        <p class="text-dkc-muted text-xs">Damai Kasih Channel — Apologetika, Katekese, dan Pembelaan Iman Katolik</p>
-        <a href="/search" class="text-xs text-dkc-gold/60 hover:text-dkc-gold transition-colors flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Cari
-        </a>
-      </div>
+  <!-- ===== SINGLE SHARED MEGA PANEL ===== -->
+  <div
+    id="mega-panel"
+    class="absolute left-0 right-0 top-full z-40 opacity-0 invisible pointer-events-none"
+    style="transition: opacity 0.25s ease, visibility 0.25s ease;"
+  >
+    <div class="absolute inset-0 bg-dkc-deep/85 backdrop-blur-2xl"></div>
+    <div class="relative h-px bg-gradient-to-r from-transparent via-dkc-gold/40 to-transparent"></div>
+    <div id="mega-content" class="relative max-w-6xl mx-auto px-6 py-8">
+      <!-- Content injected by JS -->
     </div>
   </div>
 </header>
 
-<!-- ========== MOBILE BOTTOM TAB BAR ========== -->
+<!-- ==================== MOBILE ==================== -->
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60"
      style="padding-bottom: max(env(safe-area-inset-bottom), 8px)">
   <div class="flex justify-around items-center px-1 pt-2">
-    <a href="/" class:list={["mobile-nav-item", isActive("/") && "active"]}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <a href="/" class="mobile-nav-item" data-mobile-tab="beranda">
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span class="text-[10px] leading-none">Beranda</span>
     </a>
-    <a href="/blog" class:list={["mobile-nav-item", isActive("/blog") && "active"]}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+    <button data-mobile-tab="artikel" class="mobile-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
       <span class="text-[10px] leading-none">Artikel</span>
-    </a>
-    <a href="/kitabsuci" class:list={["mobile-nav-item", isActive("/kitabsuci") && "active"]}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+    </button>
+    <button data-mobile-tab="kitabsuci" class="mobile-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
       <span class="text-[10px] leading-none">Kitab Suci</span>
-    </a>
-    <a href="/katekismus" class:list={["mobile-nav-item", isActive("/katekismus") && "active"]}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </button>
+    <button data-mobile-tab="katekismus" class="mobile-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       <span class="text-[10px] leading-none">Katekismus</span>
-    </a>
-    <!-- Mobile "More" button -->
-    <button id="mobile-menu-btn" class="mobile-nav-item" aria-label="Menu lainnya">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+    </button>
+    <button data-mobile-tab="lainnya" class="mobile-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
       <span class="text-[10px] leading-none">Lainnya</span>
     </button>
   </div>
 </nav>
 
-<!-- ========== MOBILE FULL-SCREEN MENU ========== -->
-<div id="mobile-menu-overlay" class="md:hidden fixed inset-0 z-[60] pointer-events-none">
-  <!-- Backdrop -->
-  <div id="mobile-backdrop" class="absolute inset-0 bg-dkc-deep/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
-  <!-- Slide-up panel -->
-  <div id="mobile-panel" class="absolute bottom-0 left-0 right-0 bg-dkc-surface border-t border-dkc-gold/20 rounded-t-3xl max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300 ease-out"
-       style="padding-bottom: max(env(safe-area-inset-bottom), 24px)">
-    <!-- Handle -->
-    <div class="flex justify-center pt-3 pb-2">
-      <div class="w-10 h-1 rounded-full bg-dkc-border"></div>
-    </div>
+<!-- ==================== MOBILE PANELS (hidden by default) ==================== -->
+<div id="mobile-overlay" class="md:hidden fixed inset-0 z-[60] pointer-events-none">
+  <div id="mobile-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" data-mobile-close></div>
 
-    <!-- Header -->
-    <div class="px-6 pb-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="/assets/img/avatar-icon.webp" alt="DKC" class="w-8 h-8 rounded-full border border-dkc-gold/30" />
-        <div>
-          <h2 class="text-dkc-gold font-serif font-bold text-base">Damai Kasih Channel</h2>
-          <p class="text-dkc-muted text-[10px]">Menu Lengkap</p>
-        </div>
+  {mobilePrimary.map((group, idx) => (
+    <div
+      id={`mobile-panel-${group.id}`}
+      class="mobile-panel glass-panel absolute bottom-0 left-0 right-0 rounded-t-[20px] max-h-[80vh] overflow-y-auto overflow-x-hidden overscroll-contain"
+      style="transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1); padding-bottom: max(env(safe-area-inset-bottom), 20px)"
+    >
+      {/* Drag handle */}
+      <div class="flex justify-center pt-3 pb-1 sticky top-0 bg-dkc-surface/95 backdrop-blur-sm z-10 rounded-t-[20px]">
+        <div class="w-8 h-1 rounded-full bg-dkc-border/60"></div>
       </div>
-      <button id="mobile-menu-close" class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
 
-    <!-- Search shortcut -->
-    <div class="px-6 pb-4">
-      <a href="/search" class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-dkc-card border border-dkc-border hover:border-dkc-gold/30 transition-all">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-dkc-muted"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span class="text-sm text-dkc-muted">Cari artikel, topik, ayat…</span>
-      </a>
-    </div>
-
-    <!-- Sections -->
-    <div class="px-6 space-y-6">
-      {megaMenuSections.map(section => (
-        <div>
-          <h3 class="text-dkc-gold font-serif font-semibold text-xs mb-3 uppercase tracking-[0.15em] flex items-center gap-2">
-            <span class="w-4 h-px bg-dkc-gold/40"></span>
-            {section.title}
-          </h3>
-          <div class="grid grid-cols-2 gap-2">
-            {section.items.map(item => (
-              <a
-                href={item.href}
-                class:list={[
-                  "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-200 group",
-                  isActive(item.href) ? "bg-dkc-gold/10 border border-dkc-gold/20" : "bg-dkc-card border border-transparent hover:border-dkc-gold/20",
-                ]}
-              >
-                <span class="text-base shrink-0">{item.icon}</span>
-                <div class="min-w-0">
-                  <span class:list={[
-                    "text-xs font-medium block leading-tight truncate",
-                    isActive(item.href) ? "text-dkc-gold" : "text-dkc-text",
-                  ]}>{item.label}</span>
-                </div>
-              </a>
-            ))}
-          </div>
+      {/* Header */}
+      <div class="sticky top-7 bg-dkc-surface/95 backdrop-blur-sm z-10 px-5 pb-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="text-lg">{group.submenu?.[0]?.icon || "📋"}</span>
+          <h2 class="text-dkc-gold font-serif font-bold text-lg">{group.label}</h2>
         </div>
-      ))}
+        <button data-mobile-close class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
 
-      <!-- Quick links -->
-      <div class="flex gap-2 pb-4">
-        <a href="/tags" class="flex-1 text-center py-2.5 rounded-xl bg-dkc-card border border-dkc-border text-xs text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-all">
-          🏷️ Semua Topik
-        </a>
-        <a href="/tentang" class="flex-1 text-center py-2.5 rounded-xl bg-dkc-card border border-dkc-border text-xs text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-all">
-          ℹ️ Tentang
-        </a>
+      {/* Submenu items */}
+      <div class="px-4 space-y-1.5 pb-6">
+        {group.submenu?.map(item => (
+          <a
+            href={item.href}
+            class:list={[
+              "flex items-start gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200",
+              isActive(item.href) ? "bg-dkc-gold/10 border border-dkc-gold/15" : "bg-dkc-card border border-transparent active:bg-dkc-gold/5",
+            ]}
+          >
+            <span class="text-lg mt-0.5 shrink-0">{item.icon}</span>
+            <div class="min-w-0">
+              <span class:list={[
+                "text-sm font-medium block leading-tight",
+                isActive(item.href) ? "text-dkc-gold" : "text-dkc-text",
+              ]}>{item.label}</span>
+              <span class="text-[11px] text-dkc-muted block mt-0.5 leading-tight">{item.desc}</span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
-  </div>
+  ))}
 </div>
 
 <!-- Spacer for mobile bottom nav -->
 <div class="md:hidden h-16"></div>
 
+<style>
+  /* ===== DESKTOP TRIGGER STYLES ===== */
+  .nav-trigger {
+    color: var(--color-dkc-muted);
+  }
+  .nav-trigger:hover {
+    color: var(--color-dkc-text);
+    background: var(--color-dkc-card);
+  }
+  .nav-trigger.active {
+    color: var(--color-dkc-gold);
+    background: rgba(201, 168, 76, 0.1);
+  }
+  .nav-trigger.active-mega {
+    color: var(--color-dkc-gold) !important;
+    background: rgba(201, 168, 76, 0.1) !important;
+  }
+  .nav-trigger.active-mega .nav-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ===== MEGA PANEL ===== */
+  #mega-panel.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* ===== MOBILE UTILITY ===== */
+  .glass-panel {
+    background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .mobile-nav-item .m-active {
+    color: var(--color-dkc-gold) !important;
+  }
+
+  /* Active mobile tab */
+  .mobile-tab-active {
+    color: var(--color-dkc-gold) !important;
+  }
+</style>
+
 <script>
+  // ===== DATA =====
+  const NAV_DATA = [
+    { id: "beranda", label: "Beranda", href: "/", hasSubmenu: false },
+    { id: "artikel", label: "Artikel", href: "/blog", hasSubmenu: true, style: "artikel", submenu: [
+      { href: "/blog", icon: "📝", label: "Semua Artikel", desc: "Daftar artikel terbaru" },
+      { href: "/blog/tag/Apologetika", icon: "🛡️", label: "Apologetika", desc: "Pembelaan iman Katolik" },
+      { href: "/blog/tag/Katolik", icon: "✝️", label: "Katolik", desc: "Doktrin & ajaran Gereja" },
+      { href: "/blog/tag/Protestant", icon: "📖", label: "Dialog", desc: "Dengan Protestan" },
+      { href: "/blog/tag/Dogma", icon: "📕", label: "Dogma", desc: "Dogma Gereja Katolik" },
+      { href: "/blog/tag/Maria", icon: "👑", label: "Mariologi", desc: "Bunda Maria" },
+      { href: "/blog/tag/Alkitab", icon: "📜", label: "Alkitab", desc: "Kajian & tafsir" },
+      { href: "/blog/tag/Sejarah", icon: "🏛️", label: "Sejarah", desc: "Sejarah Gereja" },
+      { href: "/search", icon: "🔍", label: "Cari Artikel", desc: "Pencarian lengkap", highlight: true },
+    ]},
+    { id: "kitabsuci", label: "Kitab Suci", href: "/kitabsuci", hasSubmenu: true, style: "kitabsuci", submenu: [
+      { href: "/kitabsuci", icon: "📖", label: "Alkitab Deuterokanonika", desc: "Bacaan KS lengkap" },
+      { href: "/blog/tag/Alkitab", icon: "📚", label: "Kajian Alkitab", desc: "Artikel tafsir & studi" },
+      { href: "/blog/tag/Refleksi", icon: "💭", label: "Refleksi", desc: "Renungan dari Kitab Suci" },
+    ]},
+    { id: "renungan", label: "Renungan", href: "/renungan", hasSubmenu: true, style: "renungan", submenu: [
+      { href: "/renungan", icon: "🕐", label: "Renungan Harian", desc: "Doa pada jam tertentu" },
+      { href: "/rosario", icon: "📿", label: "Rosario", desc: "Misteri Gembira, Sedih, Mulia, Terang" },
+      { href: "/jalan-salib", icon: "✝️", label: "Jalan Salib", desc: "14 Perhentian lengkap" },
+      { href: "/kalender-liturgi", icon: "📅", label: "Kalender Liturgi", desc: "Kalender Gereja" },
+    ]},
+    { id: "katekismus", label: "Katekismus", href: "/katekismus", hasSubmenu: true, style: "katekismus", submenu: [
+      { href: "/katekismus", icon: "📕", label: "KGK", desc: "Katekismus Gereja Katolik" },
+      { href: "/khk", icon: "⚖️", label: "Hukum Kanonik (KHK)", desc: "Kitab Hukum Gereja" },
+      { href: "/kvii", icon: "📜", label: "Konsili Vatikan II", desc: "Dokumen lengkap KV II" },
+      { href: "/summa", icon: "📚", label: "Summa Theologiae", desc: "St. Thomas Aquinas" },
+      { href: "/diagnosa/ajaran-bidat", icon: "⚔️", label: "Diagnosa Bidat", desc: "Uji ajaran sesat" },
+      { href: "/diagnosa/sedevacantisme", icon: "🛡️", label: "Diagnosa Sedevacantisme", desc: "Uji paham" },
+    ]},
+    { id: "lainnya", label: "Lainnya", href: "#", hasSubmenu: true, style: "lainnya", submenu: [
+      { href: "/suksesi-kepausan", icon: "♚", label: "Suksesi Kepausan", desc: "Rantai Paus dari St Petrus" },
+      { href: "/flix", icon: "🎥", label: "Flix — Video", desc: "Galeri video DKC" },
+      { href: "/blog/tag/Live", icon: "🔴", label: "Live DKC", desc: "Rekaman live streaming" },
+      { href: "/tags", icon: "🏷️", label: "Semua Topik", desc: "Jelajahi per topik" },
+      { href: "/tentang", icon: "ℹ️", label: "Tentang DKC", desc: "Tentang kami" },
+      { href: "/search", icon: "🔍", label: "Pencarian", desc: "Cari seluruh situs" },
+    ]},
+  ];
+
   // ===== DESKTOP MEGA MENU =====
-  const megaTrigger = document.getElementById('mega-trigger');
-  const megaPanel = document.getElementById('mega-panel');
-  const megaChevron = document.getElementById('mega-chevron');
-  let megaOpen = false;
-  let megaTimeout: ReturnType<typeof setTimeout>;
+  const megaPanel = document.getElementById("mega-panel");
+  const megaContent = document.getElementById("mega-content");
+  let currentMega = null;
+  let hideTimer = null;
 
-  function openMega() {
-    clearTimeout(megaTimeout);
-    megaOpen = true;
-    megaPanel!.classList.remove('opacity-0', 'invisible', 'translate-y-2', 'pointer-events-none');
-    megaPanel!.classList.add('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
-    megaChevron!.style.transform = 'rotate(180deg)';
+  function buildMegaHTML(group) {
+    const gridCols = group.submenu.length <= 4 ? "sm:grid-cols-2" : "sm:grid-cols-3";
+    return `
+      <div class="grid grid-cols-1 ${gridCols} gap-3 sm:gap-4">
+        ${group.submenu.map(item => `
+          <a href="${item.href}" data-mega-link
+            class="flex items-start gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 ${item.highlight
+              ? "bg-dkc-gold/10 border border-dkc-gold/20"
+              : "border border-transparent hover:bg-dkc-card hover:border-dkc-gold/10"}">
+            <span class="text-xl mt-0.5 shrink-0" style="transition: transform 0.2s">${item.icon}</span>
+            <div class="min-w-0">
+              <span class="text-sm font-medium block leading-tight text-dkc-text" style="transition: color 0.2s">${item.label}</span>
+              <span class="text-[11px] text-dkc-muted block mt-0.5 leading-tight">${item.desc}</span>
+            </div>
+          </a>
+        `).join("")}
+      </div>
+      <div class="mt-5 pt-3 border-t border-dkc-border/40 flex items-center justify-between">
+        <p class="text-dkc-muted text-[11px]">Damai Kasih Channel — Apologetika, Katekese, dan Pembelaan Iman Katolik</p>
+        <a href="/search" class="text-xs text-dkc-gold/60 hover:text-dkc-gold transition-colors flex items-center gap-1 shrink-0" style="transition: color 0.2s">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Cari</span>
+        </a>
+      </div>
+    `;
   }
 
-  function closeMega() {
-    megaTimeout = setTimeout(() => {
-      megaOpen = false;
-      megaPanel!.classList.add('opacity-0', 'invisible', 'translate-y-2', 'pointer-events-none');
-      megaPanel!.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
-      megaChevron!.style.transform = 'rotate(0deg)';
-    }, 150);
+  function showMega(id) {
+    const group = NAV_DATA.find(g => g.id === id);
+    if (!group?.hasSubmenu) return;
+    if (currentMega === id) { clearTimeout(hideTimer); hideTimer = null; return; }
+    clearTimeout(hideTimer);
+    hideTimer = null;
+
+    // Reset all triggers
+    document.querySelectorAll(".nav-trigger").forEach(el => el.classList.remove("active-mega"));
+    // Activate this trigger
+    const trigger = document.querySelector(`.nav-trigger[data-nav-id="${id}"]`);
+    if (trigger) trigger.classList.add("active-mega");
+
+    megaContent.innerHTML = buildMegaHTML(group);
+    currentMega = id;
+    requestAnimationFrame(() => megaPanel.classList.add("open"));
   }
 
-  megaTrigger?.addEventListener('mouseenter', openMega);
-  megaTrigger?.addEventListener('mouseleave', closeMega);
-  megaPanel?.addEventListener('mouseenter', () => clearTimeout(megaTimeout));
-  megaPanel?.addEventListener('mouseleave', closeMega);
+  function hideMega() {
+    hideTimer = setTimeout(() => {
+      currentMega = null;
+      megaPanel.classList.remove("open");
+      document.querySelectorAll(".nav-trigger").forEach(el => el.classList.remove("active-mega"));
+    }, 180);
+  }
 
-  // Close on escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMega();
-      closeMobileMenu();
-    }
+  // Attach desktop hover listeners
+  document.querySelectorAll("[data-nav-group]").forEach(groupEl => {
+    const id = groupEl.getAttribute("data-nav-group");
+    groupEl.addEventListener("mouseenter", () => showMega(id));
+    groupEl.addEventListener("mouseleave", hideMega);
   });
 
-  // ===== MOBILE MENU =====
-  const mobileBtn = document.getElementById('mobile-menu-btn');
-  const mobileClose = document.getElementById('mobile-menu-close');
-  const mobileOverlay = document.getElementById('mobile-menu-overlay');
-  const mobileBackdrop = document.getElementById('mobile-backdrop');
-  const mobilePanel = document.getElementById('mobile-panel');
-
-  function openMobileMenu() {
-    mobileOverlay!.classList.remove('pointer-events-none');
-    mobileOverlay!.classList.add('pointer-events-auto');
-    mobileBackdrop!.classList.remove('opacity-0');
-    mobileBackdrop!.classList.add('opacity-100');
-    mobilePanel!.style.transform = 'translateY(0)';
-    document.body.style.overflow = 'hidden';
+  // Mega panel itself — keep open while hovering on it
+  if (megaPanel) {
+    megaPanel.addEventListener("mouseenter", () => { clearTimeout(hideTimer); hideTimer = null; });
+    megaPanel.addEventListener("mouseleave", hideMega);
   }
 
-  function closeMobileMenu() {
-    mobileBackdrop!.classList.remove('opacity-100');
-    mobileBackdrop!.classList.add('opacity-0');
-    mobilePanel!.style.transform = 'translateY(100%)';
-    document.body.style.overflow = '';
+  // ===== MOBILE PANELS =====
+  const mobileOverlay = document.getElementById("mobile-overlay");
+  const mobileBackdrop = document.getElementById("mobile-backdrop");
+  let activeMobilePanel = null;
+
+  function openMobilePanel(id) {
+    if (activeMobilePanel) {
+      activeMobilePanel.style.transform = "translateY(100%)";
+      activeMobilePanel = null;
+    }
+    const panel = document.getElementById("mobile-panel-" + id);
+    if (!panel) return;
+
+    mobileOverlay.classList.remove("pointer-events-none");
+    mobileOverlay.classList.add("pointer-events-auto");
+
+    requestAnimationFrame(() => {
+      mobileBackdrop.classList.add("opacity-100");
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        panel.style.transform = "translateY(0)";
+      });
+    });
+
+    document.body.style.overflow = "hidden";
+    activeMobilePanel = panel;
+
+    document.querySelectorAll("[data-mobile-tab]").forEach(el => el.classList.remove("mobile-tab-active"));
+    const tab = document.querySelector(`[data-mobile-tab="${id}"]`);
+    if (tab) tab.classList.add("mobile-tab-active");
+  }
+
+  function closeMobilePanel() {
+    if (activeMobilePanel) {
+      activeMobilePanel.style.transform = "translateY(100%)";
+      activeMobilePanel = null;
+    }
+    mobileBackdrop.classList.remove("opacity-100");
     setTimeout(() => {
-      mobileOverlay!.classList.remove('pointer-events-auto');
-      mobileOverlay!.classList.add('pointer-events-none');
-    }, 300);
+      mobileOverlay.classList.remove("pointer-events-auto");
+      mobileOverlay.classList.add("pointer-events-none");
+    }, 350);
+    document.body.style.overflow = "";
+    document.querySelectorAll("[data-mobile-tab]").forEach(el => el.classList.remove("mobile-tab-active"));
   }
 
-  mobileBtn?.addEventListener('click', openMobileMenu);
-  mobileClose?.addEventListener('click', closeMobileMenu);
-  mobileBackdrop?.addEventListener('click', closeMobileMenu);
+  // Attach mobile listeners
+  document.querySelectorAll("[data-mobile-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-mobile-tab");
+      if (id) openMobilePanel(id);
+    });
+  });
+
+  document.querySelectorAll("[data-mobile-close]").forEach(el => {
+    el.addEventListener("click", closeMobilePanel);
+  });
+
+  // Esc key
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { hideMega(); closeMobilePanel(); }
+  });
 </script>

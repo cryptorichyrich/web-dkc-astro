@@ -37,9 +37,13 @@ const navGroups = [
     hasSubmenu: true,
     style: "kitabsuci",
     submenu: [
-      { href: "/kitabsuci", icon: "📖", label: "Alkitab Deuterokanonika", desc: "Bacaan KS lengkap dengan deuterokanonika" },
-      { href: "/blog/tag/Alkitab", icon: "📚", label: "Kajian Alkitab", desc: "Artikel tafsir & studi" },
-      { href: "/blog/tag/Refleksi", icon: "💭", label: "Refleksi", desc: "Renungan dari Kitab Suci" },
+      { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
+      { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+      { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
+      { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
+      { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },
+      { href: "/kemenag", icon: "📋", label: "Kitab Suci Kemenag", desc: "Untuk perbandingan" },
+      { href: "/timeline-kanon-kitabsuci", icon: "📜", label: "Sejarah Kanon Kitab Suci", desc: "Timeline pembentukan kanon" },
     ],
   },
   {
@@ -628,9 +632,13 @@ function activeClass(href: string): string {
       { href: "/search", icon: "🔍", label: "Cari Artikel", desc: "Pencarian lengkap", highlight: true },
     ]},
     { id: "kitabsuci", label: "Kitab Suci", href: "/kitabsuci", hasSubmenu: true, style: "kitabsuci", submenu: [
-      { href: "/kitabsuci", icon: "📖", label: "Alkitab Deuterokanonika", desc: "Bacaan KS lengkap" },
-      { href: "/blog/tag/Alkitab", icon: "📚", label: "Kajian Alkitab", desc: "Artikel tafsir & studi" },
-      { href: "/blog/tag/Refleksi", icon: "💭", label: "Refleksi", desc: "Renungan dari Kitab Suci" },
+      { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
+      { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+      { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
+      { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
+      { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },
+      { href: "/kemenag", icon: "📋", label: "Kitab Suci Kemenag", desc: "Untuk perbandingan" },
+      { href: "/timeline-kanon-kitabsuci", icon: "📜", label: "Sejarah Kanon Kitab Suci", desc: "Timeline pembentukan kanon" },
     ]},
     { id: "renungan", label: "Renungan", href: "/renungan", hasSubmenu: true, style: "renungan", submenu: [
       { href: "/renungan", icon: "🕐", label: "Renungan Harian", desc: "Doa pada jam tertentu" },

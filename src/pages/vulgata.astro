@@ -48,6 +48,15 @@ import Footer from "@/components/Footer.astro";
       <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5"></div>
     </div>
 
+    <!-- Verse Selection -->
+    <div id="step-verses" class="glass-card p-5 mb-5 hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="verse-title" class="text-dkc-gold font-bold text-sm uppercase tracking-wider">—</h2>
+        <button id="back-chapters" class="text-dkc-muted text-xs border border-dkc-border rounded-lg px-3 py-1 hover:text-dkc-gold hover:border-dkc-gold/30">← Back</button>
+      </div>
+      <div id="verse-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5"></div>
+    </div>
+
     <!-- Reading Area -->
     <div id="reading-area" class="glass-card p-5 md:p-6 mb-5 hidden">
       <!-- Action Bar -->
@@ -106,6 +115,7 @@ import Footer from "@/components/Footer.astro";
   #reading-content .verse-row { border-radius: 0.5rem; padding: 0.35rem 0.5rem; margin: 0 -0.5rem; transition: background-color 0.15s; cursor: pointer; }
   #reading-content .verse-row:hover { background: rgba(201,168,76,0.05); }
   #reading-content .verse-row.highlighted { background: rgba(201,168,76,0.1); box-shadow: inset 0 0 0 1px rgba(201,168,76,0.3); }
+  #reading-content .verse-row.flash { background: rgba(201,168,76,0.25); box-shadow: inset 0 0 0 2px rgba(201,168,76,0.5); transition: background-color 0.3s, box-shadow 0.3s; }
   .latin-text { font-style: italic; color: var(--color-dkc-text); }
   .english-text { color: var(--color-dkc-muted); font-size: 0.85em; margin-top: 0.15rem; }
   .sel-btn { background: var(--color-dkc-surface); border: 1px solid var(--color-dkc-border); color: var(--color-dkc-muted); border-radius: 0.5rem; padding: 0.4rem 0; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; text-align: center; }
@@ -146,11 +156,17 @@ import Footer from "@/components/Footer.astro";
   let ttsTmr:any=null, ttsSec=0;
 
   const $=id=>document.getElementById(id)!;
-  const stepT=$("step-testament"), stepB=$("step-books"), stepC=$("step-chapters");
+  const stepT=$("step-testament"), stepB=$("step-books"), stepC=$("step-chapters"), stepV=$("step-verses");
   const rArea=$("reading-area"), rContent=$("reading-content"), rTitle=$("reading-title"), rSub=$("reading-subtitle"), rLoad=$("reading-loading");
-  const bGrid=$("book-grid"), cGrid=$("chapter-grid"), btmNav=$("bottom-nav");
+  const bGrid=$("book-grid"), cGrid=$("chapter-grid"), vGrid=$("verse-grid"), btmNav=$("bottom-nav");
+  const verseTitle=$("verse-title") as HTMLElement;
 
-  function showStep(s:string) { stepT.classList.toggle("hidden",s!=="testament"); stepB.classList.toggle("hidden",s!=="books"); stepC.classList.toggle("hidden",s!=="chapters"); }
+  function showStep(s:string) {
+    stepT.classList.toggle("hidden",s!=="testament");
+    stepB.classList.toggle("hidden",s!=="books");
+    stepC.classList.toggle("hidden",s!=="chapters");
+    stepV.classList.toggle("hidden",s!=="verses");
+  }
 
   document.querySelectorAll(".testament-btn").forEach(b=>b.addEventListener("click",()=>{
     const t=b.getAttribute("data-testament")!; curTest=t;
@@ -162,13 +178,51 @@ import Footer from "@/components/Footer.astro";
   }));
 
   function selBook(k:string){
-    curBook=k;$("book-title").textContent=(BOOK_NAMES[k]||k).toUpperCase();
+    curBook=k;curChapter=0;
+    $("book-title").textContent=(BOOK_NAMES[k]||k).toUpperCase();
     bGrid.querySelectorAll(".sel-btn").forEach(b=>b.classList.remove("active"));bGrid.querySelector(`[data-book="${k}"]`)?.classList.add("active");
     const bk=data[k];if(!bk)return;
     const chs=Object.keys(bk).map(Number).sort((a,b)=>a-b);
     cGrid.innerHTML="";
-    for(const c of chs){const btn=document.createElement("button");btn.className="sel-btn py-2";btn.textContent=String(c);btn.addEventListener("click",()=>loadChapter(k,c));cGrid.appendChild(btn);}
+    for(const c of chs){const btn=document.createElement("button");btn.className="sel-btn py-2";btn.textContent=String(c);btn.addEventListener("click",()=>selectChapter(k,c));cGrid.appendChild(btn);}
     showStep("chapters");stepB.classList.remove("hidden");
+    rArea.classList.add("hidden");btmNav.classList.add("hidden");
+  }
+
+  // Step 3: Chapter -> show verse grid (NOT text)
+  function selectChapter(book:string, ch:number){
+    curBook=book; curChapter=ch;
+    const bk=data[book]; if(!bk) return;
+    const chData=bk[String(ch)]; if(!chData) return;
+
+    // Highlight the clicked chapter
+    cGrid.querySelectorAll(".sel-btn").forEach(b=>b.classList.remove("active"));
+    for(const btn of Array.from(cGrid.children)){
+      if(btn.textContent===String(ch)) btn.classList.add("active");
+    }
+
+    // Show verse grid
+    const verses = Array.isArray(chData) ? chData : (chData.verses || []);
+    verseTitle.textContent = `${BOOK_NAMES[book] || book} ${ch}`;
+    vGrid.innerHTML = "";
+    for (let i = 0; i < verses.length; i++) {
+      const v = verses[i];
+      const vNum = typeof v === 'object' ? v.verse : (i + 1);
+      const btn = document.createElement("button");
+      btn.className = "sel-btn py-2";
+      btn.textContent = String(vNum);
+      btn.addEventListener("click", () => loadAndScrollTo(book, ch, vNum));
+      vGrid.appendChild(btn);
+    }
+    // Show verses, keep chapters + books visible, hide reading area
+    stepV.classList.remove("hidden");
+    stepC.classList.remove("hidden");
+    stepB.classList.remove("hidden");
+    rArea.classList.add("hidden");
+    btmNav.classList.add("hidden");
+
+    // Update hash
+    window.location.hash = `${book}${ch}`;
   }
 
   function loadChapter(book:string,ch:number){
@@ -183,12 +237,30 @@ import Footer from "@/components/Footer.astro";
       html+=`<div class="verse-row${isHl?" highlighted":""}" data-verse="${v.verse}"><sup>${v.verse}</sup><div class="latin-text">${v.latin}</div><div class="english-text">${v.english}</div></div>`;
     }
     rContent.innerHTML=html;rArea.classList.remove("hidden");btmNav.classList.remove("hidden");
+    // Keep chapter + verse grids visible as context above the text
+    stepC.classList.remove("hidden");
+    stepV.classList.remove("hidden");
+    stepB.classList.remove("hidden");
     window.location.hash=`${book}${ch}`;updateBm();
     rTitle.scrollIntoView({behavior:"smooth",block:"start"});
   }
 
-  $("back-testament").addEventListener("click",()=>showStep("testament"));
-  $("back-books").addEventListener("click",()=>{showStep("books");stepB.classList.remove("hidden");});
+  // Load and scroll to specific verse
+  function loadAndScrollTo(book:string, chapter:number, verse:number){
+    loadChapter(book, chapter);
+    setTimeout(() => {
+      const el = rContent.querySelector(`[data-verse="${verse}"]`) as HTMLElement;
+      if (el) {
+        el.classList.add("flash");
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => el.classList.remove("flash"), 2000);
+      }
+    }, 100);
+  }
+
+  $("back-testament").addEventListener("click",()=>{rArea.classList.add("hidden");btmNav.classList.add("hidden");showStep("testament");});
+  $("back-books").addEventListener("click",()=>{rArea.classList.add("hidden");btmNav.classList.add("hidden");showStep("books");stepB.classList.remove("hidden");});
+  $("back-chapters").addEventListener("click",()=>{rArea.classList.add("hidden");btmNav.classList.add("hidden");showStep("chapters");stepB.classList.remove("hidden");stepC.classList.remove("hidden");});
 
   function getAdj(d:number){
     const bk=data[curBook];if(!bk)return null;const chs=Object.keys(bk).map(Number).sort((a,b)=>a-b);const i=chs.indexOf(curChapter)+d;
@@ -237,7 +309,13 @@ import Footer from "@/components/Footer.astro";
   async function init(){
     rLoad.classList.remove("hidden");
     const r=await fetch("/assets/data/vulgate_bible.json");data=await r.json();rLoad.classList.add("hidden");
-    const h=location.hash.slice(1);if(h){const m=h.match(/^([a-z0-9_]+?)(\d+)$/);if(m&&data[m[1]]?.[m[2]]){curTest=OT.includes(m[1])?"ot":"nt";loadChapter(m[1],parseInt(m[2]));}}
+    const h=location.hash.slice(1);if(h){
+      const m=h.match(/^([a-z0-9_]+?)(\d+)$/);
+      if(m&&data[m[1]]?.[m[2]]){
+        curTest=OT.includes(m[1])?"ot":"nt";
+        selectChapter(m[1],parseInt(m[2]));
+      }
+    }
   }
   init();
 </script>

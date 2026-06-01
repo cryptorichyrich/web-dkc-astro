@@ -23,7 +23,7 @@ import "@/styles/global.css";
     <slot />
 
     <!-- Global Reading Progress Bar (hidden on index page) -->
-    <div id="global-progress-bar" class="fixed top-0 left-0 w-full h-[3px] z-[70] bg-dkc-surface/30 pointer-events-none">
+    <div id="global-progress-bar" class="fixed top-0 left-0 w-full h-[4px] z-[70] bg-dkc-surface/30 pointer-events-none">
       <div id="global-progress-fill" class="h-full bg-gradient-to-r from-dkc-gold/80 to-dkc-gold/50 transition-[width] duration-150 ease-out" style="width:0%"></div>
     </div>
 
@@ -37,9 +37,18 @@ import "@/styles/global.css";
 
 <style>
   /* Hide progress bar on index page */
-  :root[data-page="index"] #global-progress-bar,
-  body:not(:has(main)) #global-progress-bar {
+  :root[data-page="index"] #global-progress-bar {
     display: none;
+  }
+  /* TTS pulsing animation while speaking */
+  @keyframes tts-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+  }
+  #global-tts-btn.tts-speaking {
+    animation: tts-pulse 1.5s ease-in-out infinite;
+    color: var(--color-dkc-gold) !important;
+    border-color: rgba(201,168,76,0.4) !important;
   }
 </style>
 
@@ -58,8 +67,11 @@ import "@/styles/global.css";
     }
 
     function updateProgress() {
-      const h = document.documentElement;
-      const pct = Math.min((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100, 100);
+      const scrollTop = Math.max(window.scrollY, document.documentElement.scrollTop, document.body.scrollTop);
+      const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      const clientHeight = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
+      const maxScroll = scrollHeight - clientHeight;
+      const pct = maxScroll > 0 ? Math.min((scrollTop / maxScroll) * 100, 100) : 0;
       fill.style.width = pct + '%';
     }
 
@@ -76,6 +88,16 @@ import "@/styles/global.css";
 
     let playing = false;
     let utterance: SpeechSynthesisUtterance | null = null;
+
+    // Preload voices
+    let cachedVoices: SpeechSynthesisVoice[] = [];
+    function loadVoices() {
+      cachedVoices = window.speechSynthesis.getVoices();
+    }
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
 
     function getMainText(): string {
       // Try multiple selectors to find page content
@@ -102,21 +124,22 @@ import "@/styles/global.css";
       playing = false;
       iconPlay.classList.remove('hidden');
       iconStop.classList.add('hidden');
-      btn.classList.remove('text-dkc-gold', 'border-dkc-gold/30');
+      btn.classList.remove('tts-speaking');
     }
 
     function startTTS() {
       const text = getMainText();
       if (!text) return;
 
+      // Unlock audio context — cancel any pending speech first
       window.speechSynthesis.cancel();
       playing = true;
       iconPlay.classList.add('hidden');
       iconStop.classList.remove('hidden');
-      btn.classList.add('text-dkc-gold', 'border-dkc-gold/30');
+      btn.classList.add('tts-speaking');
 
-      // Truncate to ~5000 chars for reasonable TTS length
-      const maxLen = 5000;
+      // Truncate to ~10000 chars for reasonable TTS length
+      const maxLen = 10000;
       const ttsText = text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
 
       utterance = new SpeechSynthesisUtterance(ttsText);
@@ -136,15 +159,20 @@ import "@/styles/global.css";
         utterance.rate = 0.95;
       }
 
-      // Try to find a matching voice
-      const voices = window.speechSynthesis.getVoices();
+      // Try to find a matching voice (use cached voices, reload if empty)
+      const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
       if (utterance.lang === 'id-ID') {
         const idVoice = voices.find(v => v.lang.startsWith('id'));
         if (idVoice) utterance.voice = idVoice;
       }
 
       utterance.onend = () => stopTTS();
-      utterance.onerror = () => stopTTS();
+      utterance.onerror = (e) => {
+        // Brief visual flash on error
+        btn.style.background = 'rgba(239,83,80,0.2)';
+        setTimeout(() => { btn.style.background = ''; }, 500);
+        stopTTS();
+      };
 
       window.speechSynthesis.speak(utterance);
     }

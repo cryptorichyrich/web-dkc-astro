@@ -64,6 +64,16 @@ import Footer from "@/components/Footer.astro";
       </div>
     </div>
 
+    <!-- Testament Tabs (PL/PB) -->
+    <div class="flex gap-2 mb-3">
+      <button data-testament="all" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Semua</button>
+      <button data-testament="pl" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Perjanjian Lama</button>
+      <button data-testament="pb" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Perjanjian Baru</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-0.5 bg-dkc-gold/60 z-[60] transition-all duration-150" style="width:0%"></div>
+
     <!-- Reading Area -->
     <div class="glass-card p-5 md:p-6 mb-5">
       <div class="flex justify-between items-center mb-5">
@@ -77,6 +87,39 @@ import Footer from "@/components/Footer.astro";
           </button>
           <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
             Selanjutnya →
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Bar: TTS + Share + Bookmark + Font -->
+      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dkc-border/40 flex-wrap">
+        <button id="tts-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors" title="Bacakan ayat">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          <span>Bacakan</span>
+        </button>
+        <button id="tts-stop-btn" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/40 text-red-400 text-xs hover:bg-red-500/10 transition-colors" title="Berhenti">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <span>Berhenti</span>
+        </button>
+        <button id="bookmark-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors" title="Tandai ayat">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <span>Tandai</span>
+        </button>
+        <div class="flex items-center gap-1 ml-auto">
+          <span class="text-dkc-muted text-[10px] mr-1">Aa</span>
+          <button data-fsize="sm" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-[10px] hover:text-dkc-gold transition-colors">A</button>
+          <button data-fsize="md" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-xs hover:text-dkc-gold transition-colors">A</button>
+          <button data-fsize="lg" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-sm hover:text-dkc-gold transition-colors">A</button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="share-wa" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-green-400 hover:border-green-400/40 transition-colors" title="WhatsApp">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.546 4.09 1.504 5.818L.052 23.52l5.856-1.535A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.82c-1.98 0-3.832-.567-5.408-1.548l-.388-.23-4.028 1.056 1.074-3.926-.254-.404A9.79 9.79 0 012.18 12c0-5.422 4.398-9.82 9.82-9.82 5.422 0 9.82 4.398 9.82 9.82 0 5.422-4.398 9.82-9.82 9.82z"/></svg>
+          </button>
+          <button id="share-tg" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-blue-400 hover:border-blue-400/40 transition-colors" title="Telegram">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </button>
+          <button id="share-copy" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/40 transition-colors" title="Salin tautan">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           </button>
         </div>
       </div>
@@ -430,6 +473,160 @@ import Footer from "@/components/Footer.astro";
     if (e.key === "ArrowLeft") document.getElementById("prev-ch")!.click();
     if (e.key === "ArrowRight") document.getElementById("next-ch")!.click();
   });
+
+  // ===== Testament filter =====
+  const PL_BOOKS = new Set(["kej","kel","im","bil","ul","yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh","tob","ydt","est","ayb","mzm","ams","pkh","kid","keb","sir","yes","yer","rat","bar","yeh","dan","hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal","1mak","2mak"]);
+  let currentTestament = "all";
+  const testamentTabs = document.querySelectorAll(".testament-tab");
+
+  function applyTestamentFilter() {
+    for (const group of BOOK_GROUPS) {
+      const optgroup = bookSelect.querySelector(`optgroup[label="${group.label}"]`) as HTMLOptGroupElement;
+      if (!optgroup) continue;
+      for (const opt of Array.from(optgroup.options)) {
+        const abbr = opt.value;
+        if (currentTestament === "all") { opt.hidden = false; }
+        else if (currentTestament === "pl") { opt.hidden = !PL_BOOKS.has(abbr); }
+        else { opt.hidden = PL_BOOKS.has(abbr); }
+      }
+    }
+    // If current book is hidden, switch to first visible
+    const currentOpt = bookSelect.querySelector(`option[value="${currentBook}"]`) as HTMLOptionElement;
+    if (currentOpt && currentOpt.hidden) {
+      const first = bookSelect.querySelector("option:not([hidden])") as HTMLOptionElement;
+      if (first) navigateTo(first.value, 1);
+    }
+  }
+
+  testamentTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      testamentTabs.forEach(t => t.classList.remove("version-tab-active"));
+      tab.classList.add("version-tab-active");
+      currentTestament = tab.getAttribute("data-testament") || "all";
+      applyTestamentFilter();
+    });
+  });
+  // Init "all" tab active
+  testamentTabs[0]?.classList.add("version-tab-active");
+
+  // ===== TTS =====
+  let ttsUtterance: SpeechSynthesisUtterance | null = null;
+  const ttsBtn = document.getElementById("tts-btn")!;
+  const ttsStopBtn = document.getElementById("tts-stop-btn")!;
+
+  ttsBtn.addEventListener("click", () => {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const text = Array.from(readingContent.querySelectorAll(".verse-text")).map(el => el.textContent).join(" ");
+    if (!text) return;
+    ttsUtterance = new SpeechSynthesisUtterance(text);
+    ttsUtterance.lang = "id-ID";
+    ttsUtterance.rate = 0.9;
+    // Try to pick Indonesian voice
+    const voices = speechSynthesis.getVoices();
+    const idVoice = voices.find(v => v.lang.startsWith("id"));
+    if (idVoice) ttsUtterance.voice = idVoice;
+    ttsBtn.classList.add("hidden");
+    ttsStopBtn.classList.remove("hidden");
+    ttsUtterance.onend = () => { ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); };
+    speechSynthesis.speak(ttsUtterance);
+  });
+  ttsStopBtn.addEventListener("click", () => {
+    speechSynthesis.cancel();
+    ttsBtn.classList.remove("hidden");
+    ttsStopBtn.classList.add("hidden");
+  });
+
+  // ===== Bookmarks (localStorage) =====
+  const BK_KEY = "dkc-bible-bookmarks";
+  function getBookmarks(): string[] { return JSON.parse(localStorage.getItem(BK_KEY) || "[]"); }
+  function saveBookmark(ref: string) {
+    const bms = getBookmarks(); if (!bms.includes(ref)) { bms.push(ref); localStorage.setItem(BK_KEY, JSON.stringify(bms)); }
+  }
+  function removeBookmark(ref: string) {
+    const bms = getBookmarks().filter(b => b !== ref); localStorage.setItem(BK_KEY, JSON.stringify(bms));
+  }
+  const bookmarkBtn = document.getElementById("bookmark-btn")!;
+  bookmarkBtn.addEventListener("click", () => {
+    const ref = `${currentBook} ${currentChapter}`;
+    const bms = getBookmarks();
+    if (bms.includes(ref)) { removeBookmark(ref); bookmarkBtn.style.borderColor = ""; bookmarkBtn.style.color = ""; }
+    else { saveBookmark(ref); bookmarkBtn.style.borderColor = "rgba(201,168,76,0.6)"; bookmarkBtn.style.color = "var(--color-dkc-gold)"; }
+  });
+
+  // ===== Font Size =====
+  const FONT_MAP: Record<string, string> = { sm: "13px", md: "15px", lg: "18px" };
+  const fontBtns = document.querySelectorAll(".font-size-btn");
+  fontBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const size = btn.getAttribute("data-fsize") || "md";
+      readingContent.style.fontSize = FONT_MAP[size];
+      fontBtns.forEach(b => { b.style.borderColor = ""; b.style.color = ""; });
+      btn.style.borderColor = "rgba(201,168,76,0.5)"; btn.style.color = "var(--color-dkc-gold)";
+      localStorage.setItem("dkc-bible-fontsize", size);
+    });
+  });
+  // Restore font size
+  const savedFS = localStorage.getItem("dkc-bible-fontsize");
+  if (savedFS && FONT_MAP[savedFS]) {
+    readingContent.style.fontSize = FONT_MAP[savedFS];
+    document.querySelector(`.font-size-btn[data-fsize="${savedFS}"]`)?.dispatchEvent(new Event("click"));
+  }
+
+  // ===== Share =====
+  function getShareUrl(): string {
+    return `${window.location.origin}/kitabsuci#${currentBook}${currentChapter}`;
+  }
+  function getShareText(): string {
+    const name = BOOK_NAMES[currentBook] || currentBook;
+    const first = readingContent.querySelector(".verse-text")?.textContent || "";
+    return `${name} ${currentChapter}: "${first.slice(0, 100)}..." — Damai Kasih Channel`;
+  }
+  document.getElementById("share-wa")!.addEventListener("click", () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(getShareText() + " " + getShareUrl())}`, "_blank");
+  });
+  document.getElementById("share-tg")!.addEventListener("click", () => {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(getShareUrl())}&text=${encodeURIComponent(getShareText())}`, "_blank");
+  });
+  document.getElementById("share-copy")!.addEventListener("click", () => {
+    navigator.clipboard.writeText(getShareUrl()).then(() => {
+      const btn = document.getElementById("share-copy")!;
+      btn.style.borderColor = "rgba(201,168,76,0.6)"; btn.style.color = "var(--color-dkc-gold)";
+      setTimeout(() => { btn.style.borderColor = ""; btn.style.color = ""; }, 1500);
+    });
+  });
+
+  // ===== Progress Bar =====
+  const progressBar = document.getElementById("reading-progress")!;
+  window.addEventListener("scroll", () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progressBar.style.width = Math.min(pct, 100) + "%";
+  });
+
+  // ===== Update bookmark button state on navigate =====
+  const origRenderVerses = renderVerses;
+  // Monkey-patch renderVerses to also update bookmark state
+  const _origRender = renderVerses;
+  // Actually just call updateBookmarkState after navigateTo
+  function updateBookmarkState() {
+    const ref = `${currentBook} ${currentChapter}`;
+    const bms = getBookmarks();
+    if (bms.includes(ref)) {
+      bookmarkBtn.style.borderColor = "rgba(201,168,76,0.6)";
+      bookmarkBtn.style.color = "var(--color-dkc-gold)";
+    } else {
+      bookmarkBtn.style.borderColor = "";
+      bookmarkBtn.style.color = "";
+    }
+  }
+
+  // Patch navigateTo to also call updateBookmarkState
+  const _origNavigateTo = navigateTo;
+  // We can't reassign, so call it from renderVerses hook instead
+  // Use MutationObserver on readingContent
+  const mo = new MutationObserver(() => updateBookmarkState());
+  mo.observe(readingContent, { childList: true });
 
   // ===== Init =====
   async function init() {

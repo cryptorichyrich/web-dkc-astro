@@ -1,0 +1,128 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Kompendium Katekismus Gereja Katolik</h1>
+        <p class="text-dkc-muted text-sm">Ringkasan resmi KGK dalam format tanya-jawab oleh Paus Benediktus XVI</p>
+      </div>
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
+        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
+        <span>598 Pertanyaan</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="glass-card p-6 space-y-4 text-sm leading-relaxed mb-5">
+      <p class="text-dkc-text">
+        <strong class="text-dkc-gold">Kompendium Katekismus Gereja Katolik</strong> adalah ringkasan resmi dari Katekismus Gereja Katolik (KGK) yang disusun atas perintah Paus Yohanes Paulus II dan diterbitkan oleh Paus Benediktus XVI pada tahun 2005. Dokumen ini menyajikan inti iman Katolik dalam format tanya-jawab yang ringkas dan mudah dipahami.
+      </p>
+      <p class="text-dkc-muted">
+        Kompendium ini terdiri dari <strong class="text-dkc-text">598 pertanyaan dan jawaban</strong> yang mencakup seluruh pokok ajaran iman Katolik. Format dialog ini mengikuti tradisi katekesis klasik Gereja, di mana pengajaran disampaikan melalui percakapan antara katekis dan yang belajar. Dibandingkan KGK lengkap yang memiliki 2.865 paragraf, Kompendium memberikan ringkasan padat yang tetap setia pada substansi ajaran.
+      </p>
+    </div>
+
+    <!-- Structure Overview -->
+    <div class="glass-card p-6 mb-5">
+      <h2 class="text-dkc-gold font-bold text-lg mb-4">Struktur Kompendium</h2>
+      <p class="text-dkc-muted text-sm mb-4">Seperti KGK, Kompendium terbagi menjadi empat bagian utama:</p>
+
+      <div class="space-y-3">
+        <!-- Part 1 -->
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-dkc-gold/20 text-dkc-gold text-xs font-bold px-2 py-0.5 rounded-full">Bagian 1</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Pengakuan Iman</h3>
+          </div>
+          <p class="text-dkc-muted text-xs leading-relaxed">
+            Merangkum Syahadat Rasuli — iman akan Allah Bapa, Yesus Kristus, Roh Kudus, dan Gereja. Mencakup pertanyaan tentang penciptaan, penebusan, dan harapan kehidupan kekal.
+          </p>
+        </div>
+
+        <!-- Part 2 -->
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-dkc-gold/20 text-dkc-gold text-xs font-bold px-2 py-0.5 rounded-full">Bagian 2</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Perayaan Misteri Kristen</h3>
+          </div>
+          <p class="text-dkc-muted text-xs leading-relaxed">
+            Menjelaskan liturgi dan tujuh sakramen Gereja: Baptis, Krisma, Ekaristi, Tobat, Pengurapan Orang Sakit, Imamat, dan Perkawinan.
+          </p>
+        </div>
+
+        <!-- Part 3 -->
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-dkc-gold/20 text-dkc-gold text-xs font-bold px-2 py-0.5 rounded-full">Bagian 3</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Kehidupan dalam Kristus</h3>
+          </div>
+          <p class="text-dkc-muted text-xs leading-relaxed">
+            Membahas moralitas Kristen, Sepuluh Perintah Allah, hukum cinta kasih, martabat manusia, dan keutamaan-keutamaan.
+          </p>
+        </div>
+
+        <!-- Part 4 -->
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-dkc-gold/20 text-dkc-gold text-xs font-bold px-2 py-0.5 rounded-full">Bagian 4</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Doa Kristiani</h3>
+          </div>
+          <p class="text-dkc-muted text-xs leading-relaxed">
+            Membahas hakikat doa, tradisi doa Gereja, dan penjelasan terperinci tentang Doa Bapa Kami sebagai model doa seluruh umat Kristiani.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="glass-card p-5 mb-5 flex items-start gap-3">
+      <span class="text-2xl shrink-0">📄</span>
+      <div>
+        <p class="text-dkc-text text-sm font-medium mb-1">Dokumen PDF dari Vatikan</p>
+        <p class="text-dkc-muted text-xs leading-relaxed mb-3">
+          Dokumen ini tersedia dalam format PDF dari situs resmi Vatikan. Anda dapat mengakses teks lengkap Kompendium secara gratis langsung dari sumbernya.
+        </p>
+        <a
+          href="https://www.vatican.va/archive/compendium_ccc/documents/archive_2005_compendium-ccc_en.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-xs hover:bg-dkc-gold/90 transition-colors"
+        >
+          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Buka di Vatican.va
+        </a>
+      </div>
+    </div>
+
+    <!-- Link to KGK -->
+    <div class="glass-card p-5 flex items-center gap-4">
+      <span class="text-3xl shrink-0">📕</span>
+      <div class="flex-1">
+        <p class="text-dkc-text text-sm font-medium">Katekismus Gereja Katolik (Lengkap)</p>
+        <p class="text-dkc-muted text-xs">Baca KGK lengkap dengan 2.865 paragraf di platform kami</p>
+      </div>
+      <a
+        href="/katekismus"
+        class="shrink-0 flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors"
+      >
+        Buka KGK
+        <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Kompendium Katekismus Gereja Katolik — Damai Kasih Channel</title>
+  <meta name="description" content="Ringkasan resmi Katekismus Gereja Katolik dalam format tanya-jawab oleh Paus Benediktus XVI. 598 pertanyaan mencakup seluruh pokok iman Katolik." />
+</slot>

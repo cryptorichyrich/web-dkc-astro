@@ -2,5 +2,18 @@
 /blog/ /blog/1 301
 /blog /blog/1 301
 
-# Legacy Jekyll blog URLs (YYYY/MM/DD/slug → /blog/slug)
-# CF Pages handles /blog/slug/ as /blog/slug/index.html automatically
+# Legacy Jekyll URL redirects
+/kgk /katekismus 301
+/kgk/ /katekismus 301
+/kv2 /kvii 301
+/kv2/ /kvii 301
+/doa-rosario /rosario 301
+/doa-rosario/ /rosario 301
+/kalender /kalender-liturgi 301
+/kalender/ /kalender-liturgi 301
+/about-dkc /tentang 301
+/about-dkc/ /tentang 301
+/diagnosa-ajaran-bidat /diagnosa/ajaran-bidat 301
+/diagnosa-ajaran-bidat/ /diagnosa/ajaran-bidat 301
+/diagnosa-sedevacantisme /diagnosa/sedevacantisme 301
+/diagnosa-sedevacantisme/ /diagnosa/sedevacantisme 301

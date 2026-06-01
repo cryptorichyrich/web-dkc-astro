@@ -1,0 +1,639 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Biblia Sacra Vulgata</h1>
+        <p class="text-dkc-muted text-sm">Biblia Sacra iuxta Vulgatam Versionem — Nova Vulgata</p>
+      </div>
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
+        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
+        <span>Vulgata Latina</span>
+      </div>
+    </div>
+
+    <!-- Citation Quick Jump -->
+    <div class="glass-card p-3 mb-5 flex items-center gap-2">
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          id="citation-input"
+          type="text"
+          placeholder="Citation search (e.g. gen 1:1-3, john 3:16, ps 23)"
+          class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40 transition-colors"
+        />
+      </div>
+      <button id="citation-go" class="bg-dkc-gold text-black font-medium px-4 py-2.5 rounded-lg text-sm shrink-0 hover:bg-dkc-gold/90 transition-colors cursor-pointer">
+        Go
+      </button>
+    </div>
+
+    <!-- Book Selector -->
+    <div class="glass-card p-4 mb-5">
+      <div class="flex items-center gap-2 mb-4">
+        <label class="text-sm text-dkc-muted shrink-0">Liber:</label>
+        <select id="book-select" class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1 focus:outline-none focus:border-dkc-gold/40">
+          <option value="">Loading…</option>
+        </select>
+      </div>
+
+      <!-- Chapter Grid -->
+      <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Reading Area -->
+    <div class="glass-card p-5 md:p-6 mb-5">
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h2 id="reading-title" class="text-dkc-gold font-bold text-lg">—</h2>
+          <p id="reading-subtitle" class="text-dkc-muted text-xs mt-0.5"></p>
+        </div>
+        <div class="flex gap-2">
+          <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+            ← Prior
+          </button>
+          <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+            Posterus →
+          </button>
+        </div>
+      </div>
+
+      <!-- Action buttons row -->
+      <div class="flex gap-2 mb-4">
+        <button id="copy-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="copy-label">Copy Chapter</span>
+        </button>
+        <button id="share-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+
+      <!-- Loading state -->
+      <div id="reading-loading" class="text-center py-12 text-dkc-muted">
+        <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
+        <p class="text-sm">Onerans versicula…</p>
+      </div>
+
+      <!-- Verses -->
+      <div id="reading-content" class="space-y-2.5 text-[15px] leading-relaxed hidden font-serif">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="flex justify-center gap-3">
+      <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+        ← Caput Prius
+      </button>
+      <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+        Caput Posterius →
+      </button>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Biblia Sacra Vulgata — Damai Kasih Channel</title>
+  <meta name="description" content="Legere Bibliam Sacram Vulgatam. Nova Vulgata, Novum Testamentum et Vetus Testamentum Latine." />
+</slot>
+
+<style>
+  #reading-content sup {
+    color: rgba(201, 168, 76, 0.7);
+    font-weight: bold;
+    font-size: 0.7rem;
+    margin-right: 0.25rem;
+  }
+  #reading-content .verse-text { color: var(--color-dkc-text); }
+  #reading-content .verse-row {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.5rem;
+    transition: background-color 0.15s;
+  }
+  #reading-content .verse-row:hover { background: rgba(201, 168, 76, 0.05); }
+  #reading-content .verse-row.highlighted {
+    background: rgba(201, 168, 76, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.3);
+  }
+  .chapter-btn-active {
+    background: rgba(201, 168, 76, 0.2);
+    color: var(--color-dkc-gold);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    font-weight: 700;
+  }
+  .chapter-btn {
+    background: var(--color-dkc-surface);
+    border: 1px solid var(--color-dkc-border);
+    color: var(--color-dkc-muted);
+  }
+  .chapter-btn:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    color: rgba(201, 168, 76, 0.8);
+  }
+</style>
+
+<script>
+  // ===== Latin book name mapping (key = JSON key) =====
+  const BOOK_NAMES: Record<string, { la: string; en: string }> = {
+    genesis:    { la: "Genesis",           en: "Genesis" },
+    exodus:     { la: "Exodus",            en: "Exodus" },
+    leviticus:  { la: "Leviticus",         en: "Leviticus" },
+    numbers:    { la: "Numeri",            en: "Numbers" },
+    deuteronomy:{ la: "Deuteronomium",     en: "Deuteronomy" },
+    joshua:     { la: "Iosue",             en: "Joshua" },
+    judges:     { la: "Iudicum",           en: "Judges" },
+    ruth:       { la: "Ruth",              en: "Ruth" },
+    "1samuel":  { la: "1 Samuel",          en: "1 Samuel" },
+    "2samuel":  { la: "2 Samuel",          en: "2 Samuel" },
+    "1kings":   { la: "3 Regum",           en: "1 Kings" },
+    "2kings":   { la: "4 Regum",           en: "2 Kings" },
+    "1chronicles": { la: "1 Paralipomenon", en: "1 Chronicles" },
+    "2chronicles": { la: "2 Paralipomenon", en: "2 Chronicles" },
+    ezra:       { la: "Ezra",              en: "Ezra" },
+    nehemiah:   { la: "Nehemiae",          en: "Nehemiah" },
+    tobias:     { la: "Tobiae",            en: "Tobit" },
+    judith:     { la: "Iudith",            en: "Judith" },
+    esther:     { la: "Esther",            en: "Esther" },
+    job:        { la: "Iob",               en: "Job" },
+    psalms:     { la: "Psalmi",            en: "Psalms" },
+    proverbs:   { la: "Proverbia",         en: "Proverbs" },
+    ecclesiastes:{ la: "Ecclesiastes",     en: "Ecclesiastes" },
+    canticles:  { la: "Canticum Canticorum", en: "Song of Songs" },
+    wisdom:     { la: "Sapientia",         en: "Wisdom" },
+    sirach:     { la: "Siracides",         en: "Sirach" },
+    isaiah:     { la: "Isaias",            en: "Isaiah" },
+    jeremiah:   { la: "Ieremias",          en: "Jeremiah" },
+    lamentations:{ la: "Lamentationes",    en: "Lamentations" },
+    baruch:     { la: "Baruch",            en: "Baruch" },
+    ezekiel:    { la: "Ezechiel",          en: "Ezekiel" },
+    daniel:     { la: "Daniel",            en: "Daniel" },
+    hosea:      { la: "Osee",              en: "Hosea" },
+    joel:       { la: "Ioel",              en: "Joel" },
+    amos:       { la: "Amos",              en: "Amos" },
+    obadiah:    { la: "Abdias",            en: "Obadiah" },
+    jonah:      { la: "Ionas",             en: "Jonah" },
+    micah:      { la: "Michaea",           en: "Micah" },
+    nahum:      { la: "Nahum",             en: "Nahum" },
+    habakkuk:   { la: "Habacuc",           en: "Habakkuk" },
+    zephaniah:  { la: "Sophonias",         en: "Zephaniah" },
+    haggai:     { la: "Aggaeus",           en: "Haggai" },
+    zechariah:  { la: "Zacharias",         en: "Zechariah" },
+    malachi:    { la: "Malachias",         en: "Malachi" },
+    "1maccabees": { la: "1 Machabaeorum",  en: "1 Maccabees" },
+    "2maccabees": { la: "2 Machabaeorum",  en: "2 Maccabees" },
+    matthew:    { la: "Matthaeum",         en: "Matthew" },
+    mark:       { la: "Marcum",            en: "Mark" },
+    luke:       { la: "Lucam",             en: "Luke" },
+    john:       { la: "Ioannem",           en: "John" },
+    acts:       { la: "Actus Apostolorum", en: "Acts" },
+    romans:     { la: "Ad Romanos",        en: "Romans" },
+    "1corinthians": { la: "1 Ad Corinthios", en: "1 Corinthians" },
+    "2corinthians": { la: "2 Ad Corinthios", en: "2 Corinthians" },
+    galatians:  { la: "Ad Galatas",        en: "Galatians" },
+    ephesians:  { la: "Ad Ephesios",       en: "Ephesians" },
+    philippians:{ la: "Ad Philippenses",   en: "Philippians" },
+    colossians: { la: "Ad Colossenses",    en: "Colossians" },
+    "1thessalonians": { la: "1 Ad Thessalonicenses", en: "1 Thessalonians" },
+    "2thessalonians": { la: "2 Ad Thessalonicenses", en: "2 Thessalonians" },
+    "1timothy": { la: "1 Ad Timotheum",    en: "1 Timothy" },
+    "2timothy": { la: "2 Ad Timotheum",    en: "2 Timothy" },
+    titus:      { la: "Ad Titum",          en: "Titus" },
+    philemon:   { la: "Ad Philemonem",     en: "Philemon" },
+    hebrews:    { la: "Ad Hebraeos",       en: "Hebrews" },
+    james:      { la: "Iacobi",            en: "James" },
+    "1peter":   { la: "1 Petri",           en: "1 Peter" },
+    "2peter":   { la: "2 Petri",           en: "2 Peter" },
+    "1john":    { la: "1 Ioannis",         en: "1 John" },
+    "2john":    { la: "2 Ioannis",         en: "2 John" },
+    "3john":    { la: "3 Ioannis",         en: "3 John" },
+    jude:       { la: "Iudae",             en: "Jude" },
+    revelation: { la: "Apocalypsis",       en: "Revelation" },
+  };
+
+  // Canonical book order (matching JSON key order)
+  const BOOK_ORDER = [
+    "genesis","exodus","leviticus","numbers","deuteronomy",
+    "joshua","judges","ruth","1samuel","2samuel","1kings","2kings",
+    "1chronicles","2chronicles","ezra","nehemiah",
+    "tobias","judith","esther",
+    "job","psalms","proverbs","ecclesiastes","canticles",
+    "wisdom","sirach",
+    "isaiah","jeremiah","lamentations","baruch","ezekiel","daniel",
+    "hosea","joel","amos","obadiah","jonah","micah","nahum","habakkuk",
+    "zephaniah","haggai","zechariah","malachi",
+    "1maccabees","2maccabees",
+    "matthew","mark","luke","john","acts",
+    "romans","1corinthians","2corinthians","galatians","ephesians",
+    "philippians","colossians","1thessalonians","2thessalonians",
+    "1timothy","2timothy","titus","philemon","hebrews","james",
+    "1peter","2peter","1john","2john","3john","jude","revelation"
+  ];
+
+  // Alias map: common abbreviations → JSON keys
+  const BOOK_ALIASES: Record<string, string> = {
+    gen: "genesis", ex: "exodus", lev: "leviticus", num: "numbers", deut: "deuteronomy",
+    jos: "joshua", judg: "judges", ru: "ruth",
+    "1sam": "1samuel", "2sam": "2samuel", "1kin": "1kings", "2kin": "2kings",
+    "1chr": "1chronicles", "2chr": "2chronicles", ezr: "ezra", neh: "nehemiah",
+    tob: "tobias", jdt: "judith", est: "esther",
+    ps: "psalms", pss: "psalms", psalm: "psalms",
+    prov: "proverbs", eccl: "ecclesiastes", song: "canticles", cant: "canticles",
+    isa: "isaiah", jer: "jeremiah", lam: "lamentations", bar: "baruch",
+    ezek: "ezekiel", dan: "daniel",
+    hos: "hosea", joel: "joel", amos: "amos", obad: "obadiah", jon: "jonah",
+    mic: "micah", nah: "nahum", hab: "habakkuk", zeph: "zephaniah",
+    hag: "haggai", zech: "zechariah", mal: "malachi",
+    "1mac": "1maccabees", "2mac": "2maccabees",
+    matt: "matthew", mrk: "mark", luk: "luke", jhn: "john", joh: "john",
+    act: "acts", rom: "romans",
+    "1cor": "1corinthians", "2cor": "2corinthians", gal: "galatians", eph: "ephesians",
+    phil: "philippians", col: "colossians",
+    "1th": "1thessalonians", "2th": "2thessalonians",
+    "1tim": "1timothy", "2tim": "2timothy", tit: "titus", phm: "philemon",
+    heb: "hebrews", jas: "james",
+    "1pet": "1peter", "2pet": "2peter",
+    "1jn": "1john", "2jn": "2john", "3jn": "3john",
+    jude: "jude", rev: "revelation", apoc: "revelation",
+  };
+
+  // ===== State =====
+  let bibleData: any = null;
+  let currentBook = "genesis";
+  let currentChapter = 1;
+  let highlightVerses: number[] = [];
+
+  // ===== DOM refs =====
+  const bookSelect = document.getElementById("book-select") as HTMLSelectElement;
+  const chapterGrid = document.getElementById("chapter-grid")!;
+  const readingTitle = document.getElementById("reading-title")!;
+  const readingSubtitle = document.getElementById("reading-subtitle")!;
+  const readingLoading = document.getElementById("reading-loading")!;
+  const readingContent = document.getElementById("reading-content")!;
+  const citationInput = document.getElementById("citation-input") as HTMLInputElement;
+  const citationGo = document.getElementById("citation-go")!;
+  const copyBtn = document.getElementById("copy-btn")!;
+  const copyLabel = document.getElementById("copy-label")!;
+  const shareBtn = document.getElementById("share-btn")!;
+
+  // ===== Load Bible JSON =====
+  async function loadBible() {
+    if (bibleData) return;
+    readingLoading.classList.remove("hidden");
+    readingContent.classList.add("hidden");
+
+    const resp = await fetch("/assets/data/vulgate_bible.json");
+    if (!resp.ok) throw new Error("Failed to load Vulgate data");
+    bibleData = await resp.json();
+    populateBookSelect();
+  }
+
+  // ===== Populate book dropdown =====
+  function populateBookSelect() {
+    bookSelect.innerHTML = "";
+    const dataKeys = new Set(Object.keys(bibleData));
+
+    for (const key of BOOK_ORDER) {
+      if (!dataKeys.has(key)) continue;
+      const names = BOOK_NAMES[key];
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = names ? `${names.la} (${names.en})` : key;
+      bookSelect.appendChild(opt);
+    }
+
+    // Add any keys not in our order list
+    for (const key of Object.keys(bibleData)) {
+      if (BOOK_ORDER.includes(key)) continue;
+      const names = BOOK_NAMES[key];
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = names ? `${names.la} (${names.en})` : key;
+      bookSelect.appendChild(opt);
+    }
+
+    bookSelect.value = currentBook;
+  }
+
+  // ===== Render chapter grid =====
+  function renderChapterGrid() {
+    const book = bibleData[currentBook];
+    if (!book) return;
+    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
+
+    chapterGrid.innerHTML = "";
+    for (const ch of chapters) {
+      const btn = document.createElement("button");
+      btn.className = `w-full py-1.5 text-xs rounded-lg transition-colors cursor-pointer ${
+        ch === currentChapter ? "chapter-btn-active" : "chapter-btn"
+      }`;
+      btn.textContent = String(ch);
+      btn.addEventListener("click", () => navigateTo(currentBook, ch));
+      chapterGrid.appendChild(btn);
+    }
+  }
+
+  // ===== Render verses =====
+  function renderVerses() {
+    const book = bibleData[currentBook];
+    if (!book) return;
+    const chapterData = book[String(currentChapter)];
+    if (!chapterData) return;
+
+    const names = BOOK_NAMES[currentBook];
+    const displayName = names ? names.la : currentBook;
+    const totalChapters = Object.keys(book).length;
+    readingTitle.textContent = `${displayName} ${currentChapter}`;
+    readingSubtitle.textContent = `${totalChapters} capita — Biblia Sacra Vulgata`;
+
+    // Data format: array of { verse: "1", latin: "...", english: "..." }
+    let html = "";
+    if (Array.isArray(chapterData)) {
+      for (const entry of chapterData) {
+        const vs = parseInt(entry.verse);
+        const text = entry.latin || "";
+        const isHighlighted = highlightVerses.includes(vs);
+        html += `<div class="verse-row${isHighlighted ? " highlighted" : ""}" data-verse="${entry.verse}">
+          <sup>${entry.verse}</sup><span class="verse-text">${text}</span>
+        </div>`;
+      }
+    } else if (typeof chapterData === "object") {
+      // Fallback: { "1": "text", ... }
+      const verses = Object.keys(chapterData).map(Number).sort((a, b) => a - b);
+      for (const vs of verses) {
+        const text = typeof chapterData[String(vs)] === "string"
+          ? chapterData[String(vs)]
+          : (chapterData[String(vs)] as any).latin || "";
+        const isHighlighted = highlightVerses.includes(vs);
+        html += `<div class="verse-row${isHighlighted ? " highlighted" : ""}" data-verse="${vs}">
+          <sup>${vs}</sup><span class="verse-text">${text}</span>
+        </div>`;
+      }
+    }
+
+    readingContent.innerHTML = html;
+    readingLoading.classList.add("hidden");
+    readingContent.classList.remove("hidden");
+  }
+
+  // ===== Navigate =====
+  async function navigateTo(book: string, chapter: number, verses?: number[]) {
+    currentBook = book;
+    currentChapter = chapter;
+    highlightVerses = verses || [];
+
+    bookSelect.value = book;
+    renderChapterGrid();
+    renderVerses();
+
+    // Update URL hash: #book/chapter or #book/chapter:v1-v2
+    const hash = verses?.length
+      ? `${book}/${chapter}:${verses[0]}${verses.length > 1 ? "-" + verses[verses.length - 1] : ""}`
+      : `${book}/${chapter}`;
+    window.location.hash = hash;
+
+    // Scroll to reading area
+    readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ===== Parse citation =====
+  function parseCitation(input: string): { book: string; chapter: number; verses?: number[] } | null {
+    const normalized = input.trim().toLowerCase().replace(/\s+/g, " ");
+    // Patterns: "gen 1:1-3", "genesis 1", "ps 23:1", "john 3:16"
+    const match = normalized.match(/^([\d\w]+)\s*(\d+)\s*(?::\s*([\d,\-]+))?$/);
+    if (!match) return null;
+
+    const bookInput = match[1];
+    const chapter = parseInt(match[2]);
+    const verseStr = match[3];
+
+    // Resolve book key via aliases, direct match, or partial name match
+    let bookKey: string | null = BOOK_ALIASES[bookInput] || null;
+    if (!bookKey) {
+      for (const key of Object.keys(bibleData)) {
+        if (key === bookInput) { bookKey = key; break; }
+        const names = BOOK_NAMES[key];
+        if (names) {
+          const enLow = names.en.toLowerCase().replace(/[^a-z]/g, "");
+          const laLow = names.la.toLowerCase().replace(/[^a-z]/g, "");
+          const inp = bookInput.replace(/[^a-z]/g, "");
+          if (enLow.startsWith(inp) || laLow.startsWith(inp)) {
+            bookKey = key; break;
+          }
+        }
+      }
+    }
+    if (!bookKey || !bibleData[bookKey]) return null;
+
+    let verses: number[] | undefined;
+    if (verseStr) {
+      verses = [];
+      for (const part of verseStr.split(",")) {
+        if (part.includes("-")) {
+          const [a, b] = part.split("-").map(Number);
+          for (let i = a; i <= b; i++) verses.push(i);
+        } else {
+          verses.push(parseInt(part));
+        }
+      }
+    }
+
+    return { book: bookKey, chapter, verses };
+  }
+
+  // ===== Get adjacent chapter =====
+  function getAdjacentChapter(delta: number) {
+    const book = bibleData[currentBook];
+    if (!book) return null;
+    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
+    const idx = chapters.indexOf(currentChapter);
+    const newIdx = idx + delta;
+    if (newIdx >= 0 && newIdx < chapters.length) {
+      return { book: currentBook, chapter: chapters[newIdx] };
+    }
+    // Try adjacent book (use canonical order)
+    const allBooks = BOOK_ORDER.filter((k: string) => bibleData[k]);
+    const bookIdx = allBooks.indexOf(currentBook);
+    const nextBookIdx = bookIdx + delta;
+    if (nextBookIdx >= 0 && nextBookIdx < allBooks.length) {
+      const nextBook = allBooks[nextBookIdx];
+      const nextChapters = Object.keys(bibleData[nextBook]).map(Number).sort((a, b) => a - b);
+      return {
+        book: nextBook,
+        chapter: delta > 0 ? nextChapters[0] : nextChapters[nextChapters.length - 1]
+      };
+    }
+    return null;
+  }
+
+  // ===== Get chapter as plain text =====
+  function getChapterText(): string {
+    const book = bibleData[currentBook];
+    if (!book) return "";
+    const chapterData = book[String(currentChapter)];
+    if (!chapterData) return "";
+
+    const names = BOOK_NAMES[currentBook];
+    const displayName = names ? names.la : currentBook;
+    let text = `${displayName} ${currentChapter}\n\n`;
+
+    if (Array.isArray(chapterData)) {
+      for (const entry of chapterData) {
+        text += `${entry.verse}. ${entry.latin}\n`;
+      }
+    } else {
+      for (const vs of Object.keys(chapterData).sort((a, b) => parseInt(a) - parseInt(b))) {
+        const val = chapterData[vs];
+        const latin = typeof val === "string" ? val : val.latin || "";
+        text += `${vs}. ${latin}\n`;
+      }
+    }
+    return text.trim();
+  }
+
+  // ===== Copy chapter =====
+  function copyChapter() {
+    const text = getChapterText();
+    navigator.clipboard.writeText(text).then(() => {
+      copyLabel.textContent = "Copied!";
+      setTimeout(() => { copyLabel.textContent = "Copy Chapter"; }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      copyLabel.textContent = "Copied!";
+      setTimeout(() => { copyLabel.textContent = "Copy Chapter"; }, 2000);
+    });
+  }
+
+  // ===== Share =====
+  function shareChapter() {
+    const text = getChapterText();
+    const names = BOOK_NAMES[currentBook];
+    const displayName = names ? names.la : currentBook;
+    const title = `${displayName} ${currentChapter} — Biblia Sacra Vulgata`;
+    const url = window.location.href;
+
+    if (navigator.share) {
+      navigator.share({ title, text: text.slice(0, 500) + (text.length > 500 ? "…" : ""), url }).catch(() => {});
+    } else {
+      // Fallback: copy URL
+      navigator.clipboard.writeText(url).then(() => {
+        shareBtn.querySelector("span, svg + *")?.remove();
+        const sp = document.createElement("span");
+        sp.textContent = "Link copied!";
+        shareBtn.appendChild(sp);
+        setTimeout(() => {
+          sp.remove();
+          const orig = document.createElement("span");
+          orig.textContent = "Share";
+          shareBtn.appendChild(orig);
+        }, 2000);
+      }).catch(() => {});
+    }
+  }
+
+  // ===== Event listeners =====
+  bookSelect.addEventListener("change", () => {
+    navigateTo(bookSelect.value, 1);
+  });
+
+  citationGo.addEventListener("click", () => {
+    const result = parseCitation(citationInput.value);
+    if (result) navigateTo(result.book, result.chapter, result.verses);
+  });
+
+  citationInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") citationGo.click();
+  });
+
+  copyBtn.addEventListener("click", copyChapter);
+  shareBtn.addEventListener("click", shareChapter);
+
+  // Prev/Next buttons
+  document.getElementById("prev-ch")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(-1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("next-ch")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("prev-ch-bottom")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(-1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("next-ch-bottom")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+
+  // Keyboard nav
+  document.addEventListener("keydown", (e) => {
+    if (document.activeElement === citationInput || document.activeElement === bookSelect) return;
+    if (e.key === "ArrowLeft") document.getElementById("prev-ch")!.click();
+    if (e.key === "ArrowRight") document.getElementById("next-ch")!.click();
+  });
+
+  // ===== Init =====
+  async function init() {
+    const hash = window.location.hash.slice(1);
+    let initBook = "genesis";
+    let initChapter = 1;
+    let initVerses: number[] = [];
+
+    if (hash) {
+      // Hash format: #book/chapter or #book/chapter:v1-v2
+      const parsed = hash.match(/^([^/]+)\/(\d+)(?::(\d+(?:-\d+)?))?$/);
+      if (parsed) {
+        const bookInput = parsed[1];
+        const chapterNum = parseInt(parsed[2]);
+
+        // Resolve book from hash
+        const resolved = BOOK_ALIASES[bookInput] || bookInput;
+        initBook = resolved;
+        initChapter = chapterNum;
+
+        if (parsed[3]) {
+          if (parsed[3].includes("-")) {
+            const [a, b] = parsed[3].split("-").map(Number);
+            for (let i = a; i <= b; i++) initVerses.push(i);
+          } else {
+            initVerses.push(parseInt(parsed[3]));
+          }
+        }
+      }
+    }
+
+    await loadBible();
+
+    // Validate book/chapter exist
+    if (bibleData[initBook] && bibleData[initBook][String(initChapter)]) {
+      navigateTo(initBook, initChapter, initVerses);
+    } else {
+      navigateTo("genesis", 1);
+    }
+  }
+
+  init();
+</script>

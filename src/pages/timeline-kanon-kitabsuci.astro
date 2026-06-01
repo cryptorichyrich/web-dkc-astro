@@ -1,0 +1,218 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+const events = [
+  {
+    date: "~1400–400 SM",
+    title: "Penulisan Kitab Suci Ibrani (Perjanjian Lama)",
+    desc: "Musa dan para nabi menuliskan kitab-kitab Perjanjian Lama secara bertahap selama kurun waktu seribu tahun. Tradisi lisan dan tulisan disusun menjadi kitab-kitab yang menjadi fondasi iman Israel.",
+  },
+  {
+    date: "~250 SM",
+    title: "Septuaginta (LXX)",
+    desc: "Terjemahan Alkitab Ibrani ke bahasa Yunani di Aleksandria, Mesir. Meliputi kitab-kitab deuterokanonika (Tobit, Yudit, 1–2 Makabe, Kebijaksanaan, Sirakh, Barukh). Versi inilah yang banyak dikutip para Rasul dalam Perjanjian Baru.",
+  },
+  {
+    date: "~50–100 M",
+    title: "Penulisan Perjanjian Baru",
+    desc: "Para Rasul dan penulis terilhami menulis Injil, Kisah Para Rasul, surat-surat rasuli, dan Kitab Wahyu. Seluruh 27 kitab PB diselesaikan sebelum akhir abad pertama.",
+  },
+  {
+    date: "140 M",
+    title: "Marcion dan Kanon Terbatas",
+    desc: 'Marcion dari Sinope mengajarkan kanon terbatas: hanya Injil Lukas dan surat-surat Paulus (tanpa PL). Gereja menolak ajaran ini karena menyangkal kesinambungan Perjanjian Lama dan Baru.',
+  },
+  {
+    date: "367 M",
+    title: "Surat Paskah Athanasius",
+    desc: "Athanasius dari Aleksandria menerbitkan Surat Paskah (Festal Letter 39) yang memuat daftar pertama kanon 27 kitab Perjanjian Baru persis seperti yang kita kenal sekarang.",
+  },
+  {
+    date: "382 M",
+    title: "Konsili Roma",
+    desc: "Paus Damasus I mengukuhkan kanon lengkap Alkitab termasuk kitab-kitab deuterokanonika. Daftar ini menjadi patokan resmi Gereja Katolik.",
+  },
+  {
+    date: "393 M",
+    title: "Konsili Hippo",
+    desc: "Sinode para uskup di Hippo (Afrika Utara) mengukuhkan kanon 73 kitab: 46 PL (termasuk deuterokanonika) + 27 PB. Keputusan ini dikirim ke Roma untuk persetujuan.",
+  },
+  {
+    date: "397 M",
+    title: "Konsili Kartago III",
+    desc: "Menegaskan kembali kanon Hippo. Daftar kanon yang sama dikukuhkan oleh para uskup Afrika Utara dan diterima secara luas di seluruh Gereja.",
+  },
+  {
+    date: "405 M",
+    title: "Paus Innosensius I",
+    desc: "Paus Innosensius I secara resgi menyetujui dan mengesahkan daftar kanon definitif dalam suratnya kepada Exsuperius dari Toulouse, mengukuhkan 73 kitab.",
+  },
+  {
+    date: "1442 M",
+    title: "Konsili Florence",
+    desc: "Mengeluarkan dekrit kanon Kitab Suci untuk kesatuan dengan Gereja Koptik (Bulla Cantate Domino). Mengukuhkan kembali kanon yang sama dengan deuterokanonika.",
+  },
+  {
+    date: "1546 M",
+    title: "Konsili Trente",
+    desc: "Secara dogmatis dan definitif menetapkan kanon 73 kitab sebagai ajaran iman. Keputusan ini merupakan respons terhadap Reformasi Protestan yang menghapus kitab-kitab deuterokanonika.",
+  },
+];
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold text-dkc-gold mb-3">
+        Timeline Pembentukan Kanon Kitab Suci
+      </h1>
+      <p class="text-dkc-muted max-w-2xl mx-auto leading-relaxed">
+        Perjalanan panjang pembentukan kanon Alkitab Katolik — dari penulisan kitab pertama hingga penentuan dogmatis di Konsili Trente.
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative">
+      <!-- Vertical line (desktop: center, mobile: left) -->
+      <div
+        class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-dkc-gold/30 -translate-x-1/2"
+        aria-hidden="true"
+      ></div>
+
+      <div class="space-y-8 md:space-y-12">
+        {events.map((evt, i) => (
+          <div class="relative flex items-start md:justify-center">
+            <!-- Dot on the line -->
+            <div
+              class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-dkc-gold border-2 border-dkc-deep -translate-x-1/2 mt-6 z-10"
+              aria-hidden="true"
+            ></div>
+
+            <!-- Card: mobile always right of dot, desktop alternates -->
+            <div
+              class:list={[
+                "glass-card p-5 md:p-6 ml-10 md:ml-0 md:w-[calc(50%-2rem)]",
+                i % 2 === 0
+                  ? "md:mr-auto md:pr-8"
+                  : "md:ml-auto md:pl-8",
+              ]}
+            >
+              <!-- Date badge -->
+              <span class="inline-block bg-dkc-gold/20 text-dkc-gold text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                {evt.date}
+              </span>
+              <h3 class="text-lg font-semibold text-dkc-gold mb-2">{evt.title}</h3>
+              <p class="text-sm text-dkc-text/80 leading-relaxed">{evt.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Deuterokanonika section -->
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-dkc-gold mb-4 text-center">
+        Mengapa Deuterokanonika Penting?
+      </h2>
+      <p class="text-dkc-muted text-center max-w-2xl mx-auto mb-8 leading-relaxed">
+        Kitab-kitab deuterokanonika (Tobit, Yudit, 1 &amp; 2 Makabe, Kebijaksanaan, Sirakh, Barukh, serta tambahan Daniel dan Ester) telah menjadi bagian dari Alkitab Gereja sejak awal. Kitab-kitab ini digunakan oleh para Bapa Gereja, dikutip dalam Perjanjian Baru, dan dikukuhkan oleh berbagai konsili ekumenis.
+      </p>
+
+      <!-- Comparison cards -->
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <!-- Protestant -->
+        <div class="glass-card p-6 border-dkc-border">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">📖</span>
+            <div>
+              <h3 class="text-lg font-semibold text-dkc-text">Kanon Protestan</h3>
+              <span class="text-xs text-dkc-muted">66 Kitab</span>
+            </div>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between text-dkc-muted">
+              <span>Perjanjian Lama</span>
+              <span class="font-medium text-dkc-text">39 kitab</span>
+            </div>
+            <div class="flex justify-between text-dkc-muted">
+              <span>Perjanjian Baru</span>
+              <span class="font-medium text-dkc-text">27 kitab</span>
+            </div>
+            <div class="border-t border-dkc-border pt-2 mt-2">
+              <p class="text-dkc-muted text-xs leading-relaxed">
+                Mengikuti kanon Ibrani (Masoretik). Kitab deuterokanonika dihapus pada masa Reformasi abad ke-16.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catholic -->
+        <div class="glass-card p-6 border-dkc-gold/30">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">✝️</span>
+            <div>
+              <h3 class="text-lg font-semibold text-dkc-gold">Kanon Katolik</h3>
+              <span class="text-xs text-dkc-muted">73 Kitab</span>
+            </div>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between text-dkc-muted">
+              <span>Perjanjian Lama</span>
+              <span class="font-medium text-dkc-text">46 kitab</span>
+            </div>
+            <div class="flex justify-between text-dkc-muted">
+              <span>Perjanjian Baru</span>
+              <span class="font-medium text-dkc-text">27 kitab</span>
+            </div>
+            <div class="border-t border-dkc-border pt-2 mt-2">
+              <p class="text-dkc-muted text-xs leading-relaxed">
+                Termasuk 7 kitab deuterokanonika (+ tambahan dalam Daniel &amp; Ester). Dikukuhkan oleh Konsili Hippo (393), Kartago (397), dan Trente (1546).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key differences -->
+      <div class="glass-card p-6 mt-6 max-w-3xl mx-auto">
+        <h3 class="text-lg font-semibold text-dkc-gold mb-3">Kitab-Kitab Deuterokanonika</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            "Tobit",
+            "Yudit",
+            "1 Makabe",
+            "2 Makabe",
+            "Kebijaksanaan",
+            "Sirakh (Eklesiasticus)",
+            "Barukh + Surat Yeremia",
+            "Tambahan Ester",
+            "Tambahan Daniel",
+          ].map((book) => (
+            <div class="flex items-center gap-2 text-sm text-dkc-text/80">
+              <span class="w-1.5 h-1.5 rounded-full bg-dkc-gold shrink-0"></span>
+              <span>{book}</span>
+            </div>
+          ))}
+        </div>
+        <p class="text-dkc-muted text-xs mt-4 leading-relaxed">
+          Kitab-kitab ini ada dalam Septuaginta (LXX), dikutip oleh para Rasul dan Bapa Gereja, dan telah menjadi bagian tak terpisahkan dari Alkitab Kristiani selama 1.500+ tahun.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Timeline Kanon Kitab Suci — Damai Kasih Channel</title>
+  <meta
+    name="description"
+    content="Perjalanan pembentukan kanon Alkitab Katolik dari penulisan kitab pertama hingga Konsili Trente. Termasuk penjelasan deuterokanonika."
+  />
+</slot>

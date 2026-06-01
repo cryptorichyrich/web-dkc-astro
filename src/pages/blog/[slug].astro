@@ -14,11 +14,28 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+// --- Related articles: 3 posts sharing the most tags, excluding current ---
+const allPosts = await getCollection("blog");
+const currentTags = post.data.tags || [];
+const relatedPosts = allPosts
+  .filter(p => p.id !== post.id)
+  .map(p => ({
+    post: p,
+    overlap: (p.data.tags || []).filter((t: string) => currentTags.includes(t)).length,
+  }))
+  .sort((a, b) => b.overlap - a.overlap || b.post.data.publishedAt.getTime() - a.post.data.publishedAt.getTime())
+  .slice(0, 3)
+  .map(r => r.post);
+
+const pageUrl = new URL(`/blog/${post.id}`, Astro.site).href;
+const encodedUrl = encodeURIComponent(pageUrl);
+const encodedTitle = encodeURIComponent(post.data.title);
 ---
 
 <BaseLayout>
   <Navbar />
-  
+
   <article class="max-w-3xl mx-auto px-4 pt-8 pb-24">
     <!-- Header -->
     <header class="mb-8">
@@ -49,6 +66,51 @@ const { Content } = await render(post);
           ))}
         </div>
       )}
+
+      <!-- Share buttons -->
+      <div class="flex items-center gap-2 mt-5" id="share-buttons">
+        <span class="text-xs text-dkc-muted mr-1">Bagikan:</span>
+
+        <button
+          data-share="whatsapp"
+          aria-label="Bagikan ke WhatsApp"
+          class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-green-400 hover:border-green-400/30 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </button>
+
+        <button
+          data-share="telegram"
+          aria-label="Bagikan ke Telegram"
+          class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-blue-400 hover:border-blue-400/30 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </button>
+
+        <button
+          data-share="twitter"
+          aria-label="Bagikan ke X/Twitter"
+          class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-white hover:border-white/30 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </button>
+
+        <button
+          data-share="facebook"
+          aria-label="Bagikan ke Facebook"
+          class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-blue-500 hover:border-blue-500/30 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </button>
+
+        <button
+          data-share="copy"
+          aria-label="Salin tautan"
+          class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+        </button>
+      </div>
     </header>
 
     {(() => {
@@ -58,10 +120,70 @@ const { Content } = await render(post);
       ) : null;
     })()}
 
-    <!-- Article body -->
-    <div class="prose prose-invert prose-gold max-w-none">
-      <Content />
+    <!-- Mobile TOC (collapsible, above content) -->
+    <div class="lg:hidden mb-6" id="mobile-toc">
+      <button
+        id="mobile-toc-toggle"
+        class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border text-sm text-dkc-muted hover:border-dkc-gold/30 transition-colors"
+        aria-expanded="false"
+        aria-controls="mobile-toc-list"
+      >
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-dkc-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+          Daftar Isi
+        </span>
+        <svg id="mobile-toc-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <nav
+        id="mobile-toc-list"
+        class="hidden mt-2 px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border"
+        aria-label="Daftar Isi"
+      >
+        <ol id="mobile-toc-items" class="space-y-1.5 text-sm text-dkc-muted"></ol>
+      </nav>
     </div>
+
+    <!-- Content + Desktop TOC sidebar -->
+    <div class="flex gap-8 relative">
+      <!-- Article body -->
+      <div class="flex-1 min-w-0">
+        <div class="prose prose-invert prose-gold max-w-none" id="article-body">
+          <Content />
+        </div>
+      </div>
+
+      <!-- Desktop TOC (sticky sidebar, right) -->
+      <aside class="hidden lg:block w-56 shrink-0" aria-label="Daftar Isi">
+        <nav class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" id="desktop-toc">
+          <p class="text-xs font-semibold text-dkc-gold uppercase tracking-wide mb-3">Daftar Isi</p>
+          <ol id="desktop-toc-items" class="space-y-1.5 text-sm text-dkc-muted border-l border-dkc-border pl-3"></ol>
+        </nav>
+      </aside>
+    </div>
+
+    <!-- Related articles -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-16 pt-8 border-t border-dkc-border">
+        <h2 class="text-lg font-semibold text-dkc-gold mb-4">Artikel Terkait</h2>
+        <div class="grid gap-4 sm:grid-cols-3">
+          {relatedPosts.map(rp => (
+            <a href={`/blog/${rp.id}`} class="glass-card p-4 block transition-all hover:border-dkc-gold/30 group">
+              {(() => {
+                const thumb = rp.data.thumbnailImage || rp.data.coverImage || rp.data.heroImage;
+                return thumb ? (
+                  <img src={thumb} alt="" class="w-full h-28 object-cover rounded-lg mb-3" loading="lazy" onerror="this.style.display='none'" />
+                ) : null;
+              })()}
+              <span class="text-xs text-dkc-gold font-medium">{rp.data.category || 'Umum'}</span>
+              <h3 class="text-white font-medium mt-1 line-clamp-2 text-sm group-hover:text-dkc-gold transition-colors">{rp.data.title}</h3>
+              <span class="text-xs text-dkc-muted mt-2 block">
+                {rp.data.publishedAt.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
   </article>
 
   <Footer />
@@ -71,8 +193,8 @@ const { Content } = await render(post);
   <title>{post.data.title} — Damai Kasih Channel</title>
   <meta name="description" content={post.data.subtitle || post.data.title} />
   {post.data.tags.map(tag => <meta name="keywords" content={tag} />)}
-  <link rel="canonical" href={new URL(`/blog/${post.id}`, Astro.site).href} />
-  
+  <link rel="canonical" href={pageUrl} />
+
   <!-- JSON-LD for Article -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
@@ -84,3 +206,135 @@ const { Content } = await render(post);
     image: post.data.heroImage || post.data.coverImage,
   })} />
 </slot>
+
+<script>
+  // === TABLE OF CONTENTS ===
+  function buildTOC() {
+    const article = document.getElementById('article-body');
+    if (!article) return;
+
+    const headings = article.querySelectorAll('h2, h3');
+    if (headings.length === 0) return;
+
+    const desktopList = document.getElementById('desktop-toc-items');
+    const mobileList = document.getElementById('mobile-toc-items');
+    const desktopToc = document.getElementById('desktop-toc');
+
+    type HeadingItem = { id: string; text: string; level: number; el: Element };
+    const items: HeadingItem[] = [];
+
+    headings.forEach((heading, i) => {
+      const id = heading.id || `toc-heading-${i}`;
+      if (!heading.id) heading.id = id;
+      items.push({ id, text: heading.textContent || '', level: parseInt(heading.tagName[1]), el: heading });
+    });
+
+    const linkClass = (level: number) =>
+      level === 2
+        ? 'block py-0.5 hover:text-dkc-gold transition-colors'
+        : 'block py-0.5 pl-3 text-xs hover:text-dkc-gold transition-colors';
+
+    items.forEach(item => {
+      const a = document.createElement('a');
+      a.href = `#${item.id}`;
+      a.textContent = item.text;
+      a.className = linkClass(item.level);
+
+      if (desktopList) {
+        const li = document.createElement('li');
+        li.appendChild(a.cloneNode(true));
+        desktopList.appendChild(li);
+      }
+      if (mobileList) {
+        const li = document.createElement('li');
+        li.appendChild(a.cloneNode(true));
+        mobileList.appendChild(li);
+      }
+    });
+
+    if (items.length === 0 && desktopToc) {
+      desktopToc.style.display = 'none';
+    }
+
+    // Scroll spy: highlight active heading
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          document.querySelectorAll('#desktop-toc-items a, #mobile-toc-items a').forEach(link => {
+            const isActive = link.getAttribute('href') === `#${id}`;
+            link.classList.toggle('text-dkc-gold', isActive);
+            link.classList.toggle('font-medium', isActive);
+          });
+        });
+      },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+    );
+
+    items.forEach(item => observer.observe(item.el));
+  }
+
+  // === MOBILE TOC TOGGLE ===
+  function initMobileTOC() {
+    const toggle = document.getElementById('mobile-toc-toggle');
+    const list = document.getElementById('mobile-toc-list');
+    const chevron = document.getElementById('mobile-toc-chevron');
+    if (!toggle || !list || !chevron) return;
+
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      list.classList.toggle('hidden', expanded);
+      chevron.style.transform = expanded ? '' : 'rotate(180deg)';
+    });
+  }
+
+  // === SHARE BUTTONS ===
+  function initShareButtons() {
+    const container = document.getElementById('share-buttons');
+    if (!container) return;
+
+    const url = window.location.href;
+    const title = document.title;
+
+    const shareUrls: Record<string, string> = {
+      whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + url)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    };
+
+    container.querySelectorAll('button[data-share]').forEach(btn => {
+      const platform = btn.getAttribute('data-share');
+      if (!platform) return;
+
+      btn.addEventListener('click', () => {
+        if (platform === 'copy') {
+          navigator.clipboard.writeText(url).then(() => {
+            const original = btn.getAttribute('aria-label') || 'Salin tautan';
+            btn.setAttribute('aria-label', 'Tautan disalin!');
+            btn.classList.add('text-dkc-gold', 'border-dkc-gold/30');
+            setTimeout(() => {
+              btn.setAttribute('aria-label', original);
+              btn.classList.remove('text-dkc-gold', 'border-dkc-gold/30');
+            }, 2000);
+          });
+        } else if (navigator.share && /Mobi|Android/i.test(navigator.userAgent) && platform !== 'facebook') {
+          navigator.share({ url, title }).catch(() => {
+            if (shareUrls[platform]) window.open(shareUrls[platform], '_blank', 'noopener');
+          });
+        } else if (shareUrls[platform]) {
+          window.open(shareUrls[platform], '_blank', 'noopener');
+        }
+      });
+    });
+  }
+
+  // Initialize everything
+  document.addEventListener('DOMContentLoaded', () => {
+    buildTOC();
+    initMobileTOC();
+    initShareButtons();
+  });
+</script>

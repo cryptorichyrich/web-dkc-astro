@@ -1,0 +1,105 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Alkitab Terjemahan KEMENAG</h1>
+        <p class="text-dkc-muted text-sm">Terjemahan resmi Kementerian Agama Republik Indonesia</p>
+      </div>
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
+        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
+        <span>Terjemahan Resmi</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="glass-card p-6 space-y-4 text-sm leading-relaxed mb-5">
+      <p class="text-dkc-text">
+        <strong class="text-dkc-gold">Alkitab Terjemahan KEMENAG</strong> adalah terjemahan Alkitab resmi yang diterbitkan oleh Kementerian Agama Republik Indonesia. Terjemahan ini merupakan salah satu versi Alkitab berbahasa Indonesia yang paling banyak digunakan di Indonesia dan menjadi acuan utama bagi umat Kristiani di tanah air.
+      </p>
+      <p class="text-dkc-muted">
+        Terjemahan KEMENAG disusun oleh tim penerjemah yang terdiri dari para ahli bahasa dan teolog dari berbagai denominasi Kristen di Indonesia. Proses penerjemahannya mengutamakan ketepatan makna dari teks asli (Ibrani, Aram, dan Yunani) sekaligus memperhatikan keindahan dan keterbacaan dalam bahasa Indonesia.
+      </p>
+    </div>
+
+    <!-- History Info Card -->
+    <div class="glass-card p-5 mb-5 flex items-start gap-3">
+      <span class="text-2xl shrink-0">🏛️</span>
+      <div>
+        <p class="text-dkc-text text-sm font-medium mb-1">Sejarah Terjemahan</p>
+        <p class="text-dkc-muted text-xs leading-relaxed">
+          Terjemahan Alkitab oleh Kementerian Agama RI merupakan kelanjutan dari tradisi panjang penerjemahan Alkitab ke bahasa Indonesia yang dimulai sejak era kolonial. Lembaga Alkitab Indonesia (LAI) dan Kementerian Agama telah berkolaborasi dalam menghasilkan terjemahan yang akurat dan mudah dipahami. Versi KEMENAG ini dikenal luas dan menjadi referensi standar dalam liturgi dan pengajaran di berbagai gereja di Indonesia.
+        </p>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="glass-card p-6 mb-5">
+      <h2 class="text-dkc-gold font-bold text-lg mb-4">Keunggulan Terjemahan KEMENAG</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">✅</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Terjemahan Resmi</h3>
+          </div>
+          <p class="text-dkc-muted text-xs">Diterbitkan oleh lembaga pemerintah Indonesia sebagai terjemahan Alkitab yang sah dan resmi.</p>
+        </div>
+
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">🌍</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Bahasa Indonesia Baku</h3>
+          </div>
+          <p class="text-dkc-muted text-xs">Menggunakan bahasa Indonesia yang baik dan benar sesuai standar tata bahasa yang berlaku.</p>
+        </div>
+
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">📖</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Ekumenis</h3>
+          </div>
+          <p class="text-dkc-muted text-xs">Disusun secara kolaboratif melibatkan berbagai denominasi Kristen, sehingga dapat diterima lintas gereja.</p>
+        </div>
+
+        <div class="border border-dkc-border rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">🔍</span>
+            <h3 class="text-dkc-text font-semibold text-sm">Akurat & Setia</h3>
+          </div>
+          <p class="text-dkc-muted text-xs">Berpegang pada prinsip penerjemahan yang setia pada teks asli Ibrani, Aram, dan Yunani.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link to Kitab Suci Reader -->
+    <div class="glass-card p-5 flex items-center gap-4">
+      <span class="text-3xl shrink-0">📜</span>
+      <div class="flex-1">
+        <p class="text-dkc-text text-sm font-medium">Baca Alkitab KEMENAG</p>
+        <p class="text-dkc-muted text-xs">Pembaca Kitab Suci kami menyertakan terjemahan KEMENAG beserta versi lainnya</p>
+      </div>
+      <a
+        href="/kitabsuci"
+        class="shrink-0 flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors"
+      >
+        Buka Kitab Suci
+        <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Alkitab Terjemahan KEMENAG — Damai Kasih Channel</title>
+  <meta name="description" content="Terjemahan Alkitab resmi Kementerian Agama Republik Indonesia. Baca Alkitab terjemahan KEMENAG secara online di Damai Kasih Channel." />
+</slot>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <span class="text-4xl">🙏</span>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Doa Tobat</h1>
+      <p class="text-dkc-muted text-sm mt-1">Act of Contrition — Puji Syukur No. 25</p>
+    </div>
+
+    <!-- Prayer Card -->
+    <div class="glass-card p-6 md:p-8 mb-6">
+      <div class="space-y-5 text-dkc-text leading-relaxed text-base">
+        <p>
+          Allah yang maharahim, aku menyesal atas dosa-dosaku.
+          Aku sungguh patut Engkau hukum, terutama karena aku telah tidak setia
+          kepada Engkau yang maha pengasih dan mahabaik bagiku.
+        </p>
+
+        <p>
+          Aku benci akan segala dosaku, dan berjanji dengan pertolongan rahmat-Mu
+          hendak memperbaiki hidupku dan tidak akan berbuat dosa lagi.
+          Allah yang maha-murah, ampunilah aku, orang berdosa.
+        </p>
+
+        <p class="text-center text-dkc-gold font-semibold mt-6">
+          Amin.
+        </p>
+      </div>
+    </div>
+
+    <!-- About Card -->
+    <div class="glass-card p-5 md:p-6 mb-6">
+      <h2 class="text-sm font-semibold text-dkc-gold uppercase tracking-wider mb-3">
+        📖 Tentang Doa Tobat
+      </h2>
+      <p class="text-dkc-muted text-sm leading-relaxed">
+        Doa Tobat adalah doa penyesalan yang mengungkapkan rasa sesal atas dosa-dosa
+        yang telah diperbuat. Doa ini merupakan bagian penting dari Sakramen Tobat
+        dan dapat dipanjatkan kapan saja sebagai ungkapan pertobatan.
+      </p>
+      <p class="text-dkc-muted text-xs mt-3 italic">
+        Sumber: Puji Syukur No. 25
+      </p>
+    </div>
+
+    <!-- Share Button -->
+    <div class="text-center">
+      <button
+        id="btn-share"
+        class="px-5 py-2.5 rounded-full border border-dkc-border text-dkc-muted text-sm transition-all active:scale-95 hover:border-dkc-gold/40 hover:text-dkc-gold"
+      >
+        📤 Bagikan Doa
+      </button>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<title>Doa Tobat — Damai Kasih Channel</title>
+<meta name="description" content="Doa Tobat Katolik untuk memohon ampun atas dosa dan mempersiapkan hati dalam pertobatan serta Sakramen Pengakuan Dosa." />
+
+<script>
+  const btnShare = document.getElementById("btn-share");
+  btnShare?.addEventListener("click", () => {
+    const text = `🙏 Doa Tobat\n\nAllah yang maharahim, aku menyesal atas dosa-dosaku. Aku sungguh patut Engkau hukum, terutama karena aku telah tidak setia kepada Engkau yang maha pengasih dan mahabaik bagiku.\n\nAku benci akan segala dosaku, dan berjanji dengan pertolongan rahmat-Mu hendak memperbaiki hidupku dan tidak akan berbuat dosa lagi. Allah yang maha-murah, ampunilah aku, orang berdosa. Amin.\n\n#DoaTobat #DamaiKasihChannel`;
+
+    if (navigator.share) {
+      navigator.share({ title: "Doa Tobat", text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btnShare.textContent;
+        btnShare.textContent = "✅ Tersalin!";
+        setTimeout(() => { btnShare.textContent = orig; }, 1500);
+      }).catch(() => {});
+    }
+  });
+</script>

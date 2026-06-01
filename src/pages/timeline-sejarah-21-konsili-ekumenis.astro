@@ -1,0 +1,233 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+const councils = [
+  {
+    num: 1,
+    name: "Nicaea I",
+    year: "325",
+    decision:
+      "Tritunggal, Kredo Nicea, menetapkan hari Paskah",
+  },
+  {
+    num: 2,
+    name: "Constantinople I",
+    year: "381",
+    decision:
+      "Ketuhanan Roh Kudus, Kredo Nicea-Constantinople",
+  },
+  {
+    num: 3,
+    name: "Ephesus",
+    year: "431",
+    decision:
+      "Maria sebagai Theotokos (Bunda Allah), menolak Nestorianisme",
+  },
+  {
+    num: 4,
+    name: "Chalcedon",
+    year: "451",
+    decision:
+      "Dua kodrat Kristus (ilahi dan manusiawi), menolak Monofisitisme",
+  },
+  {
+    num: 5,
+    name: "Constantinople II",
+    year: "553",
+    decision: "Mengutuk Tiga Babatan (Three Chapters)",
+  },
+  {
+    num: 6,
+    name: "Constantinople III",
+    year: "680–681",
+    decision:
+      "Dua kehendak Kristus (ilahi dan manusiawi)",
+  },
+  {
+    num: 7,
+    name: "Nicaea II",
+    year: "787",
+    decision:
+      "Penghormatan ikon valid, menolak Ikonoklasme",
+  },
+  {
+    num: 8,
+    name: "Constantinople IV",
+    year: "869–870",
+    decision: "Mengutuk Photius, menegaskan Filioque",
+  },
+  {
+    num: 9,
+    name: "Lateran I",
+    year: "1123",
+    decision: "Akhir Kontroversi Investiture",
+  },
+  {
+    num: 10,
+    name: "Lateran II",
+    year: "1139",
+    decision: "Reformasi disiplin klerus",
+  },
+  {
+    num: 11,
+    name: "Lateran III",
+    year: "1179",
+    decision:
+      "Pemilihan Paus Alexander III, menolak antipaus",
+  },
+  {
+    num: 12,
+    name: "Lateran IV",
+    year: "1215",
+    decision:
+      "Transubstansiasi, Inquisisi, persiapan perang salib",
+  },
+  {
+    num: 13,
+    name: "Lyon I",
+    year: "1245",
+    decision: "Mengexkomunikasi Frederick II",
+  },
+  {
+    num: 14,
+    name: "Lyon II",
+    year: "1274",
+    decision:
+      "Penyatuan dengan Gereja Timur, menegaskan Filioque",
+  },
+  {
+    num: 15,
+    name: "Vienne",
+    year: "1311–1312",
+    decision: "Pembubaran Ordo Templar",
+  },
+  {
+    num: 16,
+    name: "Constance",
+    year: "1414–1418",
+    decision:
+      "Mengakhiri Skisma Barat, dekret Haec Sancta",
+  },
+  {
+    num: 17,
+    name: "Florence",
+    year: "1431–1449",
+    decision:
+      "Persatuan sementara dengan Gereja Ortodoks",
+  },
+  {
+    num: 18,
+    name: "Lateran V",
+    year: "1512–1517",
+    decision:
+      "Upaya reformasi terakhir sebelum Reformasi Protestan",
+  },
+  {
+    num: 19,
+    name: "Trent",
+    year: "1545–1563",
+    decision:
+      "Kontra-Reformasi, menetapkan kanon, justifikasi, misa",
+  },
+  {
+    num: 20,
+    name: "Vatican I",
+    year: "1869–1870",
+    decision:
+      "Paus Infalibilitas, Pastor Aeternus",
+  },
+  {
+    num: 21,
+    name: "Vatican II",
+    year: "1962–1965",
+    decision:
+      "Modernisasi, Sacrosanctum Concilium, Lumen Gentium, Gaudium et Spes",
+  },
+];
+---
+
+<BaseLayout title="Timeline 21 Konsili Ekumenis | DKC" description="Sejarah 21 Konsili Ekumenis Gereja Katolik dalam timeline interaktif.">
+  <Navbar />
+
+  <main class="min-h-screen max-w-5xl mx-auto px-4 pt-24 pb-16">
+    <!-- Header -->
+    <header class="text-center mb-16">
+      <p class="text-dkc-gold/70 text-sm uppercase tracking-widest mb-3 font-medium">
+        Sejarah Gereja
+      </p>
+      <h1 class="text-3xl md:text-4xl font-bold text-dkc-gold leading-tight mb-4">
+        21 Konsili Ekumenis
+      </h1>
+      <p class="text-dkc-muted max-w-2xl mx-auto leading-relaxed text-base">
+        Perjalanan Gereja Katolik melalui 21 konsili ekumenis — dari Nicaea I
+        (325) hingga Vatikan II (1965) — yang membentuk iman, dogma, dan
+        kehidupan Gereja sepanjang sejarah.
+      </p>
+    </header>
+
+    <!-- Timeline -->
+    <div class="relative">
+      <!-- Vertical center line -->
+      <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-dkc-border md:-translate-x-px"></div>
+
+      {councils.map((c, i) => {
+        const isRight = i % 2 === 0; // even index → right side on desktop
+
+        return (
+          <div
+            class:list={[
+              "relative flex items-start mb-10 last:mb-0",
+              "md:items-center",
+              isRight
+                ? "md:flex-row"
+                : "md:flex-row-reverse",
+            ]}
+          >
+            {/* -------- spacer (desktop only) -------- */}
+            <div class="hidden md:block md:w-1/2" />
+
+            {/* -------- node on the line -------- */}
+            <div class="absolute left-4 md:left-1/2 -translate-x-1/2 z-10">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-dkc-gold/20 border-2 border-dkc-gold text-dkc-gold text-xs font-bold">
+                {c.num}
+              </span>
+            </div>
+
+            {/* -------- card -------- */}
+            <div
+              class:list={[
+                "glass-card p-5 md:p-6 w-[calc(100%-3rem)] ml-10",
+                "md:w-1/2 md:ml-0",
+                isRight
+                  ? "md:mr-auto md:pr-10"
+                  : "md:ml-auto md:pl-10",
+              ]}
+            >
+              {/* Badge (mobile & desktop) */}
+              <div class="flex items-center gap-3 mb-2">
+                <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-dkc-gold/20 text-dkc-gold text-xs font-bold shrink-0">
+                  {c.num}
+                </span>
+                <h3 class="text-lg font-semibold text-dkc-gold leading-snug m-0">
+                  {c.name}
+                </h3>
+              </div>
+
+              <p class="text-dkc-muted text-sm font-medium mb-2">
+                {c.year}
+              </p>
+
+              <p class="text-dkc-text text-sm leading-relaxed">
+                {c.decision}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

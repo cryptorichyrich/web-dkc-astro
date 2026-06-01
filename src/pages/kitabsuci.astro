@@ -7,143 +7,125 @@ import Footer from "@/components/Footer.astro";
 <BaseLayout>
   <Navbar />
 
+  <!-- Progress Bar -->
+  <div id="reading-progress" class="fixed top-0 left-0 h-0.5 bg-dkc-gold/60 z-[60] transition-all duration-150" style="width:0%"></div>
+
   <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Kitab Suci</h1>
-        <p class="text-dkc-muted text-sm">Alkitab Katolik Indonesia — lengkap dengan Deuterokanonika</p>
-      </div>
-      <div id="version-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
-        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
-        <span id="version-label">Memuat...</span>
-      </div>
+    <div class="text-center mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Kitab Suci</h1>
+      <p class="text-dkc-muted text-sm">Alkitab Katolik Indonesia — lengkap dengan Deuterokanonika</p>
     </div>
 
     <!-- Citation Quick Jump -->
     <div class="glass-card p-3 mb-5 flex items-center gap-2">
       <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input
-          id="citation-input"
-          type="text"
-          placeholder="Langsung ke ayat (cth: yoh 3:16, mzm 23, kej 1)"
-          class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40 transition-colors"
-        />
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="citation-input" type="text" placeholder="Langsung ke ayat (cth: yoh 3:16, mzm 23)" class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40" />
       </div>
-      <button id="citation-go" class="bg-dkc-gold text-black font-medium px-4 py-2.5 rounded-lg text-sm shrink-0 hover:bg-dkc-gold/90 transition-colors">
-        Buka
-      </button>
+      <button id="citation-go" class="bg-dkc-gold text-black font-medium px-4 py-2.5 rounded-lg text-sm shrink-0 hover:bg-dkc-gold/90">Buka</button>
     </div>
 
-    <!-- Version Tabs -->
-    <div id="version-tabs" class="flex gap-2 mb-5 overflow-x-auto pb-1">
-      <button data-version="ks" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
-        KS (TB1)
-      </button>
-      <button data-version="ks_2" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
-        KS (TB2)
-      </button>
-      <button data-version="vulgate" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
-        Vulgata
-      </button>
-    </div>
-
-    <!-- Book Selector -->
-    <div class="glass-card p-4 mb-5">
-      <div class="flex items-center gap-2 mb-4">
-        <label class="text-sm text-dkc-muted shrink-0">Kitab:</label>
-        <select id="book-select" class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1 focus:outline-none focus:border-dkc-gold/40">
-          <option value="">Memuat...</option>
-        </select>
-      </div>
-
-      <!-- Chapter Grid -->
-      <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1">
-        <!-- Filled by JS -->
+    <!-- Step 1: Testament Selection -->
+    <div id="step-testament" class="glass-card p-5 mb-5">
+      <h2 class="text-dkc-gold font-bold text-sm mb-4 uppercase tracking-wider">Pilih Perjanjian</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <button data-testament="pl" class="testament-btn group relative overflow-hidden rounded-xl border-2 border-amber-700/30 bg-gradient-to-br from-amber-900/20 to-amber-800/10 p-5 text-center transition-all hover:border-amber-600/50 hover:from-amber-900/30">
+          <div class="text-3xl mb-2">📖</div>
+          <div class="text-dkc-gold font-bold text-sm">PERJANJIAN LAMA</div>
+          <div class="text-dkc-muted text-[11px] mt-1">46 Kitab</div>
+        </button>
+        <button data-testament="pb" class="testament-btn group relative overflow-hidden rounded-xl border-2 border-red-700/30 bg-gradient-to-br from-red-900/20 to-red-800/10 p-5 text-center transition-all hover:border-red-600/50 hover:from-red-900/30">
+          <div class="text-3xl mb-2">✝️</div>
+          <div class="text-dkc-gold font-bold text-sm">PERJANJIAN BARU</div>
+          <div class="text-dkc-muted text-[11px] mt-1">27 Kitab</div>
+        </button>
       </div>
     </div>
 
-    <!-- Testament Tabs (PL/PB) -->
-    <div class="flex gap-2 mb-3">
-      <button data-testament="all" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Semua</button>
-      <button data-testament="pl" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Perjanjian Lama</button>
-      <button data-testament="pb" class="testament-tab px-4 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">Perjanjian Baru</button>
+    <!-- Step 2: Book Selection -->
+    <div id="step-books" class="glass-card p-5 mb-5 hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="testament-title" class="text-dkc-gold font-bold text-sm uppercase tracking-wider">—</h2>
+        <button id="back-testament" class="text-dkc-muted text-xs border border-dkc-border rounded-lg px-3 py-1 hover:text-dkc-gold hover:border-dkc-gold/30">← Kembali</button>
+      </div>
+      <div id="book-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
     </div>
 
-    <!-- Progress Bar -->
-    <div id="reading-progress" class="fixed top-0 left-0 h-0.5 bg-dkc-gold/60 z-[60] transition-all duration-150" style="width:0%"></div>
+    <!-- Step 3: Chapter Selection -->
+    <div id="step-chapters" class="glass-card p-5 mb-5 hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="book-title" class="text-dkc-gold font-bold text-sm uppercase tracking-wider">—</h2>
+        <button id="back-books" class="text-dkc-muted text-xs border border-dkc-border rounded-lg px-3 py-1 hover:text-dkc-gold hover:border-dkc-gold/30">← Kembali</button>
+      </div>
+      <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5"></div>
+    </div>
+
+    <!-- Step 4: Verse Selection -->
+    <div id="step-verses" class="glass-card p-5 mb-5 hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="verse-title" class="text-dkc-gold font-bold text-sm uppercase tracking-wider">—</h2>
+        <button id="back-chapters" class="text-dkc-muted text-xs border border-dkc-border rounded-lg px-3 py-1 hover:text-dkc-gold hover:border-dkc-gold/30">← Kembali</button>
+      </div>
+      <div id="verse-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1.5"></div>
+    </div>
 
     <!-- Reading Area -->
-    <div class="glass-card p-5 md:p-6 mb-5">
+    <div id="reading-area" class="glass-card p-5 md:p-6 mb-5 hidden">
+      <!-- Action Bar -->
+      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dkc-border/40 flex-wrap">
+        <button id="tts-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          <span>Bacakan</span>
+        </button>
+        <button id="tts-stop-btn" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/40 text-red-400 text-xs hover:bg-red-500/10">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <span>Berhenti</span>
+        </button>
+        <span id="tts-timer" class="hidden text-dkc-muted text-[11px] tabular-nums">00:00</span>
+        <button id="bookmark-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <span>Tandai</span>
+        </button>
+        <div class="flex items-center gap-1 ml-auto">
+          <span class="text-dkc-muted text-[10px]">Aa</span>
+          <button data-fsize="sm" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-[10px] hover:text-dkc-gold">A</button>
+          <button data-fsize="md" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-xs hover:text-dkc-gold">A</button>
+          <button data-fsize="lg" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-sm hover:text-dkc-gold">A</button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="share-wa" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-green-400 hover:border-green-400/40" title="WhatsApp"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></button>
+          <button id="share-tg" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-blue-400 hover:border-blue-400/40" title="Telegram"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></button>
+          <button id="share-copy" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/40" title="Salin"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Reading Header -->
       <div class="flex justify-between items-center mb-5">
         <div>
           <h2 id="reading-title" class="text-dkc-gold font-bold text-lg">—</h2>
           <p id="reading-subtitle" class="text-dkc-muted text-xs mt-0.5"></p>
         </div>
         <div class="flex gap-2">
-          <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-            ← Sebelumnya
-          </button>
-          <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-            Selanjutnya →
-          </button>
+          <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold">←</button>
+          <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold">→</button>
         </div>
       </div>
 
-      <!-- Action Bar: TTS + Share + Bookmark + Font -->
-      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dkc-border/40 flex-wrap">
-        <button id="tts-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors" title="Bacakan ayat">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-          <span>Bacakan</span>
-        </button>
-        <button id="tts-stop-btn" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/40 text-red-400 text-xs hover:bg-red-500/10 transition-colors" title="Berhenti">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-          <span>Berhenti</span>
-        </button>
-        <button id="bookmark-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors" title="Tandai ayat">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          <span>Tandai</span>
-        </button>
-        <div class="flex items-center gap-1 ml-auto">
-          <span class="text-dkc-muted text-[10px] mr-1">Aa</span>
-          <button data-fsize="sm" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-[10px] hover:text-dkc-gold transition-colors">A</button>
-          <button data-fsize="md" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-xs hover:text-dkc-gold transition-colors">A</button>
-          <button data-fsize="lg" class="font-size-btn px-2 py-1 rounded border border-dkc-border text-dkc-muted text-sm hover:text-dkc-gold transition-colors">A</button>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <button id="share-wa" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-green-400 hover:border-green-400/40 transition-colors" title="WhatsApp">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.546 4.09 1.504 5.818L.052 23.52l5.856-1.535A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.82c-1.98 0-3.832-.567-5.408-1.548l-.388-.23-4.028 1.056 1.074-3.926-.254-.404A9.79 9.79 0 012.18 12c0-5.422 4.398-9.82 9.82-9.82 5.422 0 9.82 4.398 9.82 9.82 0 5.422-4.398 9.82-9.82 9.82z"/></svg>
-          </button>
-          <button id="share-tg" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-blue-400 hover:border-blue-400/40 transition-colors" title="Telegram">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          </button>
-          <button id="share-copy" class="w-7 h-7 rounded-full border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/40 transition-colors" title="Salin tautan">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Loading state -->
-      <div id="reading-loading" class="text-center py-12 text-dkc-muted">
+      <!-- Loading -->
+      <div id="reading-loading" class="text-center py-12 text-dkc-muted hidden">
         <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
         <p class="text-sm">Memuat ayat...</p>
       </div>
 
       <!-- Verses -->
-      <div id="reading-content" class="space-y-2.5 text-[15px] leading-relaxed hidden">
-        <!-- Filled by JS -->
-      </div>
+      <div id="reading-content" class="space-y-2 leading-relaxed"></div>
     </div>
 
     <!-- Bottom Nav -->
-    <div class="flex justify-center gap-3">
-      <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-        ← Bab Sebelumnya
-      </button>
-      <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-        Bab Selanjutnya →
-      </button>
+    <div id="bottom-nav" class="flex justify-center gap-3 hidden">
+      <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold">← Bab Sebelumnya</button>
+      <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold">Bab Selanjutnya →</button>
     </div>
   </main>
 
@@ -156,516 +138,359 @@ import Footer from "@/components/Footer.astro";
 </slot>
 
 <style>
-  #reading-content sup {
-    color: rgba(201, 168, 76, 0.7);
-    font-weight: bold;
-    font-size: 0.7rem;
-    margin-right: 0.25rem;
-  }
-  #reading-content .verse-text { color: var(--color-dkc-text); }
-  #reading-content .verse-row {
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    margin: 0 -0.5rem;
-    transition: background-color 0.15s;
-  }
-  #reading-content .verse-row:hover { background: rgba(201, 168, 76, 0.05); }
-  #reading-content .verse-row.highlighted {
-    background: rgba(201, 168, 76, 0.1);
-    box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.3);
-  }
-  .chapter-btn-active {
-    background: rgba(201, 168, 76, 0.2);
-    color: var(--color-dkc-gold);
-    border: 1px solid rgba(201, 168, 76, 0.4);
-    font-weight: 700;
-  }
-  .chapter-btn {
-    background: var(--color-dkc-surface);
-    border: 1px solid var(--color-dkc-border);
-    color: var(--color-dkc-muted);
-  }
-  .chapter-btn:hover {
-    border-color: rgba(201, 168, 76, 0.3);
-    color: rgba(201, 168, 76, 0.8);
-  }
-  .version-tab-active {
-    background: rgba(201, 168, 76, 0.15);
-    color: var(--color-dkc-gold);
-    border-color: rgba(201, 168, 76, 0.4);
-  }
+  #reading-content sup { color: rgba(201,168,76,0.7); font-weight: bold; font-size: 0.7rem; margin-right: 0.25rem; }
+  #reading-content .verse-row { border-radius: 0.5rem; padding: 0.25rem 0.5rem; margin: 0 -0.5rem; transition: background-color 0.15s; cursor: pointer; }
+  #reading-content .verse-row:hover { background: rgba(201,168,76,0.05); }
+  #reading-content .verse-row.highlighted { background: rgba(201,168,76,0.1); box-shadow: inset 0 0 0 1px rgba(201,168,76,0.3); }
+  #reading-content .verse-row.flash { background: rgba(201,168,76,0.25); box-shadow: inset 0 0 0 2px rgba(201,168,76,0.6); }
+  .sel-btn { background: var(--color-dkc-surface); border: 1px solid var(--color-dkc-border); color: var(--color-dkc-muted); border-radius: 0.5rem; padding: 0.4rem 0; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .sel-btn:hover { border-color: rgba(201,168,76,0.3); color: var(--color-dkc-gold); }
+  .sel-btn.active { background: rgba(201,168,76,0.15); color: var(--color-dkc-gold); border-color: rgba(201,168,76,0.4); font-weight: 700; }
+  .book-btn-pl { border-color: rgba(180,130,50,0.25); }
+  .book-btn-pl:hover, .book-btn-pl.active { border-color: rgba(180,130,50,0.6); background: rgba(180,130,50,0.1); }
+  .book-btn-pb { border-color: rgba(200,60,60,0.25); }
+  .book-btn-pb:hover, .book-btn-pb.active { border-color: rgba(200,60,60,0.6); background: rgba(200,60,60,0.1); }
+  .testament-btn-active { transform: scale(0.97); }
+  .font-size-active { border-color: rgba(201,168,76,0.5) !important; color: var(--color-dkc-gold) !important; }
 </style>
 
 <script>
-  // ===== Book name mapping =====
   const BOOK_NAMES: Record<string, string> = {
-    kej: "Kejadian", kel: "Keluaran", im: "Imamat", bil: "Bilangan", ul: "Ulangan",
-    yos: "Yosua", hak: "Hakim-Hakim", rut: "Rut",
-    "1sam": "1 Samuel", "2sam": "2 Samuel", "1raj": "1 Raja-Raja", "2raj": "2 Raja-Raja",
-    "1taw": "1 Tawarikh", "2taw": "2 Tawarikh", ezr: "Ezra", neh: "Nehemia",
-    tob: "Tobit", ydt: "Yudit", est: "Ester",
-    ayb: "Ayub", mzm: "Mazmur", ams: "Amsal", pkh: "Pengkhotbah", kid: "Kidung Agung",
-    keb: "Kebijaksanaan", sir: "Sirakh",
-    yes: "Yesaya", yer: "Yeremia", rat: "Ratapan", bar: "Barukh", yeh: "Yehezkiel",
-    dan: "Daniel", hos: "Hosea", yl: "Yoel", am: "Amos", ob: "Obaja", yun: "Yunus",
-    mi: "Mikha", nah: "Nahum", hab: "Habakuk", zef: "Zefanya", hag: "Hagai",
-    za: "Zakharia", mal: "Maleakhi",
-    "1mak": "1 Makabe", "2mak": "2 Makabe",
-    mat: "Matius", mrk: "Markus", luk: "Lukas", yoh: "Yohanes",
-    kis: "Kisah Para Rasul",
-    rm: "Roma", "1kor": "1 Korintus", "2kor": "2 Korintus", gal: "Galatia",
-    ef: "Efesus", flp: "Filipi", kol: "Kolose",
-    "1tes": "1 Tesalonika", "2tes": "2 Tesalonika",
-    "1tim": "1 Timotius", "2tim": "2 Timotius", tit: "Titus", flm: "Filemon",
-    ibr: "Ibrani", yak: "Yakobus",
-    "1ptr": "1 Petrus", "2ptr": "2 Petrus",
-    "1yoh": "1 Yohanes", "2yoh": "2 Yohanes", "3yoh": "3 Yohanes",
-    yud: "Yudas", why: "Wahyu"
+    kej:"Kejadian",kel:"Keluaran",im:"Imamat",bil:"Bilangan",ul:"Ulangan",
+    yos:"Yosua",hak:"Hakim-Hakim",rut:"Rut","1sam":"1 Samuel","2sam":"2 Samuel",
+    "1raj":"1 Raja-Raja","2raj":"2 Raja-Raja","1taw":"1 Tawarikh","2taw":"2 Tawarikh",
+    ezr:"Ezra",neh:"Nehemia",tob:"Tobit",ydt:"Yudit",est:"Ester",
+    ayb:"Ayub",mzm:"Mazmur",ams:"Amsal",pkh:"Pengkhotbah",kid:"Kidung Agung",
+    keb:"Kebijaksanaan",sir:"Sirakh",yes:"Yesaya",yer:"Yeremia",rat:"Ratapan",
+    bar:"Barukh",yeh:"Yehezkiel",dan:"Daniel",hos:"Hosea",yl:"Yoel",am:"Amos",
+    ob:"Obaja",yun:"Yunus",mi:"Mikha",nah:"Nahum",hab:"Habakuk",zef:"Zefanya",
+    hag:"Hagai",za:"Zakharia",mal:"Maleakhi","1mak":"1 Makabe","2mak":"2 Makabe",
+    mat:"Matius",mrk:"Markus",luk:"Lukas",yoh:"Yohanes",kis:"Kisah Para Rasul",
+    rm:"Roma","1kor":"1 Korintus","2kor":"2 Korintus",gal:"Galatia",ef:"Efesus",
+    flp:"Filipi",kol:"Kolose","1tes":"1 Tesalonika","2tes":"2 Tesalonika",
+    "1tim":"1 Timotius","2tim":"2 Timotius",tit:"Titus",flm:"Filemon",
+    ibr:"Ibrani",yak:"Yakobus","1ptr":"1 Petrus","2ptr":"2 Petrus",
+    "1yoh":"1 Yohanes","2yoh":"2 Yohanes","3yoh":"3 Yohanes",yud:"Yudas",why:"Wahyu"
   };
 
-  // Book groups for organized display
-  const BOOK_GROUPS = [
-    { label: "Pentateukh", books: ["kej","kel","im","bil","ul"] },
-    { label: "Sejarah", books: ["yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh"] },
-    { label: "Deuterokanonika (Sejarah)", books: ["tob","ydt","est"] },
-    { label: "Puisi & Hikmat", books: ["ayb","mzm","ams","pkh","kid"] },
-    { label: "Deuterokanonika (Hikmat)", books: ["keb","sir"] },
-    { label: "Nabi Besar", books: ["yes","yer","rat","bar","yeh","dan"] },
-    { label: "Nabi Kecil", books: ["hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal"] },
-    { label: "Deuterokanonika (Nabi)", books: ["1mak","2mak"] },
-    { label: "Injil", books: ["mat","mrk","luk","yoh"] },
-    { label: "Rasuli", books: ["kis"] },
-    { label: "Surat Paulus", books: ["rm","1kor","2kor","gal","ef","flp","kol","1tes","2tes","1tim","2tim","tit","flm"] },
-    { label: "Surat Lainnya", books: ["ibr","yak","1ptr","2ptr","1yoh","2yoh","3yoh","yud"] },
-    { label: "Apokaliptik", books: ["why"] },
-  ];
+  const PL_BOOKS = ["kej","kel","im","bil","ul","yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh","tob","ydt","est","ayb","mzm","ams","pkh","kid","keb","sir","yes","yer","rat","bar","yeh","dan","hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal","1mak","2mak"];
+  const PB_BOOKS = ["mat","mrk","luk","yoh","kis","rm","1kor","2kor","gal","ef","flp","kol","1tes","2tes","1tim","2tim","tit","flm","ibr","yak","1ptr","2ptr","1yoh","2yoh","3yoh","yud","why"];
 
-  const VERSIONS: Record<string, string> = {
-    ks: "ks.json",
-    ks_2: "ks_2.json",
-    vulgate: "vulgate_bible.json",
-  };
-
-  // ===== State =====
-  let currentVersion = "ks";
+  // State
   let bibleData: any = null;
-  let currentBook = "mat";
-  let currentChapter = 1;
-  let highlightVerses: number[] = [];
+  let currentBook = "";
+  let currentChapter = 0;
+  let currentTestament = "";
+  let highlightedVerses: Set<number> = new Set();
+  let ttsTimer: any = null;
+  let ttsSeconds = 0;
 
-  // ===== DOM refs =====
-  const bookSelect = document.getElementById("book-select") as HTMLSelectElement;
+  // DOM
+  const stepTestament = document.getElementById("step-testament")!;
+  const stepBooks = document.getElementById("step-books")!;
+  const stepChapters = document.getElementById("step-chapters")!;
+  const stepVerses = document.getElementById("step-verses")!;
+  const readingArea = document.getElementById("reading-area")!;
+  const bottomNav = document.getElementById("bottom-nav")!;
+  const bookGrid = document.getElementById("book-grid")!;
   const chapterGrid = document.getElementById("chapter-grid")!;
+  const verseGrid = document.getElementById("verse-grid")!;
+  const readingContent = document.getElementById("reading-content")!;
   const readingTitle = document.getElementById("reading-title")!;
   const readingSubtitle = document.getElementById("reading-subtitle")!;
   const readingLoading = document.getElementById("reading-loading")!;
-  const readingContent = document.getElementById("reading-content")!;
-  const versionTabs = document.querySelectorAll(".version-tab");
+  const testamentTitle = document.getElementById("testament-title")!;
+  const bookTitle = document.getElementById("book-title")!;
+  const verseTitle = document.getElementById("verse-title")!;
+  const progressBar = document.getElementById("reading-progress")!;
   const citationInput = document.getElementById("citation-input") as HTMLInputElement;
-  const citationGo = document.getElementById("citation-go")!;
-  const versionLabel = document.getElementById("version-label")!;
 
-  // ===== Load Bible JSON =====
-  async function loadBible(version: string) {
-    if (bibleData && currentVersion === version) return;
-    readingLoading.classList.remove("hidden");
-    readingContent.classList.add("hidden");
-
-    const url = `/assets/data/${VERSIONS[version]}`;
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`Failed to load ${url}`);
-    bibleData = await resp.json();
-    currentVersion = version;
-    versionLabel.textContent = version.toUpperCase();
-    populateBookSelect();
+  // Show/hide steps
+  function showStep(step: string) {
+    stepTestament.classList.toggle("hidden", step !== "testament");
+    stepBooks.classList.toggle("hidden", step !== "books");
+    stepChapters.classList.toggle("hidden", step !== "chapters");
+    stepVerses.classList.toggle("hidden", step !== "verses");
   }
 
-  // ===== Populate book dropdown =====
-  function populateBookSelect() {
-    bookSelect.innerHTML = "";
-    for (const group of BOOK_GROUPS) {
-      const optgroup = document.createElement("optgroup");
-      optgroup.label = group.label;
-      for (const abbr of group.books) {
-        if (!bibleData[abbr]) continue;
-        const opt = document.createElement("option");
-        opt.value = abbr;
-        opt.textContent = BOOK_NAMES[abbr] || abbr;
-        optgroup.appendChild(opt);
+  // Step 1: Testament -> show books
+  document.querySelectorAll(".testament-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const t = btn.getAttribute("data-testament")!;
+      currentTestament = t;
+      const books = t === "pl" ? PL_BOOKS : PB_BOOKS;
+      testamentTitle.textContent = t === "pl" ? "PERJANJIAN LAMA" : "PERJANJIAN BARU";
+      bookGrid.innerHTML = "";
+      for (const abbr of books) {
+        if (!bibleData?.[abbr]) continue;
+        const b = document.createElement("button");
+        b.className = `sel-btn book-btn-${t} py-3 text-xs font-medium`;
+        b.textContent = BOOK_NAMES[abbr] || abbr;
+        b.setAttribute("data-book", abbr);
+        b.addEventListener("click", () => selectBook(abbr));
+        bookGrid.appendChild(b);
       }
-      if (optgroup.children.length > 0) bookSelect.appendChild(optgroup);
-    }
-    bookSelect.value = currentBook;
-  }
+      showStep("books");
+    });
+  });
 
-  // ===== Render chapter grid =====
-  function renderChapterGrid() {
-    const book = bibleData[currentBook];
+  // Step 2: Book -> show chapters
+  function selectBook(abbr: string) {
+    currentBook = abbr;
+    bookTitle.textContent = (BOOK_NAMES[abbr] || abbr).toUpperCase();
+    bookGrid.querySelectorAll(".sel-btn").forEach(b => b.classList.remove("active"));
+    bookGrid.querySelector(`[data-book="${abbr}"]`)?.classList.add("active");
+    const book = bibleData[abbr];
     if (!book) return;
-    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
-
+    const chapters = Object.keys(book).map(Number).sort((a,b) => a-b);
     chapterGrid.innerHTML = "";
     for (const ch of chapters) {
-      const btn = document.createElement("button");
-      btn.className = `w-full py-1.5 text-xs rounded-lg transition-colors cursor-pointer ${
-        ch === currentChapter ? "chapter-btn-active" : "chapter-btn"
-      }`;
-      btn.textContent = String(ch);
-      btn.addEventListener("click", () => navigateTo(currentBook, ch));
-      chapterGrid.appendChild(btn);
+      const b = document.createElement("button");
+      b.className = "sel-btn py-2";
+      b.textContent = String(ch);
+      b.addEventListener("click", () => selectChapter(abbr, ch));
+      chapterGrid.appendChild(b);
     }
+    showStep("chapters");
+    stepBooks.classList.remove("hidden");
   }
 
-  // ===== Render verses =====
-  function renderVerses() {
-    const book = bibleData[currentBook];
-    if (!book) return;
-    const chapter = book[String(currentChapter)];
-    if (!chapter) return;
-
-    const bookName = BOOK_NAMES[currentBook] || currentBook;
-    readingTitle.textContent = `${bookName} ${currentChapter}`;
-    readingSubtitle.textContent = `${Object.keys(book).length} bab • Kitab Suci Katolik`;
-
-    const verses = Object.keys(chapter).map(Number).sort((a, b) => a - b);
-    let html = "";
-    for (const vs of verses) {
-      const text = chapter[String(vs)];
-      const isHighlighted = highlightVerses.includes(vs);
-      html += `<div class="verse-row${isHighlighted ? " highlighted" : ""}" data-verse="${vs}">
-        <sup>${vs}</sup><span class="verse-text">${text}</span>
-      </div>`;
-    }
-    readingContent.innerHTML = html;
-    readingLoading.classList.add("hidden");
-    readingContent.classList.remove("hidden");
-  }
-
-  // ===== Navigate =====
-  async function navigateTo(book: string, chapter: number, verses?: number[]) {
+  // Step 3: Chapter -> show verses + load content
+  function selectChapter(book: string, chapter: number) {
     currentBook = book;
     currentChapter = chapter;
-    highlightVerses = verses || [];
+    const bookData = bibleData[book];
+    if (!bookData) return;
+    const chData = bookData[String(chapter)];
+    if (!chData) return;
 
-    bookSelect.value = book;
-    renderChapterGrid();
-    renderVerses();
+    // Show verse grid
+    const verses = Object.keys(chData).map(Number).sort((a,b) => a-b);
+    verseTitle.textContent = `${BOOK_NAMES[book] || book} ${chapter}`;
+    verseGrid.innerHTML = "";
+    for (const v of verses) {
+      const b = document.createElement("button");
+      b.className = "sel-btn py-2";
+      b.textContent = String(v);
+      b.addEventListener("click", () => loadAndScrollTo(book, chapter, v));
+      verseGrid.appendChild(b);
+    }
+    showStep("verses");
+    stepChapters.classList.remove("hidden");
+    stepBooks.classList.remove("hidden");
 
-    // Update URL hash
-    const hash = verses?.length
-      ? `${book}${chapter}:${verses.join(",")}`
-      : `${book}${chapter}`;
-    window.location.hash = hash;
+    // Load content immediately
+    loadChapter(book, chapter);
+  }
 
-    // Scroll to top of reading area
+  // Load chapter content
+  function loadChapter(book: string, chapter: number) {
+    const bookData = bibleData[book];
+    const chData = bookData?.[String(chapter)];
+    if (!chData) return;
+
+    const bookName = BOOK_NAMES[book] || book;
+    readingTitle.textContent = `${bookName} ${chapter}`;
+    readingSubtitle.textContent = `${Object.keys(bookData).length} bab • ${Object.keys(chData).length} ayat`;
+
+    // Load highlights
+    const hlKey = `dkc-hl-${book}-${chapter}`;
+    const saved = JSON.parse(localStorage.getItem(hlKey) || "[]");
+    highlightedVerses = new Set(saved);
+
+    const verses = Object.keys(chData).map(Number).sort((a,b) => a-b);
+    let html = "";
+    for (const v of verses) {
+      const text = chData[String(v)];
+      const isHl = highlightedVerses.has(v);
+      html += `<div class="verse-row${isHl ? " highlighted" : ""}" data-verse="${v}"><sup>${v}</sup><span class="verse-text">${text}</span></div>`;
+    }
+    readingContent.innerHTML = html;
+    readingArea.classList.remove("hidden");
+    bottomNav.classList.remove("hidden");
+
+    // URL hash
+    window.location.hash = `${book}${chapter}`;
+    updateBookmarkState();
+
+    // Scroll to reading area
     readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // ===== Parse citation =====
-  function parseCitation(input: string): { book: string; chapter: number; verses?: number[] } | null {
-    const normalized = input.trim().toLowerCase().replace(/\s+/g, " ");
-    // Try patterns: "yoh 3:16", "yoh3:16", "mzm 23", "kej 1:1-3"
-    const match = normalized.match(/^(\d?\w+)\s*(\d+)\s*(?::\s*([0-9,\-]+))?$/);
-    if (!match) return null;
-
-    const bookAbbr = match[1];
-    const chapter = parseInt(match[2]);
-    const verseStr = match[3];
-
-    // Find matching book key
-    let bookKey: string | null = null;
-    for (const key of Object.keys(bibleData)) {
-      const name = (BOOK_NAMES[key] || "").toLowerCase();
-      if (key === bookAbbr || name.startsWith(bookAbbr) || name.replace(/[^a-z]/g, "").startsWith(bookAbbr.replace(/[^a-z]/g, ""))) {
-        bookKey = key;
-        break;
+  // Load and scroll to specific verse
+  function loadAndScrollTo(book: string, chapter: number, verse: number) {
+    loadChapter(book, chapter);
+    setTimeout(() => {
+      const el = readingContent.querySelector(`[data-verse="${verse}"]`) as HTMLElement;
+      if (el) {
+        el.classList.add("flash");
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => el.classList.remove("flash"), 2000);
       }
-    }
-    if (!bookKey) return null;
-
-    let verses: number[] | undefined;
-    if (verseStr) {
-      verses = [];
-      for (const part of verseStr.split(",")) {
-        if (part.includes("-")) {
-          const [a, b] = part.split("-").map(Number);
-          for (let i = a; i <= b; i++) verses.push(i);
-        } else {
-          verses.push(parseInt(part));
-        }
-      }
-    }
-
-    return { book: bookKey, chapter, verses };
+    }, 100);
   }
 
-  // ===== Next/Prev chapter =====
-  function getAdjacentChapter(delta: number) {
-    const book = bibleData[currentBook];
-    if (!book) return null;
-    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
+  // Back buttons
+  document.getElementById("back-testament")!.addEventListener("click", () => showStep("testament"));
+  document.getElementById("back-books")!.addEventListener("click", () => { showStep("books"); stepBooks.classList.remove("hidden"); });
+  document.getElementById("back-chapters")!.addEventListener("click", () => { showStep("chapters"); stepBooks.classList.remove("hidden"); stepChapters.classList.remove("hidden"); });
+
+  // Prev/Next
+  function getAdjacent(delta: number) {
+    const book = bibleData[currentBook]; if (!book) return null;
+    const chapters = Object.keys(book).map(Number).sort((a,b)=>a-b);
     const idx = chapters.indexOf(currentChapter);
-    const newIdx = idx + delta;
-    if (newIdx >= 0 && newIdx < chapters.length) {
-      return { book: currentBook, chapter: chapters[newIdx] };
-    }
-    // Try adjacent book
-    const allBooks = Object.keys(bibleData);
-    const bookIdx = allBooks.indexOf(currentBook);
-    const nextBookIdx = bookIdx + delta;
-    if (nextBookIdx >= 0 && nextBookIdx < allBooks.length) {
-      const nextBook = allBooks[nextBookIdx];
-      const nextChapters = Object.keys(bibleData[nextBook]).map(Number).sort((a, b) => a - b);
-      return {
-        book: nextBook,
-        chapter: delta > 0 ? nextChapters[0] : nextChapters[nextChapters.length - 1]
-      };
+    const ni = idx + delta;
+    if (ni >= 0 && ni < chapters.length) return { book: currentBook, chapter: chapters[ni] };
+    const allBooks = currentTestament === "pl" ? PL_BOOKS : PB_BOOKS;
+    const bi = allBooks.indexOf(currentBook) + delta;
+    if (bi >= 0 && bi < allBooks.length && bibleData[allBooks[bi]]) {
+      const nb = allBooks[bi];
+      const nc = Object.keys(bibleData[nb]).map(Number).sort((a,b)=>a-b);
+      return { book: nb, chapter: delta > 0 ? nc[0] : nc[nc.length-1] };
     }
     return null;
   }
-
-  // ===== Event listeners =====
-  bookSelect.addEventListener("change", () => {
-    navigateTo(bookSelect.value, 1);
-  });
-
-  citationGo.addEventListener("click", () => {
-    const result = parseCitation(citationInput.value);
-    if (result) navigateTo(result.book, result.chapter, result.verses);
-  });
-
-  citationInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") citationGo.click();
-  });
-
-  versionTabs.forEach(tab => {
-    tab.addEventListener("click", async () => {
-      const ver = tab.getAttribute("data-version");
-      if (!ver) return;
-      versionTabs.forEach(t => t.classList.remove("version-tab-active"));
-      tab.classList.add("version-tab-active");
-      await loadBible(ver);
-      navigateTo(currentBook, currentChapter);
-    });
-  });
-
-  // Prev/Next buttons
-  document.getElementById("prev-ch")!.addEventListener("click", () => {
-    const adj = getAdjacentChapter(-1);
-    if (adj) navigateTo(adj.book, adj.chapter);
-  });
-  document.getElementById("next-ch")!.addEventListener("click", () => {
-    const adj = getAdjacentChapter(1);
-    if (adj) navigateTo(adj.book, adj.chapter);
-  });
-  document.getElementById("prev-ch-bottom")!.addEventListener("click", () => {
-    const adj = getAdjacentChapter(-1);
-    if (adj) navigateTo(adj.book, adj.chapter);
-  });
-  document.getElementById("next-ch-bottom")!.addEventListener("click", () => {
-    const adj = getAdjacentChapter(1);
-    if (adj) navigateTo(adj.book, adj.chapter);
-  });
-
-  // Keyboard nav
+  function goAdjacent(delta: number) {
+    const adj = getAdjacent(delta);
+    if (adj) selectChapter(adj.book, adj.chapter);
+  }
+  document.getElementById("prev-ch")!.addEventListener("click", () => goAdjacent(-1));
+  document.getElementById("next-ch")!.addEventListener("click", () => goAdjacent(1));
+  document.getElementById("prev-ch-bottom")!.addEventListener("click", () => goAdjacent(-1));
+  document.getElementById("next-ch-bottom")!.addEventListener("click", () => goAdjacent(1));
   document.addEventListener("keydown", (e) => {
     if (document.activeElement === citationInput) return;
-    if (e.key === "ArrowLeft") document.getElementById("prev-ch")!.click();
-    if (e.key === "ArrowRight") document.getElementById("next-ch")!.click();
+    if (e.key === "ArrowLeft") goAdjacent(-1);
+    if (e.key === "ArrowRight") goAdjacent(1);
   });
 
-  // ===== Testament filter =====
-  const PL_BOOKS = new Set(["kej","kel","im","bil","ul","yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh","tob","ydt","est","ayb","mzm","ams","pkh","kid","keb","sir","yes","yer","rat","bar","yeh","dan","hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal","1mak","2mak"]);
-  let currentTestament = "all";
-  const testamentTabs = document.querySelectorAll(".testament-tab");
-
-  function applyTestamentFilter() {
-    for (const group of BOOK_GROUPS) {
-      const optgroup = bookSelect.querySelector(`optgroup[label="${group.label}"]`) as HTMLOptGroupElement;
-      if (!optgroup) continue;
-      for (const opt of Array.from(optgroup.options)) {
-        const abbr = opt.value;
-        if (currentTestament === "all") { opt.hidden = false; }
-        else if (currentTestament === "pl") { opt.hidden = !PL_BOOKS.has(abbr); }
-        else { opt.hidden = PL_BOOKS.has(abbr); }
-      }
+  // Citation parser
+  function parseCitation(input: string) {
+    const m = input.trim().toLowerCase().replace(/\s+/g," ").match(/^(\d?\w+)\s*(\d+)\s*(?::\s*([0-9,\-]+))?$/);
+    if (!m) return null;
+    const abbr = m[1], ch = parseInt(m[2]), vs = m[3];
+    let bk: string|null = null;
+    for (const k of Object.keys(bibleData)) {
+      const n = (BOOK_NAMES[k]||"").toLowerCase();
+      if (k === abbr || n.replace(/[^a-z]/g,"").startsWith(abbr.replace(/[^a-z]/g,""))) { bk = k; break; }
     }
-    // If current book is hidden, switch to first visible
-    const currentOpt = bookSelect.querySelector(`option[value="${currentBook}"]`) as HTMLOptionElement;
-    if (currentOpt && currentOpt.hidden) {
-      const first = bookSelect.querySelector("option:not([hidden])") as HTMLOptionElement;
-      if (first) navigateTo(first.value, 1);
-    }
+    if (!bk) return null;
+    let verses: number[]|undefined;
+    if (vs) { verses = []; for (const p of vs.split(",")) { if (p.includes("-")) { const [a,b] = p.split("-").map(Number); for (let i=a;i<=b;i++) verses.push(i); } else verses.push(parseInt(p)); } }
+    return { book: bk, chapter: ch, verses };
   }
-
-  testamentTabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      testamentTabs.forEach(t => t.classList.remove("version-tab-active"));
-      tab.classList.add("version-tab-active");
-      currentTestament = tab.getAttribute("data-testament") || "all";
-      applyTestamentFilter();
-    });
+  document.getElementById("citation-go")!.addEventListener("click", () => {
+    const r = parseCitation(citationInput.value);
+    if (r) { if (r.verses?.length) loadAndScrollTo(r.book, r.chapter, r.verses[0]); else selectChapter(r.book, r.chapter); }
   });
-  // Init "all" tab active
-  testamentTabs[0]?.classList.add("version-tab-active");
+  citationInput.addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("citation-go")!.click(); });
 
-  // ===== TTS =====
-  let ttsUtterance: SpeechSynthesisUtterance | null = null;
+  // TTS
   const ttsBtn = document.getElementById("tts-btn")!;
   const ttsStopBtn = document.getElementById("tts-stop-btn")!;
-
+  const ttsTimerEl = document.getElementById("tts-timer")!;
   ttsBtn.addEventListener("click", () => {
     if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+    speechSynthesis.cancel();
     const text = Array.from(readingContent.querySelectorAll(".verse-text")).map(el => el.textContent).join(" ");
     if (!text) return;
-    ttsUtterance = new SpeechSynthesisUtterance(text);
-    ttsUtterance.lang = "id-ID";
-    ttsUtterance.rate = 0.9;
-    // Try to pick Indonesian voice
-    const voices = speechSynthesis.getVoices();
-    const idVoice = voices.find(v => v.lang.startsWith("id"));
-    if (idVoice) ttsUtterance.voice = idVoice;
-    ttsBtn.classList.add("hidden");
-    ttsStopBtn.classList.remove("hidden");
-    ttsUtterance.onend = () => { ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); };
-    speechSynthesis.speak(ttsUtterance);
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "id-ID"; u.rate = 0.9;
+    const idV = speechSynthesis.getVoices().find(v => v.lang.startsWith("id"));
+    if (idV) u.voice = idV;
+    ttsBtn.classList.add("hidden"); ttsStopBtn.classList.remove("hidden"); ttsTimerEl.classList.remove("hidden");
+    ttsSeconds = 0;
+    ttsTimer = setInterval(() => { ttsSeconds++; const m = String(Math.floor(ttsSeconds/60)).padStart(2,"0"); const s = String(ttsSeconds%60).padStart(2,"0"); ttsTimerEl.textContent = `${m}:${s}`; }, 1000);
+    u.onend = () => { ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); ttsTimerEl.classList.add("hidden"); clearInterval(ttsTimer); };
+    speechSynthesis.speak(u);
   });
-  ttsStopBtn.addEventListener("click", () => {
-    speechSynthesis.cancel();
-    ttsBtn.classList.remove("hidden");
-    ttsStopBtn.classList.add("hidden");
+  ttsStopBtn.addEventListener("click", () => { speechSynthesis.cancel(); ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); ttsTimerEl.classList.add("hidden"); clearInterval(ttsTimer); });
+
+  // Highlight verses on click
+  readingContent.addEventListener("click", (e) => {
+    const row = (e.target as HTMLElement).closest(".verse-row") as HTMLElement;
+    if (!row) return;
+    const v = parseInt(row.getAttribute("data-verse") || "0");
+    if (!v) return;
+    const hlKey = `dkc-hl-${currentBook}-${currentChapter}`;
+    if (highlightedVerses.has(v)) { highlightedVerses.delete(v); row.classList.remove("highlighted"); }
+    else { highlightedVerses.add(v); row.classList.add("highlighted"); }
+    localStorage.setItem(hlKey, JSON.stringify([...highlightedVerses]));
   });
 
-  // ===== Bookmarks (localStorage) =====
+  // Bookmark
   const BK_KEY = "dkc-bible-bookmarks";
-  function getBookmarks(): string[] { return JSON.parse(localStorage.getItem(BK_KEY) || "[]"); }
-  function saveBookmark(ref: string) {
-    const bms = getBookmarks(); if (!bms.includes(ref)) { bms.push(ref); localStorage.setItem(BK_KEY, JSON.stringify(bms)); }
-  }
-  function removeBookmark(ref: string) {
-    const bms = getBookmarks().filter(b => b !== ref); localStorage.setItem(BK_KEY, JSON.stringify(bms));
-  }
   const bookmarkBtn = document.getElementById("bookmark-btn")!;
+  function getBookmarks() { return JSON.parse(localStorage.getItem(BK_KEY)||"[]"); }
+  function updateBookmarkState() {
+    const ref = `${currentBook} ${currentChapter}`;
+    bookmarkBtn.style.borderColor = getBookmarks().includes(ref) ? "rgba(201,168,76,0.6)" : "";
+    bookmarkBtn.style.color = getBookmarks().includes(ref) ? "var(--color-dkc-gold)" : "";
+  }
   bookmarkBtn.addEventListener("click", () => {
     const ref = `${currentBook} ${currentChapter}`;
     const bms = getBookmarks();
-    if (bms.includes(ref)) { removeBookmark(ref); bookmarkBtn.style.borderColor = ""; bookmarkBtn.style.color = ""; }
-    else { saveBookmark(ref); bookmarkBtn.style.borderColor = "rgba(201,168,76,0.6)"; bookmarkBtn.style.color = "var(--color-dkc-gold)"; }
+    if (bms.includes(ref)) { localStorage.setItem(BK_KEY, JSON.stringify(bms.filter((b:string)=>b!==ref))); }
+    else { bms.push(ref); localStorage.setItem(BK_KEY, JSON.stringify(bms)); }
+    updateBookmarkState();
   });
 
-  // ===== Font Size =====
-  const FONT_MAP: Record<string, string> = { sm: "13px", md: "15px", lg: "18px" };
-  const fontBtns = document.querySelectorAll(".font-size-btn");
-  fontBtns.forEach(btn => {
+  // Font size
+  const FONT_MAP: Record<string,string> = { sm:"13px", md:"15px", lg:"18px" };
+  document.querySelectorAll(".font-size-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      const size = btn.getAttribute("data-fsize") || "md";
-      readingContent.style.fontSize = FONT_MAP[size];
-      fontBtns.forEach(b => { b.style.borderColor = ""; b.style.color = ""; });
-      btn.style.borderColor = "rgba(201,168,76,0.5)"; btn.style.color = "var(--color-dkc-gold)";
-      localStorage.setItem("dkc-bible-fontsize", size);
+      const s = btn.getAttribute("data-fsize")||"md";
+      readingContent.style.fontSize = FONT_MAP[s];
+      document.querySelectorAll(".font-size-btn").forEach(b => b.classList.remove("font-size-active"));
+      btn.classList.add("font-size-active");
+      localStorage.setItem("dkc-bible-fontsize", s);
     });
   });
-  // Restore font size
   const savedFS = localStorage.getItem("dkc-bible-fontsize");
-  if (savedFS && FONT_MAP[savedFS]) {
-    readingContent.style.fontSize = FONT_MAP[savedFS];
-    document.querySelector(`.font-size-btn[data-fsize="${savedFS}"]`)?.dispatchEvent(new Event("click"));
-  }
+  if (savedFS && FONT_MAP[savedFS]) { readingContent.style.fontSize = FONT_MAP[savedFS]; document.querySelector(`.font-size-btn[data-fsize="${savedFS}"]`)?.classList.add("font-size-active"); }
+  else document.querySelector('.font-size-btn[data-fsize="md"]')?.classList.add("font-size-active");
 
-  // ===== Share =====
-  function getShareUrl(): string {
-    return `${window.location.origin}/kitabsuci#${currentBook}${currentChapter}`;
-  }
-  function getShareText(): string {
-    const name = BOOK_NAMES[currentBook] || currentBook;
-    const first = readingContent.querySelector(".verse-text")?.textContent || "";
-    return `${name} ${currentChapter}: "${first.slice(0, 100)}..." — Damai Kasih Channel`;
-  }
-  document.getElementById("share-wa")!.addEventListener("click", () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(getShareText() + " " + getShareUrl())}`, "_blank");
-  });
-  document.getElementById("share-tg")!.addEventListener("click", () => {
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(getShareUrl())}&text=${encodeURIComponent(getShareText())}`, "_blank");
-  });
-  document.getElementById("share-copy")!.addEventListener("click", () => {
-    navigator.clipboard.writeText(getShareUrl()).then(() => {
-      const btn = document.getElementById("share-copy")!;
-      btn.style.borderColor = "rgba(201,168,76,0.6)"; btn.style.color = "var(--color-dkc-gold)";
-      setTimeout(() => { btn.style.borderColor = ""; btn.style.color = ""; }, 1500);
-    });
-  });
+  // Share
+  function shareUrl() { return `${location.origin}/kitabsuci#${currentBook}${currentChapter}`; }
+  function shareText() { const n=BOOK_NAMES[currentBook]||currentBook; const t=readingContent.querySelector(".verse-text")?.textContent||""; return `${n} ${currentChapter}: "${t.slice(0,100)}..." — DKC`; }
+  document.getElementById("share-wa")!.addEventListener("click", () => window.open(`https://wa.me/?text=${encodeURIComponent(shareText()+" "+shareUrl())}`,"_blank"));
+  document.getElementById("share-tg")!.addEventListener("click", () => window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(shareText())}`,"_blank"));
+  document.getElementById("share-copy")!.addEventListener("click", () => { navigator.clipboard.writeText(shareUrl()); const b=document.getElementById("share-copy")!; b.style.borderColor="rgba(201,168,76,0.6)"; setTimeout(()=>b.style.borderColor="",1500); });
 
-  // ===== Progress Bar =====
-  const progressBar = document.getElementById("reading-progress")!;
-  window.addEventListener("scroll", () => {
-    const h = document.documentElement;
-    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-    progressBar.style.width = Math.min(pct, 100) + "%";
-  });
+  // Progress bar
+  window.addEventListener("scroll", () => { const h=document.documentElement; progressBar.style.width = Math.min((h.scrollTop/(h.scrollHeight-h.clientHeight))*100,100)+"%"; });
 
-  // ===== Update bookmark button state on navigate =====
-  const origRenderVerses = renderVerses;
-  // Monkey-patch renderVerses to also update bookmark state
-  const _origRender = renderVerses;
-  // Actually just call updateBookmarkState after navigateTo
-  function updateBookmarkState() {
-    const ref = `${currentBook} ${currentChapter}`;
-    const bms = getBookmarks();
-    if (bms.includes(ref)) {
-      bookmarkBtn.style.borderColor = "rgba(201,168,76,0.6)";
-      bookmarkBtn.style.color = "var(--color-dkc-gold)";
-    } else {
-      bookmarkBtn.style.borderColor = "";
-      bookmarkBtn.style.color = "";
-    }
-  }
-
-  // Patch navigateTo to also call updateBookmarkState
-  const _origNavigateTo = navigateTo;
-  // We can't reassign, so call it from renderVerses hook instead
-  // Use MutationObserver on readingContent
-  const mo = new MutationObserver(() => updateBookmarkState());
-  mo.observe(readingContent, { childList: true });
-
-  // ===== Init =====
+  // Init
   async function init() {
-    // Check URL hash
-    const hash = window.location.hash.slice(1);
-    let initBook = "mat";
-    let initChapter = 1;
-    let initVerses: number[] = [];
+    readingLoading.classList.remove("hidden");
+    const resp = await fetch("/assets/data/ks.json");
+    bibleData = await resp.json();
+    readingLoading.classList.add("hidden");
 
+    // Check hash
+    const hash = location.hash.slice(1);
     if (hash) {
-      const parsed = hash.match(/^(\d?\w+?)(\d+)(?::([0-9,\-]+))?$/);
-      if (parsed) {
-        initBook = parsed[1];
-        initChapter = parseInt(parsed[2]);
-        if (parsed[3]) {
-          for (const p of parsed[3].split(",")) {
-            if (p.includes("-")) {
-              const [a, b] = p.split("-").map(Number);
-              for (let i = a; i <= b; i++) initVerses.push(i);
-            } else initVerses.push(parseInt(p));
-          }
-        }
+      const m = hash.match(/^(\d?\w+?)(\d+)(?::([0-9,\-]+))?$/);
+      if (m && bibleData[m[1]]?.[m[2]]) {
+        const vs = m[3] ? parseInt(m[3].split(",")[0].split("-")[0]) : 0;
+        currentTestament = PL_BOOKS.includes(m[1]) ? "pl" : "pb";
+        if (vs) loadAndScrollTo(m[1], parseInt(m[2]), vs);
+        else selectChapter(m[1], parseInt(m[2]));
+        return;
       }
     }
-
-    // Set active version tab
-    versionTabs.forEach(t => {
-      if (t.getAttribute("data-version") === currentVersion) t.classList.add("version-tab-active");
-    });
-
-    await loadBible(currentVersion);
-
-    // Validate book/chapter exist
-    if (bibleData[initBook] && bibleData[initBook][String(initChapter)]) {
-      navigateTo(initBook, initChapter, initVerses);
-    } else {
-      navigateTo("mat", 1);
+    // Check ?q= param
+    const qp = new URLSearchParams(location.search).get("q");
+    if (qp) {
+      const r = parseCitation(qp);
+      if (r && bibleData[r.book]?.[String(r.chapter)]) {
+        currentTestament = PL_BOOKS.includes(r.book) ? "pl" : "pb";
+        if (r.verses?.length) loadAndScrollTo(r.book, r.chapter, r.verses[0]);
+        else selectChapter(r.book, r.chapter);
+        return;
+      }
     }
   }
-
   init();
 </script>

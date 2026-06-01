@@ -8,113 +8,149 @@ import Footer from "@/components/Footer.astro";
   <Navbar />
 
   <main class="max-w-5xl mx-auto px-4 pt-6 pb-24">
+    <!-- Reading Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-dkc-surface/50">
+      <div id="progress-bar" class="h-full bg-dkc-gold/60 transition-all duration-300" style="width:0%"></div>
+    </div>
+
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Greek Interlinear NT</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Greek Interlinear New Testament</h1>
         <p class="text-dkc-muted text-sm">Novum Testamentum Graece — Interlinear with English &amp; Transliteration</p>
       </div>
-      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
-        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
-        <span>Ἑλληνική Κοινή</span>
+      <div class="hidden md:flex items-center gap-3">
+        <!-- Font Size Toggle -->
+        <div class="flex items-center gap-1 px-2 py-1 rounded-lg border border-dkc-border">
+          <button id="font-dec" class="px-2 py-0.5 rounded text-dkc-muted text-xs hover:text-dkc-gold transition-colors cursor-pointer" title="Decrease font size">A-</button>
+          <span id="font-size-label" class="text-dkc-muted text-[10px] min-w-[2rem] text-center">16</span>
+          <button id="font-inc" class="px-2 py-0.5 rounded text-dkc-muted text-xs hover:text-dkc-gold transition-colors cursor-pointer" title="Increase font size">A+</button>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
+          <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
+          <span>Ἑλληνική Κοινή</span>
+        </div>
       </div>
     </div>
 
-    <!-- Search within book/chapter -->
-    <div class="glass-card p-3 mb-5 flex items-center gap-2">
-      <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input
-          id="search-input"
-          type="text"
-          placeholder="Search Greek, English, or transliteration in this chapter…"
-          class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40 transition-colors"
-        />
-      </div>
-      <button id="search-clear" class="hidden px-3 py-2.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-        Clear
-      </button>
+    <!-- Breadcrumb -->
+    <div id="breadcrumb" class="flex items-center gap-1.5 text-xs text-dkc-muted mb-4 flex-wrap">
+      <button id="bc-books" class="hover:text-dkc-gold transition-colors cursor-pointer">Books</button>
+      <span class="text-dkc-border">›</span>
+      <span id="bc-book" class="hidden hover:text-dkc-gold transition-colors cursor-pointer"></span>
+      <span id="bc-sep-ch" class="hidden text-dkc-border">›</span>
+      <button id="bc-chapter" class="hidden hover:text-dkc-gold transition-colors cursor-pointer"></button>
     </div>
 
-    <!-- Book Selector -->
-    <div class="glass-card p-4 mb-5">
-      <div class="flex items-center gap-2 mb-4">
-        <label class="text-sm text-dkc-muted shrink-0">Βιβλίον:</label>
-        <select id="book-select" class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1 focus:outline-none focus:border-dkc-gold/40">
-          <option value="">Loading…</option>
-        </select>
+    <!-- ====== SELECTION PANELS ====== -->
+    <div id="selection-panel">
+
+      <!-- Book Selector Grid -->
+      <div id="book-panel" class="glass-card p-4 mb-5">
+        <h2 class="text-dkc-gold font-semibold text-sm mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          Select a Book
+        </h2>
+        <div id="book-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-1.5">
+          <!-- Filled by JS -->
+        </div>
       </div>
 
       <!-- Chapter Grid -->
-      <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1">
-        <!-- Filled by JS -->
+      <div id="chapter-panel" class="glass-card p-4 mb-5 hidden">
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="chapter-panel-title" class="text-dkc-gold font-semibold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Select Chapter
+          </h2>
+          <button id="back-to-books" class="text-xs text-dkc-muted hover:text-dkc-gold transition-colors cursor-pointer flex items-center gap-1">
+            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            All Books
+          </button>
+        </div>
+        <div id="chapter-grid" class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-1">
+          <!-- Filled by JS -->
+        </div>
       </div>
+
     </div>
 
-    <!-- Reading Area -->
-    <div class="glass-card p-5 md:p-6 mb-5">
-      <div class="flex justify-between items-center mb-5">
-        <div>
-          <h2 id="reading-title" class="text-dkc-gold font-bold text-lg">—</h2>
-          <p id="reading-subtitle" class="text-dkc-muted text-xs mt-0.5"></p>
+    <!-- ====== READING AREA ====== -->
+    <div id="reading-area" class="hidden">
+      <div class="glass-card p-5 md:p-6 mb-5">
+        <!-- Reading Header -->
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <div>
+            <h2 id="reading-title" class="text-dkc-gold font-bold text-lg">—</h2>
+            <p id="reading-subtitle" class="text-dkc-muted text-xs mt-0.5"></p>
+          </div>
+          <div class="flex gap-2">
+            <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer flex items-center gap-1">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Prev
+            </button>
+            <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer flex items-center gap-1">
+              Next
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="flex gap-2">
-          <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-            ← Prev
+
+        <!-- Toolbar -->
+        <div class="flex gap-2 mb-4 flex-wrap items-center">
+          <!-- TTS -->
+          <button id="tts-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer" title="Read aloud in English">
+            <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+            <span id="tts-label">Read Aloud</span>
           </button>
-          <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-            Next →
+          <!-- Copy -->
+          <button id="copy-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+            <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <span id="copy-label">Copy</span>
           </button>
+          <!-- Share -->
+          <button id="share-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+            <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <span id="share-label">Share</span>
+          </button>
+
+          <!-- Font size (mobile) -->
+          <div class="flex md:hidden items-center gap-1 px-2 py-1 rounded-lg border border-dkc-border">
+            <button id="font-dec-m" class="px-1.5 py-0.5 rounded text-dkc-muted text-xs hover:text-dkc-gold transition-colors cursor-pointer">A-</button>
+            <button id="font-inc-m" class="px-1.5 py-0.5 rounded text-dkc-muted text-xs hover:text-dkc-gold transition-colors cursor-pointer">A+</button>
+          </div>
+
+          <!-- Display mode -->
+          <div class="flex gap-1 ml-auto">
+            <button id="mode-interlinear" class="px-2.5 py-1.5 rounded-lg border border-dkc-gold/40 text-dkc-gold text-xs transition-colors cursor-pointer">Interlinear</button>
+            <button id="mode-greek" class="px-2.5 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 transition-colors cursor-pointer">Greek</button>
+            <button id="mode-english" class="px-2.5 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 transition-colors cursor-pointer">English</button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="reading-loading" class="text-center py-12 text-dkc-muted">
+          <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
+          <p class="text-sm">Φορτώνων…</p>
+        </div>
+
+        <!-- Verses -->
+        <div id="reading-content" class="space-y-3 leading-relaxed hidden">
+          <!-- Filled by JS -->
         </div>
       </div>
 
-      <!-- Action buttons row -->
-      <div class="flex gap-2 mb-4 flex-wrap">
-        <button id="copy-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          <span id="copy-label">Copy Chapter</span>
+      <!-- Bottom Nav -->
+      <div class="flex justify-center gap-3">
+        <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Previous Chapter
         </button>
-        <button id="share-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          <span>Share</span>
+        <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
+          Next Chapter
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
-        <!-- Display mode toggles -->
-        <div class="flex gap-1 ml-auto">
-          <button id="mode-interlinear" class="px-2.5 py-1.5 rounded-lg border border-dkc-gold/40 text-dkc-gold text-xs transition-colors cursor-pointer" title="Interlinear view">
-            Interlinear
-          </button>
-          <button id="mode-greek" class="px-2.5 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 transition-colors cursor-pointer" title="Greek only">
-            Greek
-          </button>
-          <button id="mode-english" class="px-2.5 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 transition-colors cursor-pointer" title="English only">
-            English
-          </button>
-        </div>
       </div>
-
-      <!-- Loading state -->
-      <div id="reading-loading" class="text-center py-12 text-dkc-muted">
-        <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
-        <p class="text-sm">Φορτώνων…</p>
-      </div>
-
-      <!-- Verses -->
-      <div id="reading-content" class="space-y-3 leading-relaxed hidden">
-        <!-- Filled by JS -->
-      </div>
-
-      <!-- Search results info -->
-      <div id="search-info" class="hidden mt-4 pt-3 border-t border-dkc-border text-xs text-dkc-muted text-center"></div>
-    </div>
-
-    <!-- Bottom Nav -->
-    <div class="flex justify-center gap-3">
-      <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-        ← Previous Chapter
-      </button>
-      <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors cursor-pointer">
-        Next Chapter →
-      </button>
     </div>
   </main>
 
@@ -127,6 +163,65 @@ import Footer from "@/components/Footer.astro";
 </slot>
 
 <style>
+  /* Book grid buttons */
+  #book-grid .book-btn {
+    background: var(--color-dkc-surface);
+    border: 1px solid var(--color-dkc-border);
+    color: var(--color-dkc-muted);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.7rem;
+    transition: all 0.15s;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.2;
+  }
+  #book-grid .book-btn:hover {
+    border-color: rgba(201, 168, 76, 0.4);
+    color: var(--color-dkc-gold);
+    background: rgba(201, 168, 76, 0.06);
+  }
+  #book-grid .book-btn-active {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--color-dkc-gold);
+    border-color: rgba(201, 168, 76, 0.5);
+    font-weight: 600;
+  }
+  #book-grid .book-btn .book-grk {
+    display: block;
+    font-size: 0.6rem;
+    opacity: 0.5;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Chapter / Verse grid buttons */
+  .nav-btn {
+    background: var(--color-dkc-surface);
+    border: 1px solid var(--color-dkc-border);
+    color: var(--color-dkc-muted);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+  }
+  .nav-btn:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    color: rgba(201, 168, 76, 0.8);
+  }
+  .nav-btn-active {
+    background: rgba(201, 168, 76, 0.2);
+    color: var(--color-dkc-gold);
+    border-color: rgba(201, 168, 76, 0.4);
+    font-weight: 700;
+  }
+
+  /* Verse blocks */
   #reading-content .verse-block {
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
@@ -141,10 +236,6 @@ import Footer from "@/components/Footer.astro";
     background: rgba(201, 168, 76, 0.1);
     border-left-color: rgba(201, 168, 76, 0.5);
   }
-  #reading-content .verse-block.search-match {
-    background: rgba(201, 168, 76, 0.08);
-    border-left-color: rgba(201, 168, 76, 0.4);
-  }
   #reading-content .verse-num {
     color: rgba(201, 168, 76, 0.7);
     font-weight: bold;
@@ -152,316 +243,283 @@ import Footer from "@/components/Footer.astro";
     margin-right: 0.4rem;
     user-select: none;
   }
-  #reading-content .greek-text {
-    font-family: 'Lora', 'Times New Roman', serif;
-    font-size: 1.05rem;
-    color: var(--color-dkc-text);
-    line-height: 1.6;
-  }
+
+  /* Interlinear word layout */
   #reading-content .word-group {
     display: inline-flex;
     flex-direction: column;
-    align-items: center;
-    margin-right: 0.15em;
+    align-items: flex-start;
+    margin-right: 0.3em;
     vertical-align: top;
   }
   #reading-content .word-greek {
     font-family: 'Lora', 'Times New Roman', serif;
-    font-size: 1.05rem;
     color: var(--color-dkc-text);
-    line-height: 1.4;
-    padding: 0 1px;
+    line-height: 1.5;
   }
   #reading-content .word-translit {
-    font-size: 0.6rem;
+    font-size: 0.6em;
     color: rgba(201, 168, 76, 0.55);
     line-height: 1.1;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.01em;
   }
   #reading-content .word-english {
-    font-size: 0.65rem;
+    font-size: 0.65em;
     color: var(--color-dkc-muted);
     line-height: 1.2;
     font-family: 'Inter', sans-serif;
     font-style: italic;
   }
+
+  /* Greek-only mode */
   #reading-content .greek-only-text {
     font-family: 'Lora', 'Times New Roman', serif;
-    font-size: 1.05rem;
     color: var(--color-dkc-text);
-    line-height: 1.8;
+    line-height: 1.9;
   }
+  /* English-only mode */
   #reading-content .english-only-text {
-    font-size: 0.95rem;
     color: var(--color-dkc-muted);
-    line-height: 1.8;
+    line-height: 1.9;
     font-family: 'Inter', sans-serif;
-  }
-  #reading-content mark {
-    background: rgba(201, 168, 76, 0.3);
-    color: var(--color-dkc-text);
-    border-radius: 2px;
-    padding: 0 2px;
-  }
-  .chapter-btn-active {
-    background: rgba(201, 168, 76, 0.2);
-    color: var(--color-dkc-gold);
-    border: 1px solid rgba(201, 168, 76, 0.4);
-    font-weight: 700;
-  }
-  .chapter-btn {
-    background: var(--color-dkc-surface);
-    border: 1px solid var(--color-dkc-border);
-    color: var(--color-dkc-muted);
-  }
-  .chapter-btn:hover {
-    border-color: rgba(201, 168, 76, 0.3);
-    color: rgba(201, 168, 76, 0.8);
   }
 </style>
 
 <script>
-  // ===== NT Book names =====
+  // ===== Book metadata =====
   const BOOK_NAMES: Record<string, string> = {
-    matthew: "Matthew (Κατὰ Ματθαῖον)",
-    mark: "Mark (Κατὰ Μᾶρκον)",
-    luke: "Luke (Κατὰ Λουκᾶν)",
-    john: "John (Κατὰ Ἰωάννην)",
-    acts: "Acts (Πράξεις Ἀποστόλων)",
-    romans: "Romans (Πρὸς Ῥωμαίους)",
-    "1corinthians": "1 Corinthians (Πρὸς Κορινθίους Αʹ)",
-    "2corinthians": "2 Corinthians (Πρὸς Κορινθίους Βʹ)",
-    galatians: "Galatians (Πρὸς Γαλάτας)",
-    ephesians: "Ephesians (Πρὸς Ἐφεσίους)",
-    philippians: "Philippians (Πρὸς Φιλιππησίους)",
-    colossians: "Colossians (Πρὸς Κολοσσαεῖς)",
-    "1thessalonians": "1 Thessalonians (Πρὸς Θεσσαλονικεῖς Αʹ)",
-    "2thessalonians": "2 Thessalonians (Πρὸς Θεσσαλονικεῖς Βʹ)",
-    "1timothy": "1 Timothy (Πρὸς Τιμόθεον Αʹ)",
-    "2timothy": "2 Timothy (Πρὸς Τιμόθεον Βʹ)",
-    titus: "Titus (Πρὸς Τίτον)",
-    philemon: "Philemon (Πρὸς Φιλήμονα)",
-    hebrews: "Hebrews (Πρὸς Ἑβραίους)",
-    james: "James (Ἰακώβου)",
-    "1peter": "1 Peter (Πέτρου Αʹ)",
-    "2peter": "2 Peter (Πέτρου Βʹ)",
-    "1john": "1 John (Ἰωάννου Αʹ)",
-    "2john": "2 John (Ἰωάννου Βʹ)",
-    "3john": "3 John (Ἰωάννου Γʹ)",
-    jude: "Jude (Ἰούδα)",
-    revelation: "Revelation (Ἀποκάλυψις Ἰωάννου)",
+    matthew: "Matthew", mark: "Mark", luke: "Luke", john: "John", acts: "Acts",
+    romans: "Romans", "1corinthians": "1 Corinthians", "2corinthians": "2 Corinthians",
+    galatians: "Galatians", ephesians: "Ephesians", philippians: "Philippians",
+    colossians: "Colossians", "1thessalonians": "1 Thessalonians", "2thessalonians": "2 Thessalonians",
+    "1timothy": "1 Timothy", "2timothy": "2 Timothy", titus: "Titus", philemon: "Philemon",
+    hebrews: "Hebrews", james: "James", "1peter": "1 Peter", "2peter": "2 Peter",
+    "1john": "1 John", "2john": "2 John", "3john": "3 John", jude: "Jude", revelation: "Revelation"
   };
 
-  // Canonical NT book order
+  const BOOK_GREEK: Record<string, string> = {
+    matthew: "Κατὰ Ματθαῖον", mark: "Κατὰ Μᾶρκον", luke: "Κατὰ Λουκᾶν",
+    john: "Κατὰ Ἰωάννην", acts: "Πράξεις", romans: "Πρὸς Ῥωμαίους",
+    "1corinthians": "Κορινθίους Αʹ", "2corinthians": "Κορινθίους Βʹ",
+    galatians: "Πρὸς Γαλάτας", ephesians: "Πρὸς Ἐφεσίους",
+    philippians: "Πρὸς Φιλιππησίους", colossians: "Πρὸς Κολοσσαεῖς",
+    "1thessalonians": "Θεσσαλονικεῖς Αʹ", "2thessalonians": "Θεσσαλονικεῖς Βʹ",
+    "1timothy": "Τιμόθεον Αʹ", "2timothy": "Τιμόθεον Βʹ", titus: "Πρὸς Τίτον",
+    philemon: "Πρὸς Φιλήμονα", hebrews: "Πρὸς Ἑβραίους", james: "Ἰακώβου",
+    "1peter": "Πέτρου Αʹ", "2peter": "Πέτρου Βʹ", "1john": "Ἰωάννου Αʹ",
+    "2john": "Ἰωάννου Βʹ", "3john": "Ἰωάννου Γʹ", jude: "Ἰούδα",
+    revelation: "Ἀποκάλυψις"
+  };
+
   const BOOK_ORDER = [
-    "matthew", "mark", "luke", "john", "acts",
-    "romans", "1corinthians", "2corinthians", "galatians", "ephesians",
-    "philippians", "colossians", "1thessalonians", "2thessalonians",
-    "1timothy", "2timothy", "titus", "philemon", "hebrews", "james",
-    "1peter", "2peter", "1john", "2john", "3john", "jude", "revelation"
+    "matthew","mark","luke","john","acts","romans","1corinthians","2corinthians",
+    "galatians","ephesians","philippians","colossians","1thessalonians","2thessalonians",
+    "1timothy","2timothy","titus","philemon","hebrews","james","1peter","2peter",
+    "1john","2john","3john","jude","revelation"
   ];
-
-  // Short display names
-  const BOOK_SHORT: Record<string, string> = {
-    matthew: "Matt", mark: "Mark", luke: "Luke", john: "John", acts: "Acts",
-    romans: "Rom", "1corinthians": "1 Cor", "2corinthians": "2 Cor",
-    galatians: "Gal", ephesians: "Eph", philippians: "Phil", colossians: "Col",
-    "1thessalonians": "1 Thess", "2thessalonians": "2 Thess",
-    "1timothy": "1 Tim", "2timothy": "2 Tim", titus: "Titus", philemon: "Phlm",
-    hebrews: "Heb", james: "Jas", "1peter": "1 Pet", "2peter": "2 Pet",
-    "1john": "1 Jn", "2john": "2 Jn", "3john": "3 Jn", jude: "Jude", revelation: "Rev"
-  };
 
   // ===== State =====
   let bibleData: any = null;
-  let currentBook = "matthew";
-  let currentChapter = 1;
+  let currentBook = "";
+  let currentChapter = 0;
   let highlightVerses: number[] = [];
   let displayMode: "interlinear" | "greek" | "english" = "interlinear";
-  let searchQuery = "";
-  let matchedVerses: Set<number> = new Set();
+  let baseFontSize = 16;
+  let ttsPlaying = false;
+  let ttsUtterance: SpeechSynthesisUtterance | null = null;
 
   // ===== DOM refs =====
-  const bookSelect = document.getElementById("book-select") as HTMLSelectElement;
-  const chapterGrid = document.getElementById("chapter-grid")!;
-  const readingTitle = document.getElementById("reading-title")!;
-  const readingSubtitle = document.getElementById("reading-subtitle")!;
-  const readingLoading = document.getElementById("reading-loading")!;
-  const readingContent = document.getElementById("reading-content")!;
-  const searchInput = document.getElementById("search-input") as HTMLInputElement;
-  const searchClear = document.getElementById("search-clear")!;
-  const searchInfo = document.getElementById("search-info")!;
-  const copyBtn = document.getElementById("copy-btn")!;
-  const copyLabel = document.getElementById("copy-label")!;
-  const shareBtn = document.getElementById("share-btn")!;
-  const modeInterlinear = document.getElementById("mode-interlinear")!;
-  const modeGreek = document.getElementById("mode-greek")!;
-  const modeEnglish = document.getElementById("mode-english")!;
+  const $id = (id: string) => document.getElementById(id)!;
+
+  const bookGrid = $id("book-grid");
+  const chapterPanel = $id("chapter-panel");
+  const chapterPanelTitle = $id("chapter-panel-title") as HTMLElement;
+  const chapterGrid = $id("chapter-grid");
+  const selectionPanel = $id("selection-panel");
+  const readingArea = $id("reading-area");
+  const readingTitle = $id("reading-title") as HTMLElement;
+  const readingSubtitle = $id("reading-subtitle") as HTMLElement;
+  const readingLoading = $id("reading-loading");
+  const readingContent = $id("reading-content");
+  const progressBar = $id("progress-bar") as HTMLElement;
+  const breadcrumb = $id("breadcrumb");
+
+  // Breadcrumb
+  const bcBooks = $id("bc-books") as HTMLButtonElement;
+  const bcBook = $id("bc-book") as HTMLSpanElement;
+  const bcSepCh = $id("bc-sep-ch") as HTMLSpanElement;
+  const bcChapter = $id("bc-chapter") as HTMLButtonElement;
+
+  // ===== Helpers =====
+  function esc(s: string): string {
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function getBookData(key: string) {
+    return bibleData ? bibleData[key] : null;
+  }
+
+  function getChapterCount(key: string): number {
+    const b = getBookData(key);
+    return b ? Object.keys(b).length : 0;
+  }
 
   // ===== Load data =====
   async function loadBible() {
     if (bibleData) return;
-    readingLoading.classList.remove("hidden");
-    readingContent.classList.add("hidden");
+    readingLoading?.classList.remove("hidden");
+    readingContent?.classList.add("hidden");
 
     const resp = await fetch("/assets/data/greekInterlinear.json");
     if (!resp.ok) throw new Error("Failed to load Greek interlinear data");
     bibleData = await resp.json();
-    populateBookSelect();
   }
 
-  // ===== Populate book dropdown (NT only) =====
-  function populateBookSelect() {
-    bookSelect.innerHTML = "";
+  // ===== Render book grid =====
+  function renderBookGrid() {
+    if (!bibleData) return;
     const dataKeys = new Set(Object.keys(bibleData));
-
-    for (const key of BOOK_ORDER) {
-      if (!dataKeys.has(key)) continue;
-      const opt = document.createElement("option");
-      opt.value = key;
-      opt.textContent = BOOK_NAMES[key] || key;
-      bookSelect.appendChild(opt);
+    const ordered = BOOK_ORDER.filter(k => dataKeys.has(k));
+    // include any extra keys
+    for (const k of Object.keys(bibleData)) {
+      if (!ordered.includes(k)) ordered.push(k);
     }
 
-    // Any extra keys not in our order
-    for (const key of Object.keys(bibleData)) {
-      if (BOOK_ORDER.includes(key)) continue;
-      const opt = document.createElement("option");
-      opt.value = key;
-      opt.textContent = BOOK_NAMES[key] || key;
-      bookSelect.appendChild(opt);
+    bookGrid.innerHTML = "";
+    for (const key of ordered) {
+      const btn = document.createElement("button");
+      const isActive = key === currentBook;
+      btn.className = `book-btn${isActive ? " book-btn-active" : ""}`;
+      btn.innerHTML = `<span>${esc(BOOK_NAMES[key] || key)}</span><span class="book-grk">${esc(BOOK_GREEK[key] || "")}</span>`;
+      btn.addEventListener("click", () => selectBook(key));
+      bookGrid.appendChild(btn);
     }
-
-    bookSelect.value = currentBook;
   }
 
   // ===== Render chapter grid =====
-  function renderChapterGrid() {
-    const book = bibleData[currentBook];
+  function renderChapterGrid(bookKey: string) {
+    const book = getBookData(bookKey);
     if (!book) return;
     const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
 
     chapterGrid.innerHTML = "";
     for (const ch of chapters) {
       const btn = document.createElement("button");
-      btn.className = `w-full py-1.5 text-xs rounded-lg transition-colors cursor-pointer ${
-        ch === currentChapter ? "chapter-btn-active" : "chapter-btn"
-      }`;
+      btn.className = `nav-btn${ch === currentChapter ? " nav-btn-active" : ""}`;
       btn.textContent = String(ch);
-      btn.addEventListener("click", () => navigateTo(currentBook, ch));
+      btn.addEventListener("click", () => navigateTo(bookKey, ch));
       chapterGrid.appendChild(btn);
     }
   }
 
-  // ===== Escape HTML =====
-  function esc(s: string): string {
-    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
+  // ===== Update breadcrumb =====
+  function updateBreadcrumb() {
+    // Always show Books link
+    bcBooks.classList.remove("hidden");
 
-  // ===== Highlight match in text =====
-  function highlightText(text: string, query: string): string {
-    if (!query) return esc(text);
-    const escaped = esc(text);
-    const q = esc(query);
-    const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
-    return escaped.replace(regex, "<mark>$1</mark>");
-  }
-
-  // ===== Search within chapter =====
-  function performSearch(query: string) {
-    searchQuery = query.trim().toLowerCase();
-    matchedVerses = new Set();
-
-    if (!searchQuery) {
-      searchClear.classList.add("hidden");
-      searchInfo.classList.add("hidden");
-      renderVerses();
-      return;
+    if (currentBook) {
+      bcBook.classList.remove("hidden");
+      bcBook.textContent = BOOK_NAMES[currentBook] || currentBook;
+    } else {
+      bcBook.classList.add("hidden");
     }
 
-    searchClear.classList.remove("hidden");
-
-    const book = bibleData[currentBook];
-    if (!book) return;
-    const chapterData = book[String(currentChapter)];
-    if (!chapterData || !chapterData.verses) return;
-
-    let count = 0;
-    for (const v of chapterData.verses) {
-      const greekStr = (v.greek || []).join(" ").toLowerCase();
-      const engStr = (v.english || []).join(" ").toLowerCase();
-      const translitStr = (v.translit || []).join(" ").toLowerCase();
-
-      if (greekStr.includes(searchQuery) || engStr.includes(searchQuery) || translitStr.includes(searchQuery)) {
-        matchedVerses.add(v.verse);
-        count++;
-      }
+    if (currentChapter) {
+      bcSepCh.classList.remove("hidden");
+      bcChapter.classList.remove("hidden");
+      bcChapter.textContent = `Chapter ${currentChapter}`;
+    } else {
+      bcSepCh.classList.add("hidden");
+      bcChapter.classList.add("hidden");
     }
+  }
 
-    searchInfo.classList.remove("hidden");
-    searchInfo.textContent = count > 0
-      ? `Found in ${count} verse${count > 1 ? "s" : ""}`
-      : "No matches found";
+  // ===== Select book (show chapters) =====
+  function selectBook(key: string) {
+    currentBook = key;
+    currentChapter = 0;
 
+    // Show chapter panel
+    chapterPanel.classList.remove("hidden");
+    chapterPanelTitle.innerHTML = `<span class="text-dkc-gold">${esc(BOOK_NAMES[key])}</span> — Chapters`;
+    renderChapterGrid(key);
+    renderBookGrid(); // refresh active state
+    updateBreadcrumb();
+  }
+
+  // ===== Navigate to chapter =====
+  async function navigateTo(book: string, chapter: number, verses?: number[]) {
+    await loadBible();
+
+    currentBook = book;
+    currentChapter = chapter;
+    highlightVerses = verses || [];
+
+    // Show reading, hide selection
+    selectionPanel.classList.add("hidden");
+    readingArea.classList.remove("hidden");
+
+    renderBookGrid(); // keep grid updated
+    updateBreadcrumb();
     renderVerses();
+    updateProgress();
+
+    // Hash
+    const hash = verses?.length
+      ? `${book}/${chapter}:${verses[0]}${verses.length > 1 ? "-" + verses[verses.length - 1] : ""}`
+      : `${book}/${chapter}`;
+    window.location.hash = hash;
+
+    readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   // ===== Render verses =====
   function renderVerses() {
-    const book = bibleData[currentBook];
+    const book = getBookData(currentBook);
     if (!book) return;
     const chapterData = book[String(currentChapter)];
     if (!chapterData) return;
 
-    const shortName = BOOK_SHORT[currentBook] || currentBook;
+    const verses = chapterData.verses || [];
+    const shortName = BOOK_NAMES[currentBook] || currentBook;
     const totalChapters = Object.keys(book).length;
     readingTitle.textContent = `${shortName} ${currentChapter}`;
-    readingSubtitle.textContent = `${totalChapters} chapter${totalChapters > 1 ? "s" : ""} — Greek Interlinear NT`;
+    readingSubtitle.textContent = `${totalChapters} chapter${totalChapters > 1 ? "s" : ""} · ${BOOK_GREEK[currentBook] || ""}`;
 
-    // Data format: { verses: [{ verse, english[], greek[], translit[] }] }
-    const verses = chapterData.verses || [];
+    // Apply font size
+    readingContent.style.fontSize = baseFontSize + "px";
+
     let html = "";
-
     for (const v of verses) {
       const vs = v.verse;
-      const isHighlighted = highlightVerses.includes(vs);
-      const isMatch = matchedVerses.has(vs);
-      const extraClass = isHighlighted ? " highlighted" : (isMatch ? " search-match" : "");
+      const isHL = highlightVerses.includes(vs);
 
-      html += `<div class="verse-block${extraClass}" data-verse="${vs}">`;
+      html += `<div class="verse-block${isHL ? " highlighted" : ""}" data-verse="${vs}">`;
       html += `<span class="verse-num">${vs}</span>`;
 
       if (displayMode === "interlinear") {
-        // Interlinear: each word is a column with greek on top, english below
         const greekArr: string[] = v.greek || [];
         const engArr: string[] = v.english || [];
         const translitArr: string[] = v.translit || [];
         const len = Math.max(greekArr.length, engArr.length, translitArr.length);
 
-        html += `<span class="greek-text">`;
         for (let i = 0; i < len; i++) {
           const g = greekArr[i] || "";
-          const e = engArr[i] || "";
           const t = translitArr[i] || "";
+          const e = engArr[i] || "";
           if (!g && !e && !t) continue;
-
           html += `<span class="word-group">`;
-          html += `<span class="word-greek">${searchQuery ? highlightText(g, searchQuery) : esc(g)}</span>`;
-          html += `<span class="word-translit">${searchQuery ? highlightText(t, searchQuery) : esc(t)}</span>`;
-          html += `<span class="word-english">${searchQuery ? highlightText(e, searchQuery) : esc(e)}</span>`;
+          html += `<span class="word-greek">${esc(g)}</span>`;
+          if (t) html += `<span class="word-translit">${esc(t)}</span>`;
+          if (e) html += `<span class="word-english">${esc(e)}</span>`;
           html += `</span>`;
-          if (i < len - 1) html += ` `;
         }
-        html += `</span>`;
 
       } else if (displayMode === "greek") {
-        const greekStr = (v.greek || []).join(" ");
-        html += `<span class="greek-only-text">${searchQuery ? highlightText(greekStr, searchQuery) : esc(greekStr)}</span>`;
-
+        html += `<span class="greek-only-text">${esc((v.greek || []).join(" "))}</span>`;
       } else {
-        const engStr = (v.english || []).join(" ");
-        html += `<span class="english-only-text">${searchQuery ? highlightText(engStr, searchQuery) : esc(engStr)}</span>`;
+        html += `<span class="english-only-text">${esc((v.english || []).join(" "))}</span>`;
       }
 
       html += `</div>`;
@@ -472,33 +530,47 @@ import Footer from "@/components/Footer.astro";
     readingContent.classList.remove("hidden");
   }
 
-  // ===== Navigate =====
-  async function navigateTo(book: string, chapter: number, verses?: number[]) {
-    currentBook = book;
-    currentChapter = chapter;
-    highlightVerses = verses || [];
-    searchQuery = "";
-    matchedVerses = new Set();
-    searchInput.value = "";
-    searchClear.classList.add("hidden");
-    searchInfo.classList.add("hidden");
+  // ===== Progress bar =====
+  function updateProgress() {
+    if (!bibleData) return;
+    const allBooks = BOOK_ORDER.filter(k => bibleData[k]);
+    let readChapters = 0;
+    let totalChapters = 0;
+    let foundCurrent = false;
 
-    bookSelect.value = book;
-    renderChapterGrid();
-    renderVerses();
+    for (const bk of allBooks) {
+      const chCount = Object.keys(bibleData[bk]).length;
+      totalChapters += chCount;
+      if (!foundCurrent) {
+        if (bk === currentBook) {
+          const chapters = Object.keys(bibleData[bk]).map(Number).sort((a, b) => a - b);
+          const idx = chapters.indexOf(currentChapter);
+          readChapters += idx + 1;
+          foundCurrent = true;
+        } else {
+          readChapters += chCount;
+        }
+      }
+    }
 
-    // Update URL hash
-    const hash = verses?.length
-      ? `${book}/${chapter}:${verses[0]}${verses.length > 1 ? "-" + verses[verses.length - 1] : ""}`
-      : `${book}/${chapter}`;
-    window.location.hash = hash;
-
-    readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+    const pct = totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
+    progressBar.style.width = pct + "%";
   }
 
-  // ===== Get adjacent chapter =====
+  // ===== Scroll-based progress =====
+  function updateScrollProgress() {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return;
+    const scrolled = window.scrollY / docHeight;
+    const existing = parseFloat(progressBar.style.width) || 0;
+    // Take the max of chapter-position progress and scroll progress
+    const combined = Math.max(existing, scrolled * 100);
+    progressBar.style.width = combined + "%";
+  }
+
+  // ===== Adjacent chapter =====
   function getAdjacentChapter(delta: number) {
-    const book = bibleData[currentBook];
+    const book = getBookData(currentBook);
     if (!book) return null;
     const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
     const idx = chapters.indexOf(currentChapter);
@@ -506,47 +578,85 @@ import Footer from "@/components/Footer.astro";
     if (newIdx >= 0 && newIdx < chapters.length) {
       return { book: currentBook, chapter: chapters[newIdx] };
     }
-    // Try adjacent book (NT canonical order)
+    // Cross-book
     const allBooks = BOOK_ORDER.filter((k: string) => bibleData[k]);
     const bookIdx = allBooks.indexOf(currentBook);
     const nextBookIdx = bookIdx + delta;
     if (nextBookIdx >= 0 && nextBookIdx < allBooks.length) {
       const nextBook = allBooks[nextBookIdx];
       const nextChapters = Object.keys(bibleData[nextBook]).map(Number).sort((a, b) => a - b);
-      return {
-        book: nextBook,
-        chapter: delta > 0 ? nextChapters[0] : nextChapters[nextChapters.length - 1]
-      };
+      return { book: nextBook, chapter: delta > 0 ? nextChapters[0] : nextChapters[nextChapters.length - 1] };
     }
     return null;
   }
 
-  // ===== Get chapter as plain text =====
+  // ===== TTS =====
+  function toggleTTS() {
+    if (ttsPlaying) {
+      speechSynthesis.cancel();
+      ttsPlaying = false;
+      $id("tts-label").textContent = "Read Aloud";
+      return;
+    }
+
+    const book = getBookData(currentBook);
+    if (!book) return;
+    const chapterData = book[String(currentChapter)];
+    if (!chapterData) return;
+
+    const verses = chapterData.verses || [];
+    let text = "";
+    for (const v of verses) {
+      text += `Verse ${v.verse}. ${(v.english || []).join(" ")}. `;
+    }
+
+    ttsUtterance = new SpeechSynthesisUtterance(text);
+    ttsUtterance.lang = "en-US";
+    ttsUtterance.rate = 0.9;
+
+    ttsUtterance.onend = () => {
+      ttsPlaying = false;
+      $id("tts-label").textContent = "Read Aloud";
+    };
+    ttsUtterance.onerror = () => {
+      ttsPlaying = false;
+      $id("tts-label").textContent = "Read Aloud";
+    };
+
+    speechSynthesis.speak(ttsUtterance);
+    ttsPlaying = true;
+    $id("tts-label").textContent = "Stop";
+  }
+
+  // ===== Font size =====
+  function changeFontSize(delta: number) {
+    baseFontSize = Math.min(28, Math.max(10, baseFontSize + delta));
+    $id("font-size-label").textContent = String(baseFontSize);
+    readingContent.style.fontSize = baseFontSize + "px";
+    localStorage.setItem("gnt-fontsize", String(baseFontSize));
+  }
+
+  // ===== Get chapter text =====
   function getChapterText(): string {
-    const book = bibleData[currentBook];
+    const book = getBookData(currentBook);
     if (!book) return "";
     const chapterData = book[String(currentChapter)];
     if (!chapterData) return "";
-
-    const shortName = BOOK_SHORT[currentBook] || currentBook;
+    const shortName = BOOK_NAMES[currentBook] || currentBook;
     let text = `${shortName} ${currentChapter} (Greek Interlinear NT)\n\n`;
-
-    const verses = chapterData.verses || [];
-    for (const v of verses) {
-      const greekStr = (v.greek || []).join(" ");
-      const engStr = (v.english || []).join(" ");
-      const translitStr = (v.translit || []).join(" ");
-      text += `${v.verse}. ${greekStr}\n    [${translitStr}]\n    "${engStr}"\n\n`;
+    for (const v of (chapterData.verses || [])) {
+      text += `${v.verse}. ${(v.greek || []).join(" ")}\n    [${(v.translit || []).join(" ")}]\n    "${(v.english || []).join(" ")}"\n\n`;
     }
     return text.trim();
   }
 
-  // ===== Copy chapter =====
+  // ===== Copy =====
   function copyChapter() {
     const text = getChapterText();
+    const label = $id("copy-label");
     navigator.clipboard.writeText(text).then(() => {
-      copyLabel.textContent = "Copied!";
-      setTimeout(() => { copyLabel.textContent = "Copy Chapter"; }, 2000);
+      label.textContent = "Copied!";
+      setTimeout(() => { label.textContent = "Copy"; }, 2000);
     }).catch(() => {
       const ta = document.createElement("textarea");
       ta.value = text;
@@ -556,109 +666,148 @@ import Footer from "@/components/Footer.astro";
       ta.select();
       document.execCommand("copy");
       document.body.removeChild(ta);
-      copyLabel.textContent = "Copied!";
-      setTimeout(() => { copyLabel.textContent = "Copy Chapter"; }, 2000);
+      label.textContent = "Copied!";
+      setTimeout(() => { label.textContent = "Copy"; }, 2000);
     });
   }
 
   // ===== Share =====
   function shareChapter() {
     const text = getChapterText();
-    const shortName = BOOK_SHORT[currentBook] || currentBook;
+    const shortName = BOOK_NAMES[currentBook] || currentBook;
     const title = `${shortName} ${currentChapter} — Greek Interlinear NT`;
     const url = window.location.href;
+    const label = $id("share-label");
 
     if (navigator.share) {
       navigator.share({ title, text: text.slice(0, 500) + (text.length > 500 ? "…" : ""), url }).catch(() => {});
     } else {
       navigator.clipboard.writeText(url).then(() => {
-        const sp = shareBtn.querySelector("span");
-        if (sp) sp.textContent = "Link copied!";
-        setTimeout(() => { if (sp) sp.textContent = "Share"; }, 2000);
+        label.textContent = "Link copied!";
+        setTimeout(() => { label.textContent = "Share"; }, 2000);
       }).catch(() => {});
     }
   }
 
-  // ===== Display mode toggle =====
+  // ===== Display mode =====
   function setMode(mode: "interlinear" | "greek" | "english") {
     displayMode = mode;
-    const btns = [modeInterlinear, modeGreek, modeEnglish];
-    btns.forEach(b => {
-      b.className = b.className.replace(/border-dkc-gold\/40/g, "border-dkc-border").replace(/text-dkc-gold/g, "text-dkc-muted");
-    });
-    const active = mode === "interlinear" ? modeInterlinear : mode === "greek" ? modeGreek : modeEnglish;
-    active.className = active.className.replace(/border-dkc-border/g, "border-dkc-gold/40").replace(/text-dkc-muted/g, "text-dkc-gold");
+    const modes: Record<string, HTMLElement> = {
+      interlinear: $id("mode-interlinear"),
+      greek: $id("mode-greek"),
+      english: $id("mode-english")
+    };
+    for (const [k, btn] of Object.entries(modes)) {
+      if (k === mode) {
+        btn.className = "px-2.5 py-1.5 rounded-lg border border-dkc-gold/40 text-dkc-gold text-xs transition-colors cursor-pointer";
+      } else {
+        btn.className = "px-2.5 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30 transition-colors cursor-pointer";
+      }
+    }
     renderVerses();
+    localStorage.setItem("gnt-mode", mode);
   }
 
-  // ===== Event listeners =====
-  bookSelect.addEventListener("change", () => {
-    navigateTo(bookSelect.value, 1);
-  });
+  // ===== Go back to book selection =====
+  function showBooks() {
+    selectionPanel.classList.remove("hidden");
+    readingArea.classList.add("hidden");
+    chapterPanel.classList.add("hidden");
+    currentChapter = 0;
+    stopTTS();
+    updateBreadcrumb();
+    window.location.hash = "";
+  }
 
-  copyBtn.addEventListener("click", copyChapter);
-  shareBtn.addEventListener("click", shareChapter);
+  function showChapters() {
+    if (!currentBook) return;
+    selectionPanel.classList.remove("hidden");
+    readingArea.classList.add("hidden");
+    stopTTS();
+    selectBook(currentBook);
+    window.location.hash = currentBook;
+  }
 
-  modeInterlinear.addEventListener("click", () => setMode("interlinear"));
-  modeGreek.addEventListener("click", () => setMode("greek"));
-  modeEnglish.addEventListener("click", () => setMode("english"));
-
-  // Search
-  let searchTimeout: ReturnType<typeof setTimeout>;
-  searchInput.addEventListener("input", () => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => performSearch(searchInput.value), 300);
-  });
-
-  searchClear.addEventListener("click", () => {
-    searchInput.value = "";
-    performSearch("");
-  });
-
-  searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      searchInput.value = "";
-      performSearch("");
+  function stopTTS() {
+    if (ttsPlaying) {
+      speechSynthesis.cancel();
+      ttsPlaying = false;
+      $id("tts-label").textContent = "Read Aloud";
     }
+  }
+
+  // ===== Wire events =====
+  $id("back-to-books").addEventListener("click", showBooks);
+  bcBooks.addEventListener("click", showBooks);
+  bcBook.addEventListener("click", showChapters);
+  bcChapter.addEventListener("click", () => {
+    if (currentBook && currentChapter) navigateTo(currentBook, currentChapter);
   });
 
-  // Prev/Next buttons
-  document.getElementById("prev-ch")!.addEventListener("click", () => {
+  $id("prev-ch").addEventListener("click", () => {
     const adj = getAdjacentChapter(-1);
     if (adj) navigateTo(adj.book, adj.chapter);
   });
-  document.getElementById("next-ch")!.addEventListener("click", () => {
+  $id("next-ch").addEventListener("click", () => {
     const adj = getAdjacentChapter(1);
     if (adj) navigateTo(adj.book, adj.chapter);
   });
-  document.getElementById("prev-ch-bottom")!.addEventListener("click", () => {
+  $id("prev-ch-bottom").addEventListener("click", () => {
     const adj = getAdjacentChapter(-1);
     if (adj) navigateTo(adj.book, adj.chapter);
   });
-  document.getElementById("next-ch-bottom")!.addEventListener("click", () => {
+  $id("next-ch-bottom").addEventListener("click", () => {
     const adj = getAdjacentChapter(1);
     if (adj) navigateTo(adj.book, adj.chapter);
   });
+
+  $id("tts-btn").addEventListener("click", toggleTTS);
+  $id("copy-btn").addEventListener("click", copyChapter);
+  $id("share-btn").addEventListener("click", shareChapter);
+
+  $id("mode-interlinear").addEventListener("click", () => setMode("interlinear"));
+  $id("mode-greek").addEventListener("click", () => setMode("greek"));
+  $id("mode-english").addEventListener("click", () => setMode("english"));
+
+  // Font size
+  $id("font-inc").addEventListener("click", () => changeFontSize(1));
+  $id("font-dec").addEventListener("click", () => changeFontSize(-1));
+  $id("font-inc-m").addEventListener("click", () => changeFontSize(1));
+  $id("font-dec-m").addEventListener("click", () => changeFontSize(-1));
+
+  // Scroll progress
+  window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
   // Keyboard nav
   document.addEventListener("keydown", (e) => {
-    if (document.activeElement === searchInput || document.activeElement === bookSelect) return;
-    if (e.key === "ArrowLeft") document.getElementById("prev-ch")!.click();
-    if (e.key === "ArrowRight") document.getElementById("next-ch")!.click();
+    if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "SELECT") return;
+    if (e.key === "ArrowLeft") $id("prev-ch").click();
+    if (e.key === "ArrowRight") $id("next-ch").click();
+    if (e.key === "Escape") showBooks();
   });
 
   // ===== Init =====
   async function init() {
+    // Restore prefs
+    const savedSize = localStorage.getItem("gnt-fontsize");
+    if (savedSize) {
+      baseFontSize = parseInt(savedSize) || 16;
+      $id("font-size-label").textContent = String(baseFontSize);
+    }
+    const savedMode = localStorage.getItem("gnt-mode") as "interlinear" | "greek" | "english" | null;
+    if (savedMode) setMode(savedMode);
+
+    // Parse hash
     const hash = window.location.hash.slice(1);
-    let initBook = "matthew";
-    let initChapter = 1;
+    let initBook = "";
+    let initChapter = 0;
     let initVerses: number[] = [];
 
     if (hash) {
-      const parsed = hash.match(/^([^/]+)\/(\d+)(?::(\d+(?:-\d+)?))?$/);
+      const parsed = hash.match(/^([^/]+)(?:\/(\d+)(?::(\d+(?:-\d+)?))?)?$/);
       if (parsed) {
         initBook = parsed[1];
-        initChapter = parseInt(parsed[2]);
+        if (parsed[2]) initChapter = parseInt(parsed[2]);
         if (parsed[3]) {
           if (parsed[3].includes("-")) {
             const [a, b] = parsed[3].split("-").map(Number);
@@ -671,11 +820,15 @@ import Footer from "@/components/Footer.astro";
     }
 
     await loadBible();
+    renderBookGrid();
 
-    if (bibleData[initBook] && bibleData[initBook][String(initChapter)]) {
+    if (initBook && initChapter && bibleData[initBook] && bibleData[initBook][String(initChapter)]) {
       navigateTo(initBook, initChapter, initVerses);
+    } else if (initBook && bibleData[initBook]) {
+      selectBook(initBook);
+      window.location.hash = initBook;
     } else {
-      navigateTo("matthew", 1);
+      updateBreadcrumb();
     }
   }
 

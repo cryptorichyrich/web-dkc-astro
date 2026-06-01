@@ -13,7 +13,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+// TOC items: h2 and h3 only
+const tocItems = headings.filter((h: { depth: number }) => h.depth === 2 || h.depth === 3);
 
 // --- Related articles: 3 posts sharing the most tags, excluding current ---
 const allPosts = await getCollection("blog");
@@ -34,6 +37,24 @@ const encodedTitle = encodeURIComponent(post.data.title);
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>{post.data.title} — Damai Kasih Channel</title>
+    <meta name="description" content={post.data.subtitle || post.data.title} />
+    {post.data.tags.map(tag => <meta name="keywords" content={tag} />)}
+    <link rel="canonical" href={pageUrl} />
+
+    <!-- JSON-LD for Article -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: post.data.title,
+      author: { "@type": "Person", name: post.data.author },
+      datePublished: post.data.publishedAt.toISOString(),
+      description: post.data.subtitle || "",
+      image: post.data.heroImage || post.data.coverImage,
+    })} />
+  </Fragment>
+
   <Navbar />
 
   <article class="max-w-3xl mx-auto px-4 pt-8 pb-24">
@@ -121,27 +142,44 @@ const encodedTitle = encodeURIComponent(post.data.title);
     })()}
 
     <!-- Mobile TOC (collapsible, above content) -->
-    <div class="lg:hidden mb-6" id="mobile-toc">
-      <button
-        id="mobile-toc-toggle"
-        class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border text-sm text-dkc-muted hover:border-dkc-gold/30 transition-colors"
-        aria-expanded="false"
-        aria-controls="mobile-toc-list"
-      >
-        <span class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-dkc-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
-          Daftar Isi
-        </span>
-        <svg id="mobile-toc-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-      </button>
-      <nav
-        id="mobile-toc-list"
-        class="hidden mt-2 px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border"
-        aria-label="Daftar Isi"
-      >
-        <ol id="mobile-toc-items" class="space-y-1.5 text-sm text-dkc-muted"></ol>
-      </nav>
-    </div>
+    {tocItems.length > 0 && (
+      <div class="lg:hidden mb-6" id="mobile-toc">
+        <button
+          id="mobile-toc-toggle"
+          class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border text-sm text-dkc-muted hover:border-dkc-gold/30 transition-colors"
+          aria-expanded="false"
+          aria-controls="mobile-toc-list"
+        >
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-dkc-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+            Daftar Isi
+          </span>
+          <svg id="mobile-toc-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <nav
+          id="mobile-toc-list"
+          class="hidden mt-2 px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border"
+          aria-label="Daftar Isi"
+        >
+          <ol class="space-y-1.5 text-sm text-dkc-muted">
+            {tocItems.map(h => (
+              <li>
+                <a
+                  href={`#${h.slug}`}
+                  data-toc-link
+                  class:list={[
+                    'block py-0.5 hover:text-dkc-gold transition-colors',
+                    h.depth === 3 && 'pl-3 text-xs',
+                  ]}
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    )}
 
     <!-- Content + Desktop TOC sidebar -->
     <div class="flex gap-8 relative">
@@ -153,12 +191,29 @@ const encodedTitle = encodeURIComponent(post.data.title);
       </div>
 
       <!-- Desktop TOC (sticky sidebar, right) -->
-      <aside class="hidden lg:block w-56 shrink-0" aria-label="Daftar Isi">
-        <nav class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" id="desktop-toc">
-          <p class="text-xs font-semibold text-dkc-gold uppercase tracking-wide mb-3">Daftar Isi</p>
-          <ol id="desktop-toc-items" class="space-y-1.5 text-sm text-dkc-muted border-l border-dkc-border pl-3"></ol>
-        </nav>
-      </aside>
+      {tocItems.length > 0 && (
+        <aside class="hidden lg:block w-56 shrink-0" aria-label="Daftar Isi">
+          <nav class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" id="desktop-toc">
+            <p class="text-xs font-semibold text-dkc-gold uppercase tracking-wide mb-3">Daftar Isi</p>
+            <ol class="space-y-1.5 text-sm text-dkc-muted border-l border-dkc-border pl-3">
+              {tocItems.map(h => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    data-toc-link
+                    class:list={[
+                      'block py-0.5 hover:text-dkc-gold transition-colors',
+                      h.depth === 3 && 'pl-3 text-xs',
+                    ]}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )}
     </div>
 
     <!-- Related articles -->
@@ -189,90 +244,58 @@ const encodedTitle = encodeURIComponent(post.data.title);
   <Footer />
 </BaseLayout>
 
-<slot name="head">
-  <title>{post.data.title} — Damai Kasih Channel</title>
-  <meta name="description" content={post.data.subtitle || post.data.title} />
-  {post.data.tags.map(tag => <meta name="keywords" content={tag} />)}
-  <link rel="canonical" href={pageUrl} />
-
-  <!-- JSON-LD for Article -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.data.title,
-    author: { "@type": "Person", name: post.data.author },
-    datePublished: post.data.publishedAt.toISOString(),
-    description: post.data.subtitle || "",
-    image: post.data.heroImage || post.data.coverImage,
-  })} />
-</slot>
+<style is:global>
+  /* Scroll offset so headings aren't hidden behind the sticky navbar */
+  .prose-gold h2[id],
+  .prose-gold h3[id] {
+    scroll-margin-top: 5rem;
+  }
+</style>
 
 <script>
-  // === TABLE OF CONTENTS ===
-  function buildTOC() {
-    const article = document.getElementById('article-body');
-    if (!article) return;
+  // === SCROLL SPY: highlight active TOC link based on scroll position ===
+  function initScrollSpy() {
+    const tocLinks = document.querySelectorAll('[data-toc-link]');
+    if (tocLinks.length === 0) return;
 
-    const headings = article.querySelectorAll('h2, h3');
-    if (headings.length === 0) return;
-
-    const desktopList = document.getElementById('desktop-toc-items');
-    const mobileList = document.getElementById('mobile-toc-items');
-    const desktopToc = document.getElementById('desktop-toc');
-
-    type HeadingItem = { id: string; text: string; level: number; el: Element };
-    const items: HeadingItem[] = [];
-
-    headings.forEach((heading, i) => {
-      const id = heading.id || `toc-heading-${i}`;
-      if (!heading.id) heading.id = id;
-      items.push({ id, text: heading.textContent || '', level: parseInt(heading.tagName[1]), el: heading });
-    });
-
-    const linkClass = (level: number) =>
-      level === 2
-        ? 'block py-0.5 hover:text-dkc-gold transition-colors'
-        : 'block py-0.5 pl-3 text-xs hover:text-dkc-gold transition-colors';
-
-    items.forEach(item => {
-      const a = document.createElement('a');
-      a.href = `#${item.id}`;
-      a.textContent = item.text;
-      a.className = linkClass(item.level);
-
-      if (desktopList) {
-        const li = document.createElement('li');
-        li.appendChild(a.cloneNode(true));
-        desktopList.appendChild(li);
-      }
-      if (mobileList) {
-        const li = document.createElement('li');
-        li.appendChild(a.cloneNode(true));
-        mobileList.appendChild(li);
+    // Collect the IDs that the TOC links point to
+    const headingIds: string[] = [];
+    tocLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        headingIds.push(href.slice(1));
       }
     });
 
-    if (items.length === 0 && desktopToc) {
-      desktopToc.style.display = 'none';
-    }
+    const headingEls = headingIds
+      .map(id => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    // Scroll spy: highlight active heading
+    if (headingEls.length === 0) return;
+
+    let currentActiveId: string | null = null;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const id = entry.target.id;
-          document.querySelectorAll('#desktop-toc-items a, #mobile-toc-items a').forEach(link => {
-            const isActive = link.getAttribute('href') === `#${id}`;
-            link.classList.toggle('text-dkc-gold', isActive);
-            link.classList.toggle('font-medium', isActive);
-          });
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            currentActiveId = entry.target.id;
+            break;
+          }
+        }
+        if (!currentActiveId) return;
+
+        tocLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          const isActive = href === `#${currentActiveId}`;
+          link.classList.toggle('text-dkc-gold', isActive);
+          link.classList.toggle('font-medium', isActive);
         });
       },
       { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
     );
 
-    items.forEach(item => observer.observe(item.el));
+    headingEls.forEach(h => observer.observe(h));
   }
 
   // === MOBILE TOC TOGGLE ===
@@ -287,6 +310,15 @@ const encodedTitle = encodeURIComponent(post.data.title);
       toggle.setAttribute('aria-expanded', String(!expanded));
       list.classList.toggle('hidden', expanded);
       chevron.style.transform = expanded ? '' : 'rotate(180deg)';
+    });
+
+    // Close mobile TOC when a link is clicked
+    list.querySelectorAll('[data-toc-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        list.classList.add('hidden');
+        chevron.style.transform = '';
+      });
     });
   }
 
@@ -332,9 +364,7 @@ const encodedTitle = encodeURIComponent(post.data.title);
   }
 
   // Initialize everything
-  document.addEventListener('DOMContentLoaded', () => {
-    buildTOC();
-    initMobileTOC();
-    initShareButtons();
-  });
+  initScrollSpy();
+  initMobileTOC();
+  initShareButtons();
 </script>

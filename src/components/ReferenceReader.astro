@@ -1,6 +1,9 @@
 ---
 // Shared Reference Reader — KGK, KHK, Summa style
-// Props: title, icon, dataUrl, totalCount, color
+// Props: title, subtitle, icon, dataUrl, totalCount, color
+// Features: smart range search, full-text search, TTS, font-size toggle,
+//   social share, copy-to-clipboard, highlights/bookmarks (localStorage),
+//   TOC sidebar (desktop), reading progress bar, Bible citation tooltips
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
@@ -15,103 +18,313 @@ interface Props {
 }
 
 const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro.props;
+const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
 ---
 
 <BaseLayout>
   <Navbar />
 
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+  <!-- Reading progress bar -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-[3px] z-[100] transition-[width] duration-150 ease-out"
+    style="width:0%;background:linear-gradient(90deg,var(--color-dkc-gold,#c9a84c),#e8c974);box-shadow:0 0 8px rgba(201,168,76,0.4)"></div>
+
+  <main class="max-w-6xl mx-auto px-4 pt-8 pb-24">
     <!-- Header -->
-    <div class="text-center mb-8">
+    <div class="text-center mb-6">
       <span class="text-4xl">{icon}</span>
       <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">{title}</h1>
       <p class="text-dkc-muted text-sm mt-1">{subtitle} · {totalCount} paragraf</p>
     </div>
 
-    <!-- Smart Search -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex gap-2">
-        <input
-          id="ref-search"
-          type="text"
-          placeholder="Cari nomor: 1, 5-10, 100,200-205 ..."
-          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
-          autocomplete="off"
-        />
-        <button id="ref-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">
-          Cari
-        </button>
-      </div>
-      <div class="flex gap-3 mt-2 text-xs text-dkc-muted">
-        <span>Contoh:</span>
-        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="1">1</button>
-        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="5-10">5-10</button>
-        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="8,15,22">8,15,22</button>
-        <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="100-105,200">100-105,200</button>
-      </div>
-    </div>
-
-    <!-- Full-text search -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex gap-2">
-        <input
-          id="ref-text-search"
-          type="text"
-          placeholder="Cari teks dalam paragraf..."
-          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
-          autocomplete="off"
-        />
-        <button id="ref-text-search-btn" class="px-4 py-2.5 bg-dkc-card text-dkc-muted rounded-lg text-sm font-medium hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors border border-dkc-border">
-          Teks
-        </button>
-      </div>
-    </div>
-
-    <!-- Results -->
-    <div id="ref-results" class="space-y-3">
-      <div class="text-center text-dkc-muted py-12">
-        <span class="text-4xl block mb-3">{icon}</span>
-        <p>Masukkan nomor paragraf atau teks untuk mulai membaca</p>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <div id="ref-nav" class="hidden flex justify-between items-center mt-6">
-      <button id="ref-prev" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
-        ← Sebelumnya
+    <!-- Social Share Buttons -->
+    <div id="social-share" class="flex justify-center gap-2 mb-6 flex-wrap">
+      <button data-share="whatsapp" class="share-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#25D366]/15 text-[#25D366] border border-[#25D366]/25 hover:bg-[#25D366]/25 transition-colors" title="Bagikan ke WhatsApp">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WA
       </button>
-      <span id="ref-range" class="text-sm text-dkc-muted"></span>
-      <button id="ref-next" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
-        Selanjutnya →
+      <button data-share="telegram" class="share-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#26A5E4]/15 text-[#26A5E4] border border-[#26A5E4]/25 hover:bg-[#26A5E4]/25 transition-colors" title="Bagikan ke Telegram">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.46-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.015-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.329-.913.49-1.302.481-.428-.009-1.252-.242-1.865-.441-.751-.244-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.119.098.152.228.168.32.016.092.036.301.02.466z"/></svg>
+        TG
       </button>
+      <button data-share="twitter" class="share-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#1DA1F2]/15 text-[#1DA1F2] border border-[#1DA1F2]/25 hover:bg-[#1DA1F2]/25 transition-colors" title="Bagikan ke Twitter/X">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X
+      </button>
+      <button data-share="facebook" class="share-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#1877F2]/15 text-[#1877F2] border border-[#1877F2]/25 hover:bg-[#1877F2]/25 transition-colors" title="Bagikan ke Facebook">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        FB
+      </button>
+      <button data-share="copy" class="share-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-dkc-gold/15 text-dkc-gold border border-dkc-gold/25 hover:bg-dkc-gold/25 transition-colors" title="Salin tautan">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        Salin
+      </button>
+      <span id="share-toast" class="hidden fixed top-20 left-1/2 -translate-x-1/2 bg-dkc-gold/90 text-dkc-deep px-4 py-2 rounded-lg text-sm font-medium z-[200] shadow-lg whitespace-nowrap">Tautan disalin!</span>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- TOC Sidebar (desktop only) -->
+      <aside id="toc-sidebar" class="hidden lg:block lg:w-48 shrink-0">
+        <div class="glass-card p-3 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+          <h3 class="text-xs font-semibold text-dkc-gold mb-2 uppercase tracking-wider">Daftar Isi</h3>
+          <div id="toc-grid" class="grid grid-cols-5 gap-1">
+            <!-- Populated by JS -->
+          </div>
+          <div class="mt-2 pt-2 border-t border-dkc-border text-center">
+            <button id="toc-show-more" class="text-xs text-dkc-gold/70 hover:text-dkc-gold transition-colors">Tampilkan lebih →</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 min-w-0">
+        <!-- Toolbar: TTS + Font Size -->
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <button id="tts-toggle" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors flex items-center gap-1.5" title="Bacakan semua paragraf">
+              <svg id="tts-icon-play" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              <svg id="tts-icon-stop" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+              <span id="tts-label">Bacakan</span>
+            </button>
+            <button id="font-size-toggle" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors" title="Ubah ukuran teks">
+              <span id="font-size-label">Teks M</span>
+            </button>
+          </div>
+          <!-- Current range display (shown on mobile) -->
+          <span id="current-range-label" class="text-xs text-dkc-muted hidden"></span>
+        </div>
+
+        <!-- Smart Search -->
+        <div class="glass-card p-4 mb-4">
+          <div class="flex gap-2">
+            <input
+              id="ref-search"
+              type="text"
+              placeholder="Cari nomor: 1, 5-10, 100,200-205 ..."
+              class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
+              autocomplete="off"
+            />
+            <button id="ref-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">
+              Cari
+            </button>
+          </div>
+          <div class="flex gap-3 mt-2 text-xs text-dkc-muted flex-wrap">
+            <span>Contoh:</span>
+            <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="1">1</button>
+            <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="5-10">5-10</button>
+            <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="8,15,22">8,15,22</button>
+            <button class="example-btn text-dkc-gold/70 hover:text-dkc-gold" data-q="100-105,200">100-105,200</button>
+          </div>
+        </div>
+
+        <!-- Full-text search -->
+        <div class="glass-card p-4 mb-6">
+          <div class="flex gap-2">
+            <input
+              id="ref-text-search"
+              type="text"
+              placeholder="Cari teks dalam paragraf..."
+              class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
+              autocomplete="off"
+            />
+            <button id="ref-text-search-btn" class="px-4 py-2.5 bg-dkc-card text-dkc-muted rounded-lg text-sm font-medium hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors border border-dkc-border">
+              Teks
+            </button>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div id="ref-results" class="space-y-3">
+          <div class="text-center text-dkc-muted py-12">
+            <span class="text-4xl block mb-3">{icon}</span>
+            <p>Masukkan nomor paragraf atau teks untuk mulai membaca</p>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div id="ref-nav" class="hidden justify-between items-center mt-6">
+          <button id="ref-prev" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
+            ← Sebelumnya
+          </button>
+          <span id="ref-range" class="text-sm text-dkc-muted"></span>
+          <button id="ref-next" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">
+            Selanjutnya →
+          </button>
+        </div>
+      </div>
     </div>
   </main>
 
   <Footer />
 </BaseLayout>
 
-<script define:vars={{ dataUrl }}>
+<script define:vars={{ dataUrl, title, totalCount }}>
+  // ─── Constants ─────────────────────────────────────────────
+  const STORAGE_HIGHLIGHTS_KEY = 'highlights-' + dataUrl;
+  const STORAGE_SIZE_KEY = 'reference-reader-font-size';
+  const FONT_SIZES = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl'];
+  const FONT_SIZE_LABELS = ['XS', 'S', 'M', 'L', 'XL'];
+  const TOC_COUNT = 50; // Show first 50 paragraphs in sidebar
+
+  // ─── State ─────────────────────────────────────────────────
   let allData = null;
   let currentIds = [];
-  let currentRange = { start: 0, count: 20 };
+  let highlights = new Set();
+  let currentFontSizeIndex = 2; // default 'M'
+  let ttsUtterance = null;
+  let isSpeaking = false;
+  let ttsQueue = [];
+  let ttsIndex = 0;
 
-  // Load data
+  // ─── Bible citation regex (Indonesian abbreviations) ───────
+  const BIBLE_BOOKS = [
+    'Kej','Kel','Im','Bil','Ul','Yos','Hak','Rut','1Sam','2Sam','1Raj','2Raj',
+    '1Taw','2Taw','Ezr','Neh','Est','Ayb','Mzm','Ams','Pkh','Kid','Yes','Yer',
+    'Rat','Yeh','Dan','Hos','Yl','Am','Ob','Yun','Mi','Nah','Hab','Zef','Hag',
+    'Za','Mal','Tob','Ydt','Bar','1Mak','2Mak','Keb','Sir',
+    'Mat','Mrk','Luk','Yoh','Kis','Rm','1Kor','2Kor','Gal','Ef','Flp','Kol',
+    '1Tes','2Tes','1Tim','2Tim','Tit','Flm','Ibr','Yak','1Ptr','2Ptr',
+    '1Yoh','2Yoh','3Yoh','Yud','Why'
+  ];
+  const BIBLE_REGEX = new RegExp(
+    '\\b(?:' + BIBLE_BOOKS.join('|') + ')\\s*\\d+:\\d+(?:-\\d+)?(?:\\s*;\\s*\\d+)?\\b',
+    'gi'
+  );
+
+  // ─── Helpers ───────────────────────────────────────────────
+  function getTextContent(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || '';
+  }
+
+  function escapeRegex(str) {
+    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightText(text, query) {
+    if (!query) return text;
+    // Only highlight the text nodes within HTML, not tag attributes
+    const escaped = escapeRegex(query);
+    // Insert highlights into text content, avoiding HTML tags
+    const tmp = document.createElement('div');
+    tmp.innerHTML = text;
+    _highlightTextNodes(tmp, new RegExp(`(${escaped})`, 'gi'));
+    return tmp.innerHTML;
+  }
+
+  function _highlightTextNodes(node, regex) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent;
+      if (regex.test(text)) {
+        regex.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let lastIdx = 0;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          if (match.index > lastIdx) {
+            frag.appendChild(document.createTextNode(text.slice(lastIdx, match.index)));
+          }
+          const mark = document.createElement('mark');
+          mark.className = 'bg-dkc-gold/30 text-dkc-text rounded px-0.5';
+          mark.textContent = match[1] || match[0];
+          frag.appendChild(mark);
+          lastIdx = regex.lastIndex;
+          if (!match[1]) break; // Avoid infinite loop with group captures
+        }
+        if (lastIdx < text.length) {
+          frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+        }
+        node.parentNode?.replaceChild(frag, node);
+      }
+      return;
+    }
+    if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'MARK' && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
+      // Iterate over a static copy since childNodes will change
+      const children = Array.from(node.childNodes);
+      for (const child of children) {
+        _highlightTextNodes(child, regex);
+      }
+    }
+  }
+
+  // ─── Bible Citation Tooltips ───────────────────────────────
+  function addBibleTooltips(container) {
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        // Skip text inside <a>, <mark>, <script>, <style>, or tooltip spans
+        let parent = node.parentElement;
+        while (parent) {
+          if (parent.tagName === 'A' || parent.tagName === 'MARK' ||
+              parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE' ||
+              parent.classList.contains('verse-tooltip')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          parent = parent.parentElement;
+        }
+        return BIBLE_REGEX.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+
+    const replacements = [];
+    while (walker.nextNode()) {
+      replacements.push(walker.currentNode);
+    }
+
+    for (const node of replacements) {
+      const text = node.textContent;
+      BIBLE_REGEX.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      let match;
+      while ((match = BIBLE_REGEX.exec(text)) !== null) {
+        if (match.index > lastIdx) {
+          frag.appendChild(document.createTextNode(text.slice(lastIdx, match.index)));
+        }
+        const span = document.createElement('span');
+        span.className = 'verse-tooltip';
+        span.textContent = match[0];
+        span.title = 'Lihat: ' + match[0];
+        span.style.cssText = 'border-bottom:1px dashed var(--color-dkc-gold,#c9a84c);cursor:help;';
+        span.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // Open Bible reference in new tab
+          const ref = match[0].replace(/\s+/g, '');
+          window.open('/alkitabq.php?q=' + encodeURIComponent(ref), '_blank');
+        });
+        frag.appendChild(span);
+        lastIdx = BIBLE_REGEX.lastIndex;
+      }
+      if (lastIdx < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+      }
+      if (node.parentNode) {
+        node.parentNode.replaceChild(frag, node);
+      }
+    }
+  }
+
+  // ─── Data Loading ──────────────────────────────────────────
   async function loadData() {
     if (allData) return allData;
     const res = await fetch(dataUrl);
     allData = await res.json();
-    // Normalize keys
     return allData.map(item => ({
       id: String(item.id || item.ID),
-      text: item.text || decodeURIComponent((item.TEXT || '').replace(/%20/g, ' ').replace(/%2C/g, ',').replace(/%2E/g, '.').replace(/%3B/g, ';').replace(/%3A/g, ':').replace(/%21/g, '!').replace(/%3F/g, '?').replace(/%22/g, '"').replace(/%27/g, "'").replace(/%28/g, '(').replace(/%29/g, ')').replace(/%C2%A0/g, ' '))
+      text: item.text || decodeURIComponent(
+        (item.TEXT || '').replace(/%20/g, ' ').replace(/%2C/g, ',').replace(/%2E/g, '.')
+          .replace(/%3B/g, ';').replace(/%3A/g, ':').replace(/%21/g, '!')
+          .replace(/%3F/g, '?').replace(/%22/g, '"').replace(/%27/g, "'")
+          .replace(/%28/g, '(').replace(/%29/g, ')').replace(/%C2%A0/g, ' ')
+      )
     }));
   }
 
-  // Parse range expressions: "2-10,8,9-100"
+  // ─── Parse Range Expressions ───────────────────────────────
   function parseNumbers(query) {
     if (!query?.trim()) return [];
-    query = query.replace(/,/g, ';');
-    const parts = query.split(';').filter(p => p.trim());
+    const cleaned = query.replace(/,/g, ';');
+    const parts = cleaned.split(';').filter(p => p.trim());
     let numbers = [];
     for (const part of parts) {
       const trimmed = part.trim();
@@ -119,7 +332,7 @@ const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro
         const [s, e] = trimmed.split('-').map(n => parseInt(n.trim()));
         if (!isNaN(s) && !isNaN(e)) {
           const lo = Math.min(s, e), hi = Math.max(s, e);
-          if (hi - lo > 500) continue; // safety cap
+          if (hi - lo > 500) continue;
           for (let i = lo; i <= hi; i++) numbers.push(i);
         }
       } else {
@@ -130,33 +343,136 @@ const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro
     return [...new Set(numbers)].sort((a, b) => a - b);
   }
 
-  function highlightText(text, query) {
-    if (!query) return text;
-    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark class="bg-dkc-gold/30 text-dkc-text rounded px-0.5">$1</mark>');
+  // ─── Highlight / Bookmark ──────────────────────────────────
+  function loadHighlights() {
+    try {
+      const raw = localStorage.getItem(STORAGE_HIGHLIGHTS_KEY);
+      if (raw) highlights = new Set(JSON.parse(raw));
+    } catch (e) { highlights = new Set(); }
   }
 
+  function saveHighlights() {
+    try {
+      localStorage.setItem(STORAGE_HIGHLIGHTS_KEY, JSON.stringify([...highlights]));
+    } catch (e) { /* storage full, ignore */ }
+  }
+
+  function toggleHighlight(id) {
+    if (highlights.has(id)) {
+      highlights.delete(id);
+    } else {
+      highlights.add(id);
+    }
+    saveHighlights();
+    // Update all instances of this paragraph in the DOM
+    document.querySelectorAll(`.ref-item[data-id="${id}"]`).forEach(el => {
+      el.classList.toggle('highlighted', highlights.has(id));
+      const btn = el.querySelector('.highlight-toggle');
+      if (btn) btn.classList.toggle('text-dkc-gold', highlights.has(id));
+    });
+    // Update TOC
+    updateTocActive();
+  }
+
+  // ─── TOC Sidebar ──────────────────────────────────────────
+  function buildToc() {
+    const grid = document.getElementById('toc-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    for (let i = 1; i <= Math.min(TOC_COUNT, totalCount); i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.dataset.num = i;
+      btn.className = 'text-xs py-1 px-0.5 rounded text-dkc-muted hover:text-dkc-gold hover:bg-dkc-gold/10 transition-colors text-center';
+      btn.addEventListener('click', () => {
+        document.getElementById('ref-search').value = String(i);
+        searchByNumbers(String(i));
+      });
+      grid.appendChild(btn);
+    }
+
+    // Show more button
+    const showMore = document.getElementById('toc-show-more');
+    if (showMore) {
+      showMore.addEventListener('click', () => {
+        const currentCount = grid.children.length;
+        const nextCount = Math.min(currentCount + 50, totalCount);
+        for (let i = currentCount + 1; i <= nextCount; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.dataset.num = i;
+          btn.className = 'text-xs py-1 px-0.5 rounded text-dkc-muted hover:text-dkc-gold hover:bg-dkc-gold/10 transition-colors text-center';
+          btn.addEventListener('click', () => {
+            document.getElementById('ref-search').value = String(i);
+            searchByNumbers(String(i));
+          });
+          grid.appendChild(btn);
+        }
+        if (nextCount >= totalCount) showMore.remove();
+        else showMore.textContent = 'Tampilkan lebih →';
+      });
+    }
+  }
+
+  // ─── Render Paragraphs ─────────────────────────────────────
   function renderParagraphs(items, query) {
     const container = document.getElementById('ref-results');
     if (!items.length) {
       container.innerHTML = '<div class="text-center text-dkc-muted py-8"><p>Tidak ditemukan</p></div>';
       document.getElementById('ref-nav').classList.add('hidden');
+      document.getElementById('ref-nav').classList.remove('flex');
       return;
     }
-    container.innerHTML = items.map(item => `
-      <div class="glass-card p-4 ref-item" data-id="${item.id}">
-        <div class="flex items-start gap-3">
-          <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">
-            §${item.id}
-          </span>
-          <p class="text-dkc-text text-sm leading-relaxed flex-1">${highlightText(item.text, query)}</p>
+
+    const fontSizeClass = FONT_SIZES[currentFontSizeIndex];
+
+    container.innerHTML = items.map(item => {
+      const isHighlighted = highlights.has(item.id);
+      const htmlText = highlightText(item.text, query);
+      const plainText = getTextContent(htmlText).replace(/"/g, '&quot;');
+      return `
+        <div class="glass-card p-4 ref-item ${isHighlighted ? 'highlighted' : ''}" data-id="${item.id}" data-plain="${escapeAttr(plainText)}">
+          <div class="flex items-start gap-3">
+            <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">
+              §${item.id}
+            </span>
+            <div class="flex-1 min-w-0">
+              <p class="ref-text text-dkc-text ${fontSizeClass} leading-relaxed">${htmlText}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 mt-2 ml-[52px]">
+            <button class="tts-btn p-1.5 rounded text-dkc-muted/60 hover:text-dkc-gold transition-colors" data-id="${item.id}" title="Bacakan paragraf ini">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            </button>
+            <button class="copy-btn p-1.5 rounded text-dkc-muted/60 hover:text-dkc-gold transition-colors" data-id="${item.id}" title="Salin teks">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            </button>
+            <button class="highlight-toggle p-1.5 rounded transition-colors ${isHighlighted ? 'text-dkc-gold' : 'text-dkc-muted/60 hover:text-dkc-gold'}" data-id="${item.id}" title="${isHighlighted ? 'Hapus penanda' : 'Tandai paragraf'}">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="${isHighlighted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+
+    // Add Bible citation tooltips
+    addBibleTooltips(container);
+
+    // Attach event listeners to action buttons
+    container.querySelectorAll('.tts-btn').forEach(btn => {
+      btn.addEventListener('click', () => speakSingleParagraph(btn.dataset.id));
+    });
+    container.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => copyParagraphText(btn.dataset.id));
+    });
+    container.querySelectorAll('.highlight-toggle').forEach(btn => {
+      btn.addEventListener('click', () => toggleHighlight(btn.dataset.id));
+    });
 
     // Setup nav
-    const maxId = Math.max(...allData.map(d => parseInt(d.id)));
-    const minId = Math.min(...allData.map(d => parseInt(d.id)));
+    const data = allData;
+    const maxId = Math.max(...data.map(d => parseInt(d.id)));
+    const minId = Math.min(...data.map(d => parseInt(d.id)));
     const lastShown = parseInt(items[items.length - 1].id);
     const firstShown = parseInt(items[0].id);
     const nav = document.getElementById('ref-nav');
@@ -171,22 +487,104 @@ const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro
     nav.classList.remove('hidden');
     nav.classList.add('flex');
 
-    prev.onclick = () => searchByIds(Array.from({length: 20}, (_, i) => firstShown - 20 + i).filter(n => n >= minId));
-    next.onclick = () => searchByIds(Array.from({length: 20}, (_, i) => lastShown + 1 + i).filter(n => n <= maxId));
+    // Remove old listeners by cloning
+    const newPrev = prev.cloneNode(true);
+    const newNext = next.cloneNode(true);
+    newPrev.addEventListener('click', () => {
+      const startId = Math.max(firstShown - 20, minId);
+      searchByIds(Array.from({length: 20}, (_, i) => startId + i).filter(n => n >= minId && n <= maxId));
+    });
+    newNext.addEventListener('click', () => {
+      const startId = lastShown + 1;
+      searchByIds(Array.from({length: 20}, (_, i) => startId + i).filter(n => n <= maxId));
+    });
+    prev.parentNode.replaceChild(newPrev, prev);
+    next.parentNode.replaceChild(newNext, next);
+
+    // Update TOC
+    updateTocActive();
+
+    // Setup scroll-based TOC tracking
+    setupScrollTracking();
   }
 
+  function escapeAttr(str) {
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  let scrollTrackingActive = false;
+  function setupScrollTracking() {
+    if (scrollTrackingActive) return;
+    scrollTrackingActive = true;
+    document.addEventListener('scroll', updateTocOnScroll, { passive: true });
+  }
+
+  function updateTocOnScroll() {
+    const items = document.querySelectorAll('.ref-item');
+    if (!items.length) return;
+    let activeId = null;
+    const viewportTop = window.scrollY + 120; // offset for header
+    for (const item of items) {
+      if (item.getBoundingClientRect().top + window.scrollY <= viewportTop + 100) {
+        activeId = item.dataset.id;
+      }
+    }
+    if (activeId) {
+      document.querySelectorAll('#toc-grid button').forEach(btn => {
+        const isActive = btn.dataset.num === activeId;
+        btn.classList.toggle('text-dkc-gold', isActive);
+        btn.classList.toggle('bg-dkc-gold/10', isActive);
+        btn.classList.toggle('font-bold', isActive);
+      });
+      document.getElementById('current-range-label').textContent = `§${activeId}`;
+    }
+  }
+
+  function updateTocActive() {
+    const items = document.querySelectorAll('.ref-item');
+    if (!items.length) return;
+    const firstId = items[0]?.dataset.id;
+    document.querySelectorAll('#toc-grid button').forEach(btn => {
+      const num = parseInt(btn.dataset.num);
+      const isVisible = items.length > 0 && num >= parseInt(items[0].dataset.id) && num <= parseInt(items[items.length - 1].dataset.id);
+      btn.classList.toggle('text-dkc-gold/50', isVisible && btn.dataset.num !== firstId);
+    });
+  }
+
+  // ─── Copy to Clipboard ─────────────────────────────────────
+  function copyParagraphText(id) {
+    const item = document.querySelector(`.ref-item[data-id="${id}"]`);
+    if (!item) return;
+    const plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
+    navigator.clipboard.writeText(`§${id}: ${plainText}`).then(() => {
+      showToast('Teks disalin!');
+    }).catch(() => {
+      showToast('Gagal menyalin');
+    });
+  }
+
+  // ─── Toast ──────────────────────────────────────────────────
+  function showToast(msg) {
+    const toast = document.getElementById('share-toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.remove('hidden');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.add('hidden'), 2000);
+  }
+
+  // ─── Search Functions ─────────────────────────────────────
   async function searchByIds(ids) {
     const data = await loadData();
     const items = ids.map(id => data.find(d => parseInt(d.id) === id)).filter(Boolean);
     renderParagraphs(items);
-    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 80, behavior: 'smooth' });
+    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 100, behavior: 'smooth' });
   }
 
   async function searchByNumbers(query) {
     const ids = parseNumbers(query);
     if (!ids.length) return;
     await searchByIds(ids);
-    // Update URL hash
     history.replaceState(null, '', '#' + query);
   }
 
@@ -194,44 +592,271 @@ const { title, subtitle, icon, dataUrl, totalCount, color = "dkc-gold" } = Astro
     if (!query?.trim()) return;
     const data = await loadData();
     const lower = query.toLowerCase();
-    const items = data.filter(d => d.text.toLowerCase().includes(lower)).slice(0, 50);
+    const items = data.filter(d => getTextContent(d.text).toLowerCase().includes(lower)).slice(0, 50);
     renderParagraphs(items, query);
     document.getElementById('ref-range').textContent = `${items.length} hasil ditemukan`;
-    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 80, behavior: 'smooth' });
+    window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 100, behavior: 'smooth' });
   }
 
-  // Event listeners
-  const numInput = document.getElementById('ref-search');
-  const numBtn = document.getElementById('ref-search-btn');
-  const textInput = document.getElementById('ref-text-search');
-  const textBtn = document.getElementById('ref-text-search-btn');
+  // ─── TTS (Text-to-Speech) ─────────────────────────────────
+  function speakSingleParagraph(id) {
+    const item = document.querySelector(`.ref-item[data-id="${id}"]`);
+    if (!item) return;
+    const plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
+    speakText(`Paragraf ${id}. ${plainText}`);
+  }
 
-  numBtn.addEventListener('click', () => searchByNumbers(numInput.value));
-  numInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByNumbers(numInput.value); });
-  textBtn.addEventListener('click', () => searchByText(textInput.value));
-  textInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByText(textInput.value); });
+  function speakText(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    // Try to find an Indonesian voice
+    const voices = window.speechSynthesis.getVoices();
+    const idVoice = voices.find(v => v.lang.startsWith('id'));
+    if (idVoice) utterance.voice = idVoice;
+    window.speechSynthesis.speak(utterance);
+  }
 
-  // Example buttons
-  document.querySelectorAll('.example-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      numInput.value = btn.dataset.q;
-      searchByNumbers(btn.dataset.q);
+  function speakAllParagraphs() {
+    if (isSpeaking) {
+      stopSpeaking();
+      return;
+    }
+    const items = document.querySelectorAll('.ref-item');
+    if (!items.length) return;
+    ttsQueue = Array.from(items).map(item => {
+      const plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
+      return `Paragraf ${item.dataset.id}. ${plainText}`;
     });
-  });
-
-  // Handle URL hash
-  if (location.hash) {
-    const q = location.hash.slice(1);
-    numInput.value = q;
-    searchByNumbers(q);
+    ttsIndex = 0;
+    isSpeaking = true;
+    updateTtsUI();
+    speakNextInQueue();
   }
 
-  // Preload
-  loadData();
+  function speakNextInQueue() {
+    if (!isSpeaking || ttsIndex >= ttsQueue.length) {
+      stopSpeaking();
+      return;
+    }
+    const text = ttsQueue[ttsIndex];
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const idVoice = voices.find(v => v.lang.startsWith('id'));
+    if (idVoice) utterance.voice = idVoice;
+    utterance.onend = () => {
+      ttsIndex++;
+      speakNextInQueue();
+    };
+    utterance.onerror = () => {
+      ttsIndex++;
+      speakNextInQueue();
+    };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function stopSpeaking() {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    ttsQueue = [];
+    ttsIndex = 0;
+    updateTtsUI();
+  }
+
+  function updateTtsUI() {
+    const playIcon = document.getElementById('tts-icon-play');
+    const stopIcon = document.getElementById('tts-icon-stop');
+    const label = document.getElementById('tts-label');
+    if (isSpeaking) {
+      playIcon?.classList.add('hidden');
+      stopIcon?.classList.remove('hidden');
+      if (label) label.textContent = 'Berhenti';
+    } else {
+      playIcon?.classList.remove('hidden');
+      stopIcon?.classList.add('hidden');
+      if (label) label.textContent = 'Bacakan';
+    }
+  }
+
+  // ─── Font Size Toggle ─────────────────────────────────────
+  function toggleFontSize() {
+    currentFontSizeIndex = (currentFontSizeIndex + 1) % FONT_SIZES.length;
+    const newClass = FONT_SIZES[currentFontSizeIndex];
+    const label = FONT_SIZE_LABELS[currentFontSizeIndex];
+
+    // Update all rendered paragraph text elements
+    document.querySelectorAll('.ref-text').forEach(el => {
+      FONT_SIZES.forEach(cls => el.classList.remove(cls));
+      el.classList.add(newClass);
+    });
+
+    document.getElementById('font-size-label').textContent = `Teks ${label}`;
+
+    try {
+      localStorage.setItem(STORAGE_SIZE_KEY, String(currentFontSizeIndex));
+    } catch (e) { /* ignore */ }
+  }
+
+  function loadFontSizePreference() {
+    try {
+      const saved = localStorage.getItem(STORAGE_SIZE_KEY);
+      if (saved !== null) {
+        currentFontSizeIndex = Math.min(Math.max(parseInt(saved), 0), FONT_SIZES.length - 1);
+      }
+    } catch (e) { /* ignore */ }
+    document.getElementById('font-size-label').textContent = `Teks ${FONT_SIZE_LABELS[currentFontSizeIndex]}`;
+  }
+
+  // ─── Progress Bar ─────────────────────────────────────────
+  function updateProgressBar() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+  }
+
+  // ─── Social Share ─────────────────────────────────────────
+  function shareUrl(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`${title} — ${subtitle}`);
+    let shareUrl = '';
+    switch (platform) {
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${text}%20${url}`;
+        break;
+      case 'telegram':
+        shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast('Tautan disalin!');
+        }).catch(() => {
+          showToast('Gagal menyalin');
+        });
+        return;
+    }
+    if (shareUrl) window.open(shareUrl, '_blank', 'width=600,height=400');
+  }
+
+  // ─── Initialize ───────────────────────────────────────────
+  function init() {
+    loadHighlights();
+    loadFontSizePreference();
+    buildToc();
+
+    // Event listeners — search
+    const numInput = document.getElementById('ref-search');
+    const numBtn = document.getElementById('ref-search-btn');
+    const textInput = document.getElementById('ref-text-search');
+    const textBtn = document.getElementById('ref-text-search-btn');
+
+    numBtn.addEventListener('click', () => searchByNumbers(numInput.value));
+    numInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByNumbers(numInput.value); });
+    textBtn.addEventListener('click', () => searchByText(textInput.value));
+    textInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByText(textInput.value); });
+
+    // Example buttons
+    document.querySelectorAll('.example-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        numInput.value = btn.dataset.q;
+        searchByNumbers(btn.dataset.q);
+      });
+    });
+
+    // TTS toggle (reads ALL currently displayed paragraphs)
+    document.getElementById('tts-toggle').addEventListener('click', speakAllParagraphs);
+
+    // Font size toggle
+    document.getElementById('font-size-toggle').addEventListener('click', toggleFontSize);
+
+    // Social share buttons
+    document.querySelectorAll('.share-btn').forEach(btn => {
+      btn.addEventListener('click', () => shareUrl(btn.dataset.share));
+    });
+
+    // Progress bar
+    window.addEventListener('scroll', updateProgressBar, { passive: true });
+
+    // Handle URL hash
+    if (location.hash) {
+      const q = location.hash.slice(1);
+      numInput.value = q;
+      searchByNumbers(q);
+    }
+
+    // Preload data
+    loadData();
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 
 <style>
-  mark { border-radius: 2px; }
-  #ref-results .ref-item:hover { border-color: var(--color-dkc-gold, #c9a84c) !important; }
-  #ref-results .ref-item { transition: border-color 0.2s; }
+  /* Action button group spacing */
+  .ref-item .tts-btn svg,
+  .ref-item .copy-btn svg,
+  .ref-item .highlight-toggle svg {
+    pointer-events: none;
+  }
+
+  /* Highlighted paragraph */
+  .ref-item.highlighted {
+    border-color: var(--color-dkc-gold, #c9a84c) !important;
+    box-shadow: 0 0 12px rgba(201, 168, 76, 0.08);
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.04), var(--color-dkc-card, #1a1a1a));
+  }
+
+  .ref-item {
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+  }
+
+  .ref-item:hover {
+    border-color: var(--color-dkc-gold, #c9a84c) !important;
+  }
+
+  /* Verse tooltip */
+  .verse-tooltip {
+    position: relative;
+    cursor: help;
+    transition: background 0.15s;
+  }
+  .verse-tooltip:hover {
+    background: rgba(201, 168, 76, 0.12);
+    border-radius: 2px;
+  }
+
+  /* Sidebar scrollbar */
+  #toc-sidebar > div::-webkit-scrollbar {
+    width: 3px;
+  }
+  #toc-sidebar > div::-webkit-scrollbar-thumb {
+    background: var(--color-dkc-gold, #c9a84c);
+    border-radius: 2px;
+  }
+
+  /* Share button tooltips */
+  .share-btn {
+    position: relative;
+  }
+
+  mark {
+    border-radius: 2px;
+  }
 </style>

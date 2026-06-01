@@ -6,44 +6,219 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Jalan Salib</h1>
-    <p class="text-dkc-muted mb-8">14 Perhentian Jalan Salib — doa dan refleksi</p>
+  <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
+    <div class="text-center mb-8">
+      <span class="text-4xl">✝️</span>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Jalan Salib</h1>
+      <p class="text-dkc-muted text-sm mt-1">14 Perhentian — Mengikuti jejak Yesus ke Kalvari</p>
+    </div>
 
-    <div class="space-y-3">
-      {[
-        {num: 1, title: "Yesus Dihukum Mati", ref: "Mat 27:22-26"},
-        {num: 2, title: "Yesus Memanggul Salib", ref: "Yoh 19:16-17"},
-        {num: 3, title: "Yesus Jatuh untuk Pertama Kali", ref: "Yes 53:4-5"},
-        {num: 4, title: "Yesus Bertemu Ibu-Nya", ref: "Luk 2:34-35"},
-        {num: 5, title: "Simon dari Kirene Membantu Yesus", ref: "Mat 27:32"},
-        {num: 6, title: "Veronika Mengusap Wajah Yesus", ref: "Yes 53:2-3"},
-        {num: 7, title: "Yesus Jatuh untuk Kedua Kali", ref: "Rat 3:1-2"},
-        {num: 8, title: "Yesus Menghibur Perempuan Yerusalem", ref: "Luk 23:27-31"},
-        {num: 9, title: "Yesus Jatuh untuk Ketiga Kali", ref: "Mzm 22:7-8"},
-        {num: 10, title: "Yesus Ditelanjangi", ref: "Mat 27:35"},
-        {num: 11, title: "Yesus Dipaku pada Salib", ref: "Luk 23:33-34"},
-        {num: 12, title: "Yesus Wafat di Salib", ref: "Mat 27:45-50"},
-        {num: 13, title: "Yesus Diturunkan dari Salib", ref: "Yoh 19:38-40"},
-        {num: 14, title: "Yesus Dimakamkan", ref: "Mat 27:59-61"},
-      ].map(s => (
-        <a href="#" class="glass-card p-4 flex items-center gap-4 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
-          <span class="w-8 h-8 rounded-full bg-dkc-gold/20 border border-dkc-gold/40 flex items-center justify-center text-dkc-gold text-sm font-bold shrink-0">{s.num}</span>
-          <div class="flex-1 min-w-0">
-            <h3 class="text-white font-medium text-sm">{s.title}</h3>
-            <p class="text-dkc-muted text-xs mt-1">{s.ref}</p>
-          </div>
-          <span class="text-dkc-gold">→</span>
-        </a>
-      ))}
+    <!-- Progress -->
+    <div class="mb-6">
+      <div class="flex justify-between text-xs text-dkc-muted mb-1">
+        <span id="js-progress-text">Perhentian 1 / 14</span>
+        <span id="js-progress-pct">7%</span>
+      </div>
+      <div class="h-1.5 bg-dkc-surface rounded-full overflow-hidden">
+        <div id="js-progress-bar" class="h-full bg-gradient-to-r from-dkc-gold/60 to-dkc-gold rounded-full transition-all duration-300" style="width:7%"></div>
+      </div>
+    </div>
+
+    <!-- Station selector -->
+    <div class="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide" id="js-station-nav">
+    </div>
+
+    <!-- Station card -->
+    <div id="js-card" class="glass-card p-6 md:p-8 min-h-[60vh] flex flex-col justify-center" style="touch-action:pan-y">
+      <div id="js-card-content"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mt-6">
+      <button id="js-prev" class="glass-card px-5 py-3 text-sm text-dkc-muted hover:text-dkc-gold transition-colors active:scale-95">
+        ← Sebelumnya
+      </button>
+      <button id="js-reset" class="text-dkc-muted text-xs hover:text-dkc-gold transition-colors">↺ Awal</button>
+      <button id="js-next" class="glass-card px-5 py-3 text-sm text-dkc-muted hover:text-dkc-gold transition-colors active:scale-95">
+        Selanjutnya →
+      </button>
     </div>
   </main>
-
   <Footer />
 </BaseLayout>
 
-<slot name="head">
-  <title>Jalan Salib — Damai Kasih Channel</title>
-  <meta name="description" content="14 Perhentian Jalan Salib dengan doa dan refleksi Katolik." />
-</slot>
+<script>
+  const stations = [
+    { n:1, title:"Yesus dijatuhi hukuman mati",
+      scripture:"Maka Pilatus mengambil air dan mencuci tangannya di hadapan orang banyak... lalu ia menyerahkan Yesus untuk disalibkan. (Mat 27:24-26)",
+      meditation:"Yesus, yang tanpa dosa, dijatuhi hukuman mati oleh manusia. Ia menerima hukuman itu dengan penuh kesabaran dan ketaatan kepada kehendak Bapa.",
+      prayer:"Tuhan Yesus, Engkau menerima hukuman yang bukan untuk-Mu. Berikanlah kami kekuatan untuk menerima penderitaan kami dengan sabar dan penuh kepercayaan kepada Bapa. Amin." },
+    { n:2, title:"Yesus memanggul salib-Nya",
+      scripture:"Lalu mereka memegang seorang bernama Simon dari Kirene... dan menyuruhnya memikul salib Yesus. (Luk 23:26 — tetapi Yesus memanggul-Nya sendiri: Yoh 19:17)",
+      meditation:"Yesus memikul salib yang berat di pundak-Nya. Ia tidak menolak beban itu, karena salib itu menjadi jalan menuju penebusan umat manusia.",
+      prayer:"Tuhan Yesus, Engkau rela memikul salib berat demi kami. Berikanlah kami kekuatan untuk memikul salib kami sendiri dengan penuh kesetiaan. Amin." },
+    { n:3, title:"Yesus jatuh untuk pertama kali",
+      scripture:"Sesungguhnya Ia telah memikul kelemahan kita dan menanggung penderitaan kita. (Yes 53:4)",
+      meditation:"Di bawah beban salib yang berat, Yesus jatuh. Namun Ia bangkit kembali dan terus melangkah. Kelemahan-Nya justru menunjukkan kemanusiaan-Nya yang sejati.",
+      prayer:"Tuhan Yesus, saat kami jatuh dalam dosa dan kelemahan, tolonglah kami bangkit kembali seperti Engkau bangkit dari jatuh-Mu. Amin." },
+    { n:4, title:"Yesus berjumpa dengan Bunda-Nya",
+      scripture:"Maka Simeon memberkati mereka... dan kepada Maria, ibu-Nya, ia berkata: 'Jiwa-Mu akan menembus pedang.' (Luk 2:34-35)",
+      meditation:"Maria berdiri di jalan salib, menatap Putranya dengan penuh kasih dan kesedihan. Pertemuan ini mengoyak hati Bunda dan Anak, namun penuh kekuatan cinta.",
+      prayer:"Bunda Maria, engkau berdiri berdampingan dengan Yesus dalam penderitaan-Nya. Ajarilah kami untuk setia mendampingi Kristus dalam penderitaan kami. Amin." },
+    { n:5, title:"Simon dari Kirene membantu memanggul salib",
+      scripture:"Mereka menemui seorang dari Kirene bernama Simon... dan membebankan salib itu kepadanya untuk dibawa mengikuti Yesus. (Luk 23:26)",
+      meditation:"Simon dipaksa membantu Yesus. Ia mungkin tidak menginginkannya, namun pengalaman itu mengubah hidupnya. Kadang tugas yang dipaksakan menjadi berkat.",
+      prayer:"Tuhan Yesus, bantulah kami untuk dengan sukarela menolong sesama yang memikul beban berat, seperti Simon membantu-Mu memikul salib. Amin." },
+    { n:6, title:"Veronika mengusap wajah Yesus",
+      scripture:"Sebab Aku lapar dan kamu memberi Aku makan... sakit dan kamu mengunjungi Aku. (Mat 25:35-36)",
+      meditation:"Veronika berani melangkah maju di tengah kerumunan untuk mengusap wajah Yesus yang penuh darah dan peluh. Cintanya mengalahkan ketakutannya.",
+      prayer:"Tuhan Yesus, berikanlah kami keberanian untuk melayani-Mu dalam diri orang-orang yang menderita di sekitar kami. Amin." },
+    { n:7, title:"Yesus jatuh untuk kedua kali",
+      scripture:"Ia tertindas dan Ia merendahkan diri dan tidak membuka mulut-Nya. (Yes 53:7)",
+      meditation:"Yesus jatuh lagi. Luka-Nya semakin dalam, kekuatan-Nya semakin habis. Namun Ia tidak menyerah. Ia terus bangkit dan melangkah demi kita semua.",
+      prayer:"Tuhan Yesus, saat kami merasa lelah dan ingin menyerah, ingatkanlah kami akan ketekunan-Mu. Bangkitkanlah kami kembali. Amin." },
+    { n:8, title:"Yesus berjumpa dengan perempuan-perempuan Yerusalem",
+      scripture:"Yesus berpaling kepada mereka dan berkata: 'Hai anak-anak perempuan Yerusalem, janganlah kamu menangis karena Aku.' (Luk 23:28)",
+      meditation:"Yesus menghibur orang lain bahkan saat Ia sendiri menderita. Ia mengarahkan perhatian mereka kepada pertobatan, bukan pada penderitaan-Nya sendiri.",
+      prayer:"Tuhan Yesus, ajarilah kami untuk tidak larut dalam kesedihan sendiri, tetapi selalu peduli dan menghibur sesama. Amin." },
+    { n:9, title:"Yesus jatuh untuk ketiga kali",
+      scripture:"Hatiku hancur karena sedih, habis tenagaku. (Mzm 22:15)",
+      meditation:"Kali ketiga Yesus jatuh. Salib itu terasa semakin berat. Darah, keringat, dan air mata bercampur menjadi satu. Namun cinta-Nya lebih besar dari penderitaan-Nya.",
+      prayer:"Tuhan Yesus, dalam kelemahan terdalam kami, tolonglah kami. Seperti Engkau bangkit dari jatuh-Mu yang ketiga, bangkitkanlah kami dari keputusasaan. Amin." },
+    { n:10, title:"Yesus ditanggalkan pakaian-Nya",
+      scripture:"Mereka membagi pakaian-Ku di antara mereka dan membuang undi atas jubah-Ku. (Mzm 22:19, Yoh 19:23-24)",
+      meditation:"Yesus dilucuti segala kehormatan dan martabat-Nya. Ia dibiarkan telanjang di hadapan orang banyak. Penghinaan ini Ia terima dengan penuh kerendahan hati.",
+      prayer:"Tuhan Yesus, Engkau menanggung penghinaan publik demi kami. Berikanlah kami kerendahan hati untuk tidak mencari penghargaan manusia. Amin." },
+    { n:11, title:"Yesus dipaku di salib",
+      scripture:"Mereka telah menembus tangan dan kaki-Ku. (Mzm 22:17, Yoh 20:25)",
+      meditation:"Paku-paku besi menembus tangan dan kaki Yesus. Setiap pukulan palu adalah penderitaan yang luar biasa. Namun Ia memaafkan mereka yang menyalibkan-Nya.",
+      prayer:"Tuhan Yesus, Engkau tetap memaafkan bahkan di salib. Ajarilah kami untuk memaafkan mereka yang menyakiti kami. Amin." },
+    { n:12, title:"Yesus wafat di salib",
+      scripture:"Yesus berseru dengan suara nyaring: 'Ya Bapa, ke dalam tangan-Mu Kuserahkan roh-Ku.' Dan setelah berkata demikian, Ia menyerahkan nyawa-Nya. (Luk 23:46)",
+      meditation:"Yesus menghembuskan nafas terakhir-Nya di salib. Ia mati demi dosa-dosa kita. Tabir bait suci terbelah dua — jalan menuju Bapa kini terbuka lebar.",
+      prayer:"Tuhan Yesus, terima kasih atas pengorbanan-Mu yang penuh cinta di salib. Jadikanlah kami layak menerima penebusan-Mu. Amin." },
+    { n:13, title:"Yesus diturunkan dari salib",
+      scripture:"Setelah itu, Yusuf dari Arimatea... meminta mayat Yesus. Ia turun dari salib, membungkusnya dengan kain kafan. (Mat 27:57-59)",
+      meditation:"Maria memangku tubuh Yesus yang sudah tak bernyawa di pangkuannya. Piedad yang menyayat hati. Bunda merangkul Anak yang telah dikandung dan dibesarkan dengan penuh cinta.",
+      prayer:"Bunda Maria, engkau merangkul Yesus yang sudah tiada. Ajarilah kami untuk tetap mengasihi bahkan saat kehilangan yang paling menyakitkan. Amin." },
+    { n:14, title:"Yesus dimakamkan",
+      scripture:"Merea meletakkan-Nya di dalam kubur yang baru yang dipahat dalam batu karang... lalu mereka menggulingkan batu besar ke pintu kubur itu. (Mat 27:60)",
+      meditation:"Yesus dibaringkan dalam kubur yang dingin. Segala harapan manusia seolah tertutup oleh batu besar. Namun ketiga hari akan datang — kebangkitan menanti.",
+      prayer:"Tuhan Yesus, dalam keheningan kubur, kami menantikan kebangkitan-Mu. Berikanlah kami harapan yang teguh bahwa kegelapan bukan akhir. Amin." }
+  ];
+
+  let current = 0;
+  const total = stations.length;
+
+  function renderNav() {
+    const nav = document.getElementById("js-station-nav");
+    nav.innerHTML = stations.map((s, i) =>
+      `<button data-station="${i}" class="station-btn shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold transition-all border ${i === current ? 'bg-dkc-gold/20 text-dkc-gold border-dkc-gold/50' : 'bg-dkc-surface text-dkc-muted border-dkc-border hover:border-dkc-gold/30'}">${s.n}</button>`
+    ).join("");
+
+    nav.querySelectorAll(".station-btn").forEach(btn => {
+      btn.addEventListener("click", () => goTo(parseInt(btn.dataset.station)));
+    });
+  }
+
+  function renderCard() {
+    const s = stations[current];
+    const container = document.getElementById("js-card-content");
+    container.innerHTML = `
+      <div class="text-center mb-6">
+        <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-dkc-gold/15 text-dkc-gold text-xl font-bold">${s.n}</span>
+      </div>
+      <h2 class="text-xl md:text-2xl font-bold text-dkc-gold text-center mb-6">Perhentian ${toRoman(s.n)}: ${s.title}</h2>
+
+      <div class="space-y-5">
+        <div class="bg-dkc-surface/50 rounded-xl p-4 border-l-4 border-dkc-gold/40">
+          <p class="text-xs text-dkc-gold/70 font-semibold uppercase tracking-wider mb-2">📜 Sabda Allah</p>
+          <p class="text-dkc-text text-sm leading-relaxed italic">${s.scripture}</p>
+        </div>
+
+        <div class="bg-dkc-surface/50 rounded-xl p-4">
+          <p class="text-xs text-dkc-gold/70 font-semibold uppercase tracking-wider mb-2">💭 Renungan</p>
+          <p class="text-dkc-text text-sm leading-relaxed">${s.meditation}</p>
+        </div>
+
+        <div class="bg-dkc-gold/5 rounded-xl p-4 border border-dkc-gold/20">
+          <p class="text-xs text-dkc-gold/70 font-semibold uppercase tracking-wider mb-2">🙏 Doa</p>
+          <p class="text-dkc-text text-sm leading-relaxed">${s.prayer}</p>
+        </div>
+      </div>
+    `;
+
+    // Update progress
+    const pct = Math.round(((current + 1) / total) * 100);
+    document.getElementById("js-progress-text").textContent = `Perhentian ${current + 1} / ${total}`;
+    document.getElementById("js-progress-pct").textContent = `${pct}%`;
+    document.getElementById("js-progress-bar").style.width = `${pct}%`;
+
+    // Update nav buttons
+    renderNav();
+
+    // Update prev/next
+    const prev = document.getElementById("js-prev");
+    const next = document.getElementById("js-next");
+    prev.disabled = current <= 0;
+    next.disabled = current >= total - 1;
+    prev.classList.toggle("opacity-40", current <= 0);
+    next.classList.toggle("opacity-40", current >= total - 1);
+
+    // Scroll into view
+    document.getElementById("js-card").scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // URL hash
+    history.replaceState(null, "", `#${current + 1}`);
+  }
+
+  function toRoman(n) {
+    const r = ["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV"];
+    return r[n] || n;
+  }
+
+  function goTo(i) { current = Math.max(0, Math.min(total - 1, i)); renderCard(); }
+  function next() { if (current < total - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  // Button listeners
+  document.getElementById("js-prev").addEventListener("click", prev);
+  document.getElementById("js-next").addEventListener("click", next);
+  document.getElementById("js-reset").addEventListener("click", () => goTo(0));
+
+  // Keyboard navigation
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); next(); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+  });
+
+  // Touch swipe
+  let touchStartX = 0, touchStartY = 0, swiping = false;
+  const card = document.getElementById("js-card");
+  card.addEventListener("touchstart", e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    swiping = true;
+  }, { passive: true });
+  card.addEventListener("touchend", e => {
+    if (!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  // Init
+  if (location.hash) {
+    const h = parseInt(location.hash.slice(1));
+    if (h >= 1 && h <= 14) current = h - 1;
+  }
+  renderCard();
+</script>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

@@ -6,95 +6,97 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Navbar />
-
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
     <div class="text-center mb-8">
       <span class="text-4xl">📜</span>
       <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Konsili Vatikan II</h1>
-      <p class="text-dkc-muted text-sm mt-1">Dokumen-dokumen resmi Konsili Vatikan II</p>
+      <p class="text-dkc-muted text-sm mt-1">Dokumen-dokumen resmi Konsili Vatikan II (1962–1965)</p>
     </div>
 
     <!-- Document selector -->
-    <div id="kvii-docs" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-    </div>
+    <div id="kvii-docs" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6"></div>
 
-    <!-- Paragraph search -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex gap-2">
-        <input
-          id="kvii-search"
-          type="text"
-          placeholder="Cari nomor: 1, 5-10, 100-105 ..."
-          class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50"
-          autocomplete="off"
-        />
-        <button id="kvii-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">
-          Cari
-        </button>
+    <!-- Search bar -->
+    <div id="kvii-search-bar" class="hidden">
+      <div class="glass-card p-4 mb-4">
+        <div class="flex gap-2">
+          <input id="kvii-search" type="text" placeholder="Cari nomor: 1, 5-10, 100-105 ..."
+            class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50" autocomplete="off" />
+          <button id="kvii-search-btn" class="px-4 py-2.5 bg-dkc-gold/20 text-dkc-gold rounded-lg text-sm font-medium hover:bg-dkc-gold/30 transition-colors border border-dkc-gold/30">Cari</button>
+        </div>
+        <div class="flex gap-2 mt-3">
+          <input id="kvii-text-search" type="text" placeholder="Cari teks dalam dokumen..."
+            class="flex-1 bg-dkc-surface border border-dkc-border rounded-lg px-4 py-2.5 text-sm text-dkc-text placeholder-dkc-muted/50 focus:outline-none focus:border-dkc-gold/50" autocomplete="off" />
+          <button id="kvii-text-search-btn" class="px-4 py-2.5 bg-dkc-card text-dkc-muted rounded-lg text-sm font-medium hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors border border-dkc-border">Teks</button>
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <span id="kvii-range" class="text-xs text-dkc-muted"></span>
+          <button id="kvii-full-doc" class="text-xs text-dkc-gold/70 hover:text-dkc-gold">📄 Tampilkan semua</button>
+        </div>
       </div>
     </div>
 
+    <!-- Results -->
     <div id="kvii-results" class="space-y-3"></div>
-  </main>
 
+    <!-- Navigation -->
+    <div id="kvii-nav" class="hidden flex justify-between items-center mt-6">
+      <button id="kvii-prev" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">← Sebelumnya</button>
+      <button id="kvii-next" class="glass-card px-4 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">Selanjutnya →</button>
+    </div>
+  </main>
   <Footer />
 </BaseLayout>
 
-<script define:vars={{}}>
+<script>
   let allData = null;
   let currentDoc = null;
+  let currentIds = [];
 
   const DOC_LABELS = {
-    'Dei_Verbum': 'Dei Verbum (Wahyu Ilahi)',
-    'Lumen_Gentium': 'Lumen Gentium (Gereja)',
-    'Gaudium_et_Spes': 'Gaudium et Spes (Gereja & Dunia)',
-    'Sacrosanctum_Concilium': 'Sacrosanctum Concilium (Liturgi)',
-    'Dignitatis_Humanae': 'Dignitatis Humanae (Kebebasan Beragama)',
-    'Nostra_Aetate': 'Nostra Aetate (Agama Non-Kristen)',
-    'Unitatis_Redintegratio': 'Unitatis Redintegratio (Ekumenisme)',
-    'Ad_Gentes': 'Ad Gentes (Misi)',
-    'Presbyterorum_Ordinis': 'Presbyterorum Ordinis (Imam)',
-    'Optatam_Totius': 'Optatam Totius (Pelatihan Imam)',
-    'Perfectae_Caritatis': 'Perfectae Caritatis (Biara)',
-    'Apostolicam_Actuositatem': 'Apostolicam Actuositatem (Awam)',
-    'Inter_Mirifica': 'Inter Mirifica (Media)',
-    'Christus_Dominus': 'Christus Dominus (Uskup)',
-    'Orientalium_Ecclesiarum': 'Orientalium Ecclesiarum (Gereja Timur)',
-    'Redemptionis_Sacramentum': 'Redemptionis Sacramentum (Ekaristi)',
-    'Dominus_Iesus': 'Dominus Iesus (Yesus Kristus)',
-    'Musicam_Sacram': 'Musicam Sacram (Musik Liturgi)',
-    'Pedoman_Umum_Misale_Romawi': 'Pedoman Umum Misale Romawi',
-    'Pedoman_Pastoral_Misa_Dengan_Anak-Anak': 'Pedoman Pastoral Misa Anak',
-    'Ecclesia_de_Eucharistia': 'Ecclesia de Eucharistia',
-    'Sacramentum_Caritatis': 'Sacramentum Caritatis',
-    ' Mane_Nobiscum_Domine': 'Mane Nobiscum Domine'
+    'Dei_Verbum':'Dei Verbum (Wahyu Ilahi)',
+    'Lumen_Gentium':'Lumen Gentium (Gereja)',
+    'Gaudium_et_Spes':'Gaudium et Spes (Gereja & Dunia)',
+    'Sacrosanctum_Concilium':'Sacrosanctum Concilium (Liturgi)',
+    'Dignitatis_Humanae':'Dignitatis Humanae (Kebebasan Beragama)',
+    'Nostra_Aetate':'Nostra Aetate (Agama Non-Kristen)',
+    'Unitatis_Redintegratio':'Unitatis Redintegratio (Ekumenisme)',
+    'Ad_Gentes':'Ad Gentes (Misi)',
+    'Presbyterorum_Ordinis':'Presbyterorum Ordinis (Imam)',
+    'Optatam_Totius':'Optatam Totius (Pelatihan Imam)',
+    'Perfectae_Caritatis':'Perfectae Caritatis (Biara)',
+    'Apostolicam_Actuositatem':'Apostolicam Actuositatem (Awam)',
+    'Inter_Mirifica':'Inter Mirifica (Media)',
+    'Christus_Dominus':'Christus Dominus (Uskup)',
+    'Orientalium_Ecclesiarum':'Orientalium Ecclesiarum (Gereja Timur)',
+    'Redemptionis_Sacramentum':'Redemptionis Sacramentum (Ekaristi)',
+    'Dominus_Iesus':'Dominus Iesus (Yesus Kristus)',
+    'Musicam_Sacram':'Musicam Sacram (Musik Liturgi)',
+    'Pedoman_Umum_Misale_Romawi':'Pedoman Umum Misale Romawi',
+    'Pedoman_Pastoral_Misa_Dengan_Anak-Anak':'Pedoman Pastoral Misa Anak',
+    'Ecclesia_de_Eucharistia':'Ecclesia de Eucharistia',
+    'Sacramentum_Caritatis':'Sacramentum Caritatis',
+    ' Mane_Nobiscum_Domine':'Mane Nobiscum Domine'
   };
 
   function decodeText(t) {
     if (!t) return '';
-    return decodeURIComponent(t.replace(/%20/g,' ').replace(/%2C/g,',').replace(/%2E/g,'.').replace(/%3B/g,';').replace(/%3A/g,':').replace(/%21/g,'!').replace(/%3F/g,'?').replace(/%22/g,'"').replace(/%27/g,"'").replace(/%28/g,'(').replace(/%29/g,')'));
+    try { return decodeURIComponent(t); } catch(e) {
+      return t.replace(/%20/g,' ').replace(/%2C/g,',').replace(/%2E/g,'.').replace(/%3B/g,';').replace(/%3A/g,':').replace(/%21/g,'!').replace(/%3F/g,'?').replace(/%27/g,"'").replace(/%28/g,'(').replace(/%29/g,')');
+    }
   }
 
   function parseNumbers(query) {
     if (!query?.trim()) return [];
     query = query.replace(/,/g, ';');
-    const parts = query.split(';').filter(p => p.trim());
-    let numbers = [];
-    for (const part of parts) {
-      const trimmed = part.trim();
-      if (trimmed.includes('-')) {
-        const [s, e] = trimmed.split('-').map(n => parseInt(n.trim()));
-        if (!isNaN(s) && !isNaN(e)) {
-          const lo = Math.min(s, e), hi = Math.max(s, e);
-          if (hi - lo > 500) continue;
-          for (let i = lo; i <= hi; i++) numbers.push(i);
-        }
-      } else {
-        const n = parseInt(trimmed);
-        if (!isNaN(n)) numbers.push(n);
+    return [...new Set(query.split(';').filter(p=>p.trim()).flatMap(part => {
+      const t = part.trim();
+      if (t.includes('-')) {
+        const [s,e] = t.split('-').map(n=>parseInt(n.trim()));
+        if (!isNaN(s)&&!isNaN(e)) { const lo=Math.min(s,e),hi=Math.max(s,e); if(hi-lo>500) return []; return Array.from({length:hi-lo+1},(_,i)=>lo+i); }
       }
-    }
-    return [...new Set(numbers)].sort((a, b) => a - b);
+      const n = parseInt(t); return isNaN(n)?[]:[n];
+    }))].sort((a,b)=>a-b);
   }
 
   async function loadData() {
@@ -102,6 +104,91 @@ import Footer from "@/components/Footer.astro";
     const res = await fetch('/assets/data/kvii.json');
     allData = await res.json();
     return allData;
+  }
+
+  function highlightText(text, query) {
+    if (!query) return text;
+    const esc = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${esc})`, 'gi'), '<mark class="bg-dkc-gold/30 text-dkc-text rounded px-0.5">$1</mark>');
+  }
+
+  function renderParagraphs(items, query) {
+    const container = document.getElementById('kvii-results');
+    if (!items.length) {
+      container.innerHTML = '<div class="text-center text-dkc-muted py-8"><p>Tidak ditemukan</p></div>';
+      document.getElementById('kvii-nav').classList.add('hidden');
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="glass-card p-4">
+        <div class="flex items-start gap-3">
+          <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">§${item.id}</span>
+          <p class="text-dkc-text text-sm leading-relaxed flex-1">${highlightText(item.text, query)}</p>
+        </div>
+      </div>
+    `).join('');
+
+    currentIds = items.map(i => parseInt(i.id));
+    const nav = document.getElementById('kvii-nav');
+    const prev = document.getElementById('kvii-prev');
+    const next = document.getElementById('kvii-next');
+    const data = allData[currentDoc];
+    const allNums = Object.keys(data).map(Number).sort((a,b)=>a-b);
+    const first = currentIds[0], last = currentIds[currentIds.length-1];
+    document.getElementById('kvii-range').textContent = `§${first} — §${last} dari ${allNums.length} paragraf`;
+    prev.disabled = first <= allNums[0];
+    next.disabled = last >= allNums[allNums.length-1];
+    prev.classList.toggle('opacity-40', prev.disabled);
+    next.classList.toggle('opacity-40', next.disabled);
+    nav.classList.remove('hidden');
+    nav.classList.add('flex');
+
+    prev.onclick = () => {
+      const prevStart = Math.max(allNums[0], first - 20);
+      doSearch(`${prevStart}-${first-1}`);
+    };
+    next.onclick = () => {
+      const nextEnd = Math.min(allNums[allNums.length-1], last + 20);
+      doSearch(`${last+1}-${nextEnd}`);
+    };
+
+    window.scrollTo({ top: document.getElementById('kvii-search-bar').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  async function doSearch(query) {
+    if (!currentDoc) return;
+    const data = await loadData();
+    const doc = data[currentDoc];
+    if (!doc) return;
+    const ids = parseNumbers(query);
+    const items = ids.map(id => ({ id: String(id), text: decodeText(doc[String(id)]) })).filter(d => d.text);
+    renderParagraphs(items);
+    history.replaceState(null, '', `#${currentDoc}/${query}`);
+  }
+
+  async function doTextSearch(query) {
+    if (!currentDoc || !query?.trim()) return;
+    const data = await loadData();
+    const doc = data[currentDoc];
+    if (!doc) return;
+    const lower = query.toLowerCase();
+    const items = Object.entries(doc)
+      .map(([id, text]) => ({ id, text: decodeText(text) }))
+      .filter(d => d.text.toLowerCase().includes(lower))
+      .slice(0, 50);
+    renderParagraphs(items, query);
+    document.getElementById('kvii-range').textContent = `${items.length} hasil ditemukan`;
+  }
+
+  async function showFullDoc() {
+    if (!currentDoc) return;
+    const data = await loadData();
+    const doc = data[currentDoc];
+    if (!doc) return;
+    const items = Object.entries(doc)
+      .map(([id, text]) => ({ id, text: decodeText(text) }))
+      .sort((a,b) => parseInt(a.id) - parseInt(b.id));
+    renderParagraphs(items);
   }
 
   async function renderDocList() {
@@ -119,55 +206,38 @@ import Footer from "@/components/Footer.astro";
     docs.querySelectorAll('.doc-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         currentDoc = btn.dataset.doc;
-        document.querySelectorAll('.doc-btn').forEach(b => b.classList.remove('border-dkc-gold/60'));
-        btn.classList.add('border-dkc-gold/60');
+        document.querySelectorAll('.doc-btn').forEach(b => b.classList.remove('border-dkc-gold/60','bg-dkc-gold/5'));
+        btn.classList.add('border-dkc-gold/60','bg-dkc-gold/5');
+        document.getElementById('kvii-search-bar').classList.remove('hidden');
         const input = document.getElementById('kvii-search');
         input.value = '1-20';
         doSearch('1-20');
-        history.replaceState(null, '', '#' + currentDoc);
       });
     });
   }
 
-  async function doSearch(query) {
-    if (!currentDoc) {
-      document.getElementById('kvii-results').innerHTML = '<div class="text-center text-dkc-muted py-8">Pilih dokumen terlebih dahulu</div>';
-      return;
-    }
-    const data = await loadData();
-    const doc = data[currentDoc];
-    if (!doc) return;
-
-    const ids = parseNumbers(query);
-    const items = ids.map(id => ({ id: String(id), text: decodeText(doc[String(id)]) })).filter(d => d.text);
-
-    const container = document.getElementById('kvii-results');
-    if (!items.length) {
-      container.innerHTML = '<div class="text-center text-dkc-muted py-8">Tidak ditemukan</div>';
-      return;
-    }
-    container.innerHTML = items.map(item => `
-      <div class="glass-card p-4">
-        <div class="flex items-start gap-3">
-          <span class="text-dkc-gold font-bold text-sm shrink-0 mt-0.5 bg-dkc-gold/10 w-10 h-10 rounded-lg flex items-center justify-center">§${item.id}</span>
-          <p class="text-dkc-text text-sm leading-relaxed">${item.text}</p>
-        </div>
-      </div>
-    `).join('');
-  }
-
   document.getElementById('kvii-search-btn').addEventListener('click', () => doSearch(document.getElementById('kvii-search').value));
   document.getElementById('kvii-search').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(e.target.value); });
+  document.getElementById('kvii-text-search-btn').addEventListener('click', () => doTextSearch(document.getElementById('kvii-text-search').value));
+  document.getElementById('kvii-text-search').addEventListener('keydown', e => { if (e.key === 'Enter') doTextSearch(e.target.value); });
+  document.getElementById('kvii-full-doc').addEventListener('click', showFullDoc);
 
   renderDocList();
+
+  // Handle URL hash: #Lumen_Gentium/1-20
   if (location.hash) {
-    const doc = location.hash.slice(1);
+    const hash = location.hash.slice(1);
+    const [doc, q] = hash.split('/');
     if (doc) {
       await loadData();
       if (allData[doc]) {
         currentDoc = doc;
         const btn = document.querySelector(`[data-doc="${doc}"]`);
         if (btn) btn.click();
+        if (q) {
+          document.getElementById('kvii-search').value = q;
+          doSearch(q);
+        }
       }
     }
   }

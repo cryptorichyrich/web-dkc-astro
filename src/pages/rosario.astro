@@ -7,65 +7,62 @@ import Footer from "@/components/Footer.astro";
 <BaseLayout>
   <Navbar />
   
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+  <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
     <h1 class="text-3xl font-bold text-dkc-gold mb-2">Doa Rosario</h1>
-    <p class="text-dkc-muted mb-8">Doa Rosario interaktif — panduan langkah demi langkah</p>
+    <p class="text-dkc-muted mb-6">Doa Rosario interaktif — panduan langkah demi langkah</p>
 
-    <!-- Mystery Selector -->
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-      {["Gembira", "Sedih", "Mulia", "Terang"].map(m => (
-        <button class="px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold whitespace-nowrap transition-colors">
-          Peristiwa {m}
-        </button>
-      ))}
+    <!-- Mystery Selector Tabs -->
+    <div id="mystery-tabs" class="flex gap-2 mb-6 overflow-x-auto pb-2">
+      <!-- JS-populated -->
     </div>
 
     <!-- Current Mystery Display -->
-    <div class="glass-card glass-card-amber p-5 mb-6 text-center">
-      <span class="text-xs font-medium bg-dkc-gold/20 text-dkc-gold px-3 py-1 rounded-full mb-3 inline-block">Peristiwa Gembira — Butir 1</span>
-      <h2 class="text-xl text-dkc-gold font-bold mb-2">Maria Menerima Kabar Gembira dari Malaikat Gabriel</h2>
-      <p class="text-dkc-muted text-sm mb-4">Buah: Kerendahan Hati</p>
-      
-      <!-- Progress dots -->
-      <div class="flex justify-center gap-2 mb-4">
-        {[0,1,2,3,4].map(i => (
-          <div class={`w-3 h-3 rounded-full ${i === 1 ? 'bg-dkc-gold' : 'bg-dkc-border'}`}></div>
-        ))}
+    <div id="mystery-display" class="glass-card glass-card-amber p-5 mb-6 text-center hidden">
+      <!-- JS-populated -->
+    </div>
+
+    <!-- Prayer Display -->
+    <div id="prayer-display" class="glass-card p-6 mb-4 text-center min-h-[200px] flex flex-col justify-center items-center">
+      <p class="text-dkc-muted text-sm" id="prayer-label">Memuat...</p>
+      <h2 class="text-xl text-dkc-gold font-bold mt-2" id="prayer-title"></h2>
+      <p class="text-dkc-text mt-4 leading-relaxed text-base" id="prayer-text"></p>
+      <p class="text-dkc-muted text-xs mt-3" id="prayer-sub"></p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-4">
+      <div class="flex justify-between text-xs text-dkc-muted mb-1">
+        <span id="progress-label">Langkah 0/0</span>
+        <span id="bead-label">Butir 0/0</span>
       </div>
-      
-      <div class="flex gap-3 justify-center">
-        <button class="px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm">← Sebelumnya</button>
-        <button class="px-4 py-2 rounded-lg bg-dkc-gold text-black font-medium text-sm">Selanjutnya →</button>
+      <div class="w-full bg-dkc-border rounded-full h-2 overflow-hidden">
+        <div id="progress-bar" class="bg-dkc-gold h-full rounded-full transition-all duration-300" style="width: 0%"></div>
       </div>
     </div>
 
-    <!-- Prayer Text -->
-    <div class="glass-card p-5 space-y-4 text-sm leading-relaxed">
-      <div class="text-center">
-        <p class="text-dkc-gold font-semibold">Tanda Salib</p>
-        <p class="text-dkc-muted mt-1">Dalam nama Bapa, dan Putra, dan Roh Kudus. Amin.</p>
-      </div>
-      <div class="text-center">
-        <p class="text-dkc-gold font-semibold">Aku Percaya</p>
-        <p class="text-dkc-muted mt-1 text-xs">Aku percaya akan Allah, Bapa yang mahakuasa...</p>
-      </div>
-      <div class="text-center">
-        <p class="text-dkc-gold font-semibold">Bapa Kami</p>
-        <p class="text-dkc-muted mt-1">Bapa kami yang ada di surga, dimuliakanlah nama-Mu...</p>
-      </div>
-      <div class="text-center">
-        <p class="text-dkc-gold font-semibold">Salam Maria (×3)</p>
-        <p class="text-dkc-muted mt-1 text-xs">Salam Maria, penuh rahmat, Tuhan sertamu...</p>
-      </div>
-      <div class="text-center">
-        <p class="text-dkc-gold font-semibold">Kemuliaan</p>
-        <p class="text-dkc-muted mt-1">Kemuliaan kepada Bapa dan Putra dan Roh Kudus...</p>
-      </div>
+    <!-- Bead visual counter -->
+    <div id="bead-counter" class="flex flex-wrap justify-center gap-1 mb-6">
+      <!-- JS-populated -->
     </div>
 
-    <!-- Rosary Beads Counter -->
-    <div class="mt-6 text-center">
-      <span class="text-dkc-muted text-sm">Peristiwa 1/5 · Salam Maria 1/10</span>
+    <!-- Navigation -->
+    <div class="flex gap-3 justify-center items-center mb-4">
+      <button id="btn-prev" class="px-5 py-3 rounded-xl border border-dkc-border text-dkc-muted text-sm font-medium min-w-[120px] transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none hover:border-dkc-gold/40 hover:text-dkc-gold">
+        ← Sebelumnya
+      </button>
+      <button id="btn-reset" class="px-4 py-3 rounded-xl border border-dkc-border text-dkc-muted text-sm transition-all active:scale-95 hover:border-dkc-gold/40" title="Mulai ulang">
+        ↺
+      </button>
+      <button id="btn-next" class="px-5 py-3 rounded-xl bg-dkc-gold text-black font-semibold text-sm min-w-[120px] transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none hover:bg-dkc-gold/90">
+        Selanjutnya →
+      </button>
+    </div>
+
+    <!-- Share Button -->
+    <div class="text-center">
+      <button id="btn-share" class="px-4 py-2 rounded-full border border-dkc-border text-dkc-muted text-xs transition-all active:scale-95 hover:border-dkc-gold/40 hover:text-dkc-gold">
+        📤 Bagikan Misteri
+      </button>
     </div>
   </main>
 
@@ -76,3 +73,376 @@ import Footer from "@/components/Footer.astro";
   <title>Doa Rosario Interaktif — Damai Kasih Channel</title>
   <meta name="description" content="Doa Rosario interaktif dengan panduan langkah demi langkah. Peristiwa Gembira, Sedih, Mulia, Terang." />
 </slot>
+
+<script>
+  // --- Data Loading & State ---
+  const MYSTERY_ICONS = { gembira: '🌟', terang: '☀️', sedih: '💔', mulia: '👑' };
+  const MYSTERY_COLORS = {
+    warning: 'border-amber-500/40 bg-amber-500/10 text-amber-400',
+    danger: 'border-red-500/40 bg-red-500/10 text-red-400',
+    primary: 'border-blue-500/40 bg-blue-500/10 text-blue-400',
+  };
+
+  let data = null;
+  let currentMystery = 'gembira';
+  let steps = [];
+  let currentStep = 0;
+
+  // --- DOM refs ---
+  const elTabs = document.getElementById('mystery-tabs');
+  const elMysteryDisplay = document.getElementById('mystery-display');
+  const elPrayerLabel = document.getElementById('prayer-label');
+  const elPrayerTitle = document.getElementById('prayer-title');
+  const elPrayerText = document.getElementById('prayer-text');
+  const elPrayerSub = document.getElementById('prayer-sub');
+  const elProgressLabel = document.getElementById('progress-label');
+  const elBeadLabel = document.getElementById('bead-label');
+  const elProgressBar = document.getElementById('progress-bar');
+  const elBeadCounter = document.getElementById('bead-counter');
+  const elBtnPrev = document.getElementById('btn-prev');
+  const elBtnNext = document.getElementById('btn-next');
+  const elBtnReset = document.getElementById('btn-reset');
+  const elBtnShare = document.getElementById('btn-share');
+  const elPrayerDisplay = document.getElementById('prayer-display');
+
+  // --- Fetch data ---
+  async function init() {
+    const resp = await fetch('/assets/data/rosario.json');
+    data = await resp.json();
+
+    // Determine today's mystery
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = days[new Date().getDay()];
+    currentMystery = data.daily_mysteries[today] || 'gembira';
+
+    renderTabs();
+    selectMystery(currentMystery);
+  }
+
+  // --- Render mystery selector tabs ---
+  function renderTabs() {
+    const keys = ['gembira', 'terang', 'sedih', 'mulia'];
+    elTabs.innerHTML = keys.map(k => {
+      const m = data.mysteries[k];
+      const icon = MYSTERY_ICONS[k];
+      const isActive = k === currentMystery;
+      return `<button data-mystery="${k}" class="px-4 py-2 rounded-full text-sm border whitespace-nowrap transition-all active:scale-95 font-medium ${
+        isActive
+          ? 'border-dkc-gold bg-dkc-gold/15 text-dkc-gold'
+          : 'border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold'
+      }">${icon} ${m.title.split(' ')[1]}</button>`;
+    }).join('');
+
+    elTabs.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectMystery(btn.dataset.mystery);
+      });
+    });
+  }
+
+  // --- Select mystery and rebuild steps ---
+  function selectMystery(key) {
+    currentMystery = key;
+    currentStep = 0;
+    steps = buildSteps(key);
+    renderTabs();
+    renderMysteryDisplay();
+    renderPrayer();
+    renderProgress();
+    renderBeadCounter();
+    updateButtons();
+    scrollToPrayer();
+  }
+
+  // --- Build flat steps array ---
+  function buildSteps(mysteryKey) {
+    const st = data.rosary_structure;
+    const mystery = data.mysteries[mysteryKey];
+    const result = [];
+
+    // Opening
+    for (const item of st.opening) {
+      if (typeof item === 'string') {
+        result.push({ type: 'prayer', prayerKey: item, section: 'opening', ...data.prayers[item] });
+      } else if (item.prayer && item.count) {
+        for (let i = 0; i < item.count; i++) {
+          result.push({
+            type: 'prayer',
+            prayerKey: item.prayer,
+            section: 'opening',
+            ...data.prayers[item.prayer],
+            repeat: `${i + 1}/${item.count}`,
+            intention: item.intention || null,
+          });
+        }
+      }
+    }
+
+    // Decades
+    for (const decade of st.decades) {
+      for (const item of decade.prayers) {
+        if (typeof item === 'string') {
+          result.push({
+            type: 'prayer',
+            prayerKey: item,
+            section: 'decade',
+            decadeNum: decade.step,
+            ...data.prayers[item],
+          });
+        } else if (item.prayer === 'announce_mystery') {
+          const m = mystery.mysteries[item.mystery_number - 1];
+          result.push({
+            type: 'mystery',
+            section: 'decade',
+            decadeNum: decade.step,
+            mystery: m,
+          });
+        } else if (item.prayer && item.count) {
+          for (let i = 0; i < item.count; i++) {
+            result.push({
+              type: 'prayer',
+              prayerKey: item.prayer,
+              section: 'decade',
+              decadeNum: decade.step,
+              ...data.prayers[item.prayer],
+              repeat: `${i + 1}/${item.count}`,
+            });
+          }
+        }
+      }
+    }
+
+    // Closing
+    for (const item of st.closing) {
+      if (typeof item === 'string') {
+        result.push({ type: 'prayer', prayerKey: item, section: 'closing', ...data.prayers[item] });
+      }
+    }
+
+    return result;
+  }
+
+  // --- Render mystery info card ---
+  function renderMysteryDisplay() {
+    const m = data.mysteries[currentMystery];
+    const icon = MYSTERY_ICONS[currentMystery];
+    const colorClass = MYSTERY_COLORS[m.color] || MYSTERY_COLORS.warning;
+
+    // Find current mystery in the steps
+    let currentMysteryInfo = null;
+    // Look backward and forward to find the nearest mystery announcement
+    for (let i = currentStep; i >= 0; i--) {
+      if (steps[i].type === 'mystery') {
+        currentMysteryInfo = steps[i].mystery;
+        break;
+      }
+    }
+
+    if (currentMysteryInfo) {
+      elMysteryDisplay.classList.remove('hidden');
+      elMysteryDisplay.innerHTML = `
+        <span class="text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block ${colorClass}">
+          ${icon} ${m.title} — Butir ${currentMysteryInfo.number}
+        </span>
+        <h2 class="text-xl text-dkc-gold font-bold mb-2">${currentMysteryInfo.title}</h2>
+        ${currentMysteryInfo.meditation ? `<p class="text-dkc-muted text-sm italic mb-3">"${currentMysteryInfo.meditation}"</p>` : ''}
+        ${currentMysteryInfo.scripture ? `<p class="text-dkc-gold/70 text-xs">📖 ${currentMysteryInfo.scripture}</p>` : ''}
+      `;
+    } else {
+      // Opening or closing section
+      elMysteryDisplay.classList.remove('hidden');
+      const section = steps[currentStep]?.section;
+      let label = '';
+      if (section === 'opening') label = 'Doa Pembuka';
+      else if (section === 'closing') label = 'Doa Penutup';
+      else label = m.title;
+      elMysteryDisplay.innerHTML = `
+        <span class="text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block ${colorClass}">
+          ${icon} ${m.title}
+        </span>
+        <h2 class="text-xl text-dkc-gold font-bold mb-2">${label}</h2>
+        <p class="text-dkc-muted text-sm">${m.subtitle}</p>
+      `;
+    }
+  }
+
+  // --- Render current prayer ---
+  function renderPrayer() {
+    const step = steps[currentStep];
+    if (!step) {
+      elPrayerLabel.textContent = 'Selesai';
+      elPrayerTitle.textContent = 'Amin 🙏';
+      elPrayerText.textContent = 'Doa Rosario telah selesai. Tuhan memberkati.';
+      elPrayerSub.textContent = '';
+      return;
+    }
+
+    if (step.type === 'mystery') {
+      elPrayerLabel.textContent = `Peristiwa ${currentMystery === 'gembira' ? 'Gembira' : currentMystery === 'terang' ? 'Terang' : currentMystery === 'sedih' ? 'Sedih' : 'Mulia'} — Butir ${step.mystery.number}`;
+      elPrayerTitle.textContent = step.mystery.title;
+      elPrayerText.textContent = step.mystery.description || step.mystery.meditation;
+      elPrayerSub.textContent = step.mystery.scripture ? `📖 ${step.mystery.scripture}` : '';
+    } else {
+      // Prayer step
+      const sectionLabel = step.section === 'opening' ? 'Pembuka' : step.section === 'closing' ? 'Penutup' : `Peristiwa ${step.decadeNum}`;
+      elPrayerLabel.textContent = `${sectionLabel} · ${step.title}`;
+      elPrayerTitle.textContent = step.repeat ? `${step.title} (${step.repeat})` : step.title;
+      elPrayerText.textContent = step.text;
+      elPrayerSub.textContent = step.intention ? `💭 ${step.intention}` : (step.latin ? `🇻🇦 ${step.latin}` : '');
+    }
+  }
+
+  // --- Render progress ---
+  function renderProgress() {
+    const total = steps.length;
+    const pos = currentStep + 1;
+    const pct = total > 0 ? Math.round((pos / total) * 100) : 0;
+
+    elProgressLabel.textContent = `Langkah ${pos}/${total}`;
+
+    // Count Hail Marys/beads for a traditional bead counter
+    let beadTotal = 0;
+    let beadCurrent = 0;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].type === 'prayer') beadTotal++;
+      if (i <= currentStep && steps[i].type === 'prayer') beadCurrent++;
+    }
+    elBeadLabel.textContent = `Butir ${beadCurrent}/${beadTotal}`;
+    elProgressBar.style.width = `${pct}%`;
+  }
+
+  // --- Render bead counter dots ---
+  function renderBeadCounter() {
+    const total = steps.length;
+    // Only show dots for prayer steps (skip mystery announcements)
+    const prayerSteps = steps.filter(s => s.type === 'prayer');
+    const totalPrayers = prayerSteps.length;
+
+    // Limit dots to show ~50 max
+    const maxDots = 50;
+    const stride = totalPrayers > maxDots ? Math.ceil(totalPrayers / maxDots) : 1;
+
+    let html = '';
+    let prayerIdx = 0;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].type !== 'prayer') continue;
+
+      if (prayerIdx % stride === 0 || prayerIdx === totalPrayers - 1) {
+        const isPast = i <= currentStep;
+        const isCurrent = i === currentStep;
+        const isMystery = steps[i].section === 'decade' && steps[i].prayerKey === 'bapa_kami';
+        html += `<div class="w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+          isCurrent
+            ? 'bg-dkc-gold scale-125 ring-2 ring-dkc-gold/30'
+            : isPast
+              ? 'bg-dkc-gold/50'
+              : 'bg-dkc-border'
+        } ${isMystery && isPast ? 'ring-1 ring-dkc-gold/30' : ''}"></div>`;
+      }
+      prayerIdx++;
+    }
+
+    elBeadCounter.innerHTML = html;
+  }
+
+  // --- Navigation ---
+  function goNext() {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      updateAll();
+    }
+  }
+
+  function goPrev() {
+    if (currentStep > 0) {
+      currentStep--;
+      updateAll();
+    }
+  }
+
+  function resetRosary() {
+    currentStep = 0;
+    updateAll();
+  }
+
+  function updateAll() {
+    renderMysteryDisplay();
+    renderPrayer();
+    renderProgress();
+    renderBeadCounter();
+    updateButtons();
+    scrollToPrayer();
+  }
+
+  function updateButtons() {
+    elBtnPrev.disabled = currentStep === 0;
+    elBtnNext.disabled = currentStep >= steps.length - 1;
+    elBtnNext.textContent = currentStep >= steps.length - 1 ? 'Selesai ✓' : 'Selanjutnya →';
+  }
+
+  function scrollToPrayer() {
+    elPrayerDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // --- Share ---
+  function shareMystery() {
+    const m = data.mysteries[currentMystery];
+    const icon = MYSTERY_ICONS[currentMystery];
+
+    // Find current mystery info
+    let mysteryInfo = null;
+    for (let i = currentStep; i >= 0; i--) {
+      if (steps[i].type === 'mystery') {
+        mysteryInfo = steps[i].mystery;
+        break;
+      }
+    }
+
+    const text = mysteryInfo
+      ? `📿 ${icon} ${mysteryInfo.title}\n\n📖 ${mysteryInfo.scripture || ''}\n💭 ${mysteryInfo.meditation || ''}\n\n#DoaRosario #DamaiKasihChannel`
+      : `📿 ${icon} ${m.title}\n${m.subtitle}\n\nMari berdoa Rosario bersama!\n\n#DoaRosario #DamaiKasihChannel`;
+
+    if (navigator.share) {
+      navigator.share({ title: 'Doa Rosario', text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = elBtnShare.textContent;
+        elBtnShare.textContent = '✅ Tersalin!';
+        setTimeout(() => { elBtnShare.textContent = orig; }, 1500);
+      }).catch(() => {});
+    }
+  }
+
+  // --- Event listeners ---
+  elBtnPrev.addEventListener('click', goPrev);
+  elBtnNext.addEventListener('click', goNext);
+  elBtnReset.addEventListener('click', resetRosary);
+  elBtnShare.addEventListener('click', shareMystery);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goPrev();
+    }
+  });
+
+  // Touch swipe support
+  let touchStartX = 0;
+  elPrayerDisplay.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  });
+  elPrayerDisplay.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goNext();
+      else goPrev();
+    }
+  });
+
+  // --- Initialize ---
+  init();
+</script>

@@ -26,12 +26,49 @@ import Footer from "@/components/Footer.astro";
     </div>
   </main>
 
+  <!-- SEO content section -->
+  <section class="max-w-4xl mx-auto px-4 pb-16">
+    <div class="glass-card p-6 md:p-8 space-y-6 text-dkc-text text-sm md:text-base leading-relaxed">
+      <h2 class="text-xl font-bold text-dkc-gold">Apa yang Dimaksud Ajaran Bidat?</h2>
+      <p>Dalam ajaran Gereja Katolik, bidat (heresi) adalah penolakan atau distorsi yang disengaja terhadap kebenaran iman yang telah ditetapkan oleh Gereja. Gereja membedakan antara bidat formal (penolakan sadar) dan bidat material (kesalahan tanpa kesadaran penuh).</p>
+
+      <h2 class="text-xl font-bold text-dkc-gold">Ukuran Ajaran Gereja Katolik</h2>
+      <p>Gereja Katolik menggunakan tiga sumber utama untuk menilai kebenaran ajaran: <strong>Kitab Suci</strong> (Firman Allah yang tertulis), <strong>Tradisi Suci</strong> (warisan iman dari para Rasul), dan <strong>Magisterium</strong> (otoritas mengajar Gereja). Segala ajaran yang bertentangan dengan ketiga sumber ini patut diperiksa secara kritis.</p>
+
+      <h2 class="text-xl font-bold text-dkc-gold">Peran Kitab Suci, Tradisi Suci, dan Magisterium</h2>
+      <p>Kitab Suci, Tradisi Suci, dan Magisterium merupakan tiga pilar yang tidak dapat dipisahkan dalam iman Katolik. <a href="/katekismus" class="text-dkc-gold underline">Katekismus Gereja Katolik</a> menjelaskan bahwa ketiganya saling melengkapi dalam menafsirkan dan menyampaikan wahyu ilahi.</p>
+
+      <h2 class="text-xl font-bold text-dkc-gold">Halaman Terkait</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li><a href="/katekismus" class="text-dkc-gold underline">Katekismus Gereja Katolik</a></li>
+        <li><a href="/kv2" class="text-dkc-gold underline">Dokumen Konsili Vatikan II</a></li>
+        <li><a href="/diagnosa/sedevacantisme" class="text-dkc-gold underline">Diagnosa Sedevacantisme</a></li>
+        <li><a href="/suksesi-kepausan" class="text-dkc-gold underline">Suksesi Kepausan</a></li>
+        <li><a href="/timeline-kanon-kitabsuci" class="text-dkc-gold underline">Timeline Kanon Kitab Suci</a></li>
+      </ul>
+    </div>
+  </section>
+
   <Footer />
 </BaseLayout>
 
 <slot name="head">
-  <title>Diagnosa Ajaran Bidat — Damai Kasih Channel</title>
-  <meta name="description" content="Uji ajaran berdasarkan Katekismus Gereja Katolik." />
+  <title>Diagnosa Ajaran Bidat dalam Perspektif Katolik — Damai Kasih Channel</title>
+  <meta name="description" content="Pelajari cara mengenali ajaran yang menyimpang dari iman Katolik berdasarkan Kitab Suci, Tradisi Suci, Magisterium, dan Katekismus Gereja Katolik." />
+  <meta name="keywords" content="ajaran bidat, bidat dalam Gereja Katolik, diagnosa ajaran sesat, apologetika Katolik, ajaran Gereja Katolik" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Diagnosa Ajaran Bidat",
+    "url": "https://web-dkc-astro.pages.dev/diagnosa/ajaran-bidat/",
+    "description": "Alat untuk mengenali ajaran yang menyimpang dari iman Katolik.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
+    "inLanguage": "id-ID"
+  }
+  </script>
 </slot>
 
 <style is:global>
@@ -89,7 +126,7 @@ import Footer from "@/components/Footer.astro";
     {
       "text": "Apakah Anda setuju bahwa rahmat Allah tidaklah perlu untuk mencapai keselamatan?",
       "correctAnswer": "Tidak",
-      "correctExplanation": "Rahmat Allah adalah perlu untuk mencapai keselamatan, karena manusia tidak dapat menyelamatkan diri sendiri. St. Paulus dalam suratnya kepada jemaat Efesus mengajarkan bahwa rahmat Allah adalah perlu untuk mencapai keselamatan (<a href='http://localhost:4000/kitabsuci/pbtb2/?q=ef2:8-9' target=_blank>Efesus 2:8-9</a>). (KGK 1996)"
+      "correctExplanation": "Rahmat Allah adalah perlu untuk mencapai keselamatan, karena manusia tidak dapat menyelamatkan diri sendiri. St. Paulus dalam suratnya kepada jemaat Efesus mengajarkan bahwa rahmat Allah adalah perlu untuk mencapai keselamatan (<a href='/kitabsuci/?q=ef2:8-9' target=_blank>Efesus 2:8-9</a>). (KGK 1996)"
     },
     {
       "text": "Apakah Anda percaya bahwa dosa asal tidak ada dan manusia lahir dalam keadaan suci?",
@@ -104,7 +141,7 @@ import Footer from "@/components/Footer.astro";
     {
       "text": "Apakah Anda percaya bahwa rahmat Allah hanya diberikan kepada orang-orang yang telah melakukan perbuatan baik?",
       "correctAnswer": "Tidak",
-      "correctExplanation": "Rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia, tetapi hanya karena anugerah Allah. St. Paulus dalam suratnya kepada jemaat Roma mengajarkan bahwa rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia (<a href='http://localhost:4000/kitabsuci/pbtb2/?q=rm11:6' target=_blank>Roma 11:6</a>). (KGK 1996)"
+      "correctExplanation": "Rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia, tetapi hanya karena anugerah Allah. St. Paulus dalam suratnya kepada jemaat Roma mengajarkan bahwa rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia (<a href='/kitabsuci/?q=rm11:6' target=_blank>Roma 11:6</a>). (KGK 1996)"
     },
     {
       "text": "Apakah Anda setuju bahwa keselamatan hanya dapat dicapai melalui iman dan rahmat Allah?",
@@ -207,7 +244,7 @@ import Footer from "@/components/Footer.astro";
       {
         "text": "Apakah Anda menolak penggunaan ikon dalam ibadah Kristen?",
         "correctAnswer": "Tidak",
-        "correctExplanation": "Penggunaan ikon dalam ibadah Kristen adalah suatu praktik yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili Nicea II tahun 787 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/kgk/?q=1160-1162/' target=_blank>1160-1162</a>."
+        "correctExplanation": "Penggunaan ikon dalam ibadah Kristen adalah suatu praktik yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili Nicea II tahun 787 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/katekismus?q=1160-1162/' target=_blank>1160-1162</a>."
       },
       {
         "text": "Apakah Anda percaya bahwa ikon dapat digunakan untuk membantu umat berdoa dan mengingat Tuhan?",
@@ -222,7 +259,7 @@ import Footer from "@/components/Footer.astro";
       {
         "text": "Apakah Anda mendukung keputusan Konsili Nicea II tahun 787 yang membela penggunaan ikon?",
         "correctAnswer": "Iya",
-        "correctExplanation": "Keputusan Konsili Nicea II tahun 787 yang membela penggunaan ikon adalah suatu keputusan yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili tersebut dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/kgk/?q=1159-1162/' target=_blank>1159-1162</a> ."
+        "correctExplanation": "Keputusan Konsili Nicea II tahun 787 yang membela penggunaan ikon adalah suatu keputusan yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili tersebut dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/katekismus?q=1159-1162/' target=_blank>1159-1162</a> ."
       }
     ]
   },
@@ -465,7 +502,7 @@ import Footer from "@/components/Footer.astro";
     {
       "text": "Apakah Anda setuju bahwa orang Kristen harus fokus pada kemakmuran finansial sebagai tujuan utama hidup mereka?",
       "correctAnswer": "Tidak",
-      "correctExplanation": "Kehidupan Kristen harus berfokus pada kekayaan spiritual dan tujuan yang lebih tinggi, bukan hanya kemakmuran finansial. Santo Matius mengingatkan kita untuk menimbun harta di surga. (<a href='http://localhost:4000/kitabsuci/pbtb2/?q=mat6:19-20' target=_blank>Matius 6:19-20</a>, KGK 2544)"
+      "correctExplanation": "Kehidupan Kristen harus berfokus pada kekayaan spiritual dan tujuan yang lebih tinggi, bukan hanya kemakmuran finansial. Santo Matius mengingatkan kita untuk menimbun harta di surga. (<a href='/kitabsuci/?q=mat6:19-20' target=_blank>Matius 6:19-20</a>, KGK 2544)"
     },
     {
       "text": "Apakah Anda percaya bahwa hidup sederhana dan tidak terlalu mengutamakan harta duniawi adalah nilai yang penting dalam kehidupan Kristen?",
@@ -475,7 +512,7 @@ import Footer from "@/components/Footer.astro";
     {
       "text": "Apakah Anda setuju bahwa kekayaan materi tidaklah penting dalam hidup Kristen?",
       "correctAnswer": "Iya",
-      "correctExplanation": "Kekayaan materi tidaklah penting dalam hidup Kristen. Santo Paulus mengingatkan kita untuk mencari kekayaan yang tidak dapat binasa. (<a href='http://localhost:4000/kitabsuci/pbtb2/?q=1kor4:20' target=_blank>1 Korintus 4:20</a>, KGK 1720)"
+      "correctExplanation": "Kekayaan materi tidaklah penting dalam hidup Kristen. Santo Paulus mengingatkan kita untuk mencari kekayaan yang tidak dapat binasa. (<a href='/kitabsuci/?q=1kor4:20' target=_blank>1 Korintus 4:20</a>, KGK 1720)"
      }
    ]
   },{
@@ -676,8 +713,9 @@ import Footer from "@/components/Footer.astro";
     // Reading materials
     html += "<div class=\"reading-list\">";
     html += "<div class=\"reading-list-header\">📚 Bacaan Lebih Lanjut</div>";
+    html += "<a href=\"/blog/kumpulan-inspirasi-ajaran-ajaran-bidat-yang-merasuki-protestantisme\" target=\"_blank\"><span>📚</span><span>Kumpulan Inspirasi: Ajaran-ajaran Bidat yang Merasuki Protestantisme</span></a>";
     html += "<a href=\"/blog/ajaran-ajaran-sesat-dari-abad-pertama-hingga-abad-tujuh-belas\" target=\"_blank\"><span>📚</span><span>Ajaran-ajaran Sesat dari Abad Pertama hingga Abad Tujuh Belas</span></a>";
-    html += "<a href=\"/blog/bidat-gereja-katolik-dari-abad-pertama-hingga-abad-limabelas\" target=\"_blank\"><span>📚</span><span>Bidat Gereja Katolik dari Abad Pertama hingga Abad Lima Belas</span></a>";
+    html += "<a href=\"/blog/aliran-sesat\" target=\"_blank\"><span>📚</span><span>Aliran Sesat: Mengenal Ajaran-ajaran yang Menyimpang</span></a>";
     html += "</div>";
 
     // Retry button
@@ -732,7 +770,7 @@ import Footer from "@/components/Footer.astro";
   progressBarUpdate();
 
   document.addEventListener("keydown", function(event) {
-    if (event.key === "1") { nextQuestion("Iya"); }
-    else if (event.key === "2") { nextQuestion("Tidak"); }
+    if (event.key === "1" || event.key === "NumPad1") { nextQuestion("Iya"); }
+    else if (event.key === "2" || event.key === "NumPad2") { nextQuestion("Tidak"); }
   });
 </script>

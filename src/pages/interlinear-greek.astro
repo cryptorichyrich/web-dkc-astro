@@ -222,6 +222,11 @@ import Footer from "@/components/Footer.astro";
     background: rgba(201, 168, 76, 0.1);
     border-left-color: rgba(201, 168, 76, 0.5);
   }
+  #reading-content .verse-block.flash-highlight {
+    background: rgba(201, 168, 76, 0.25);
+    border-left-color: rgba(201, 168, 76, 0.7);
+    transition: background-color 0.3s, border-color 0.3s;
+  }
   #reading-content .verse-num {
     color: rgba(201, 168, 76, 0.7);
     font-weight: bold;
@@ -440,6 +445,9 @@ import Footer from "@/components/Footer.astro";
     renderChapterGrid(key);
     renderBookGrid(); // refresh active state
     updateBreadcrumb();
+
+    // Scroll to chapter panel
+    setTimeout(() => chapterPanel.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
   // ===== Navigate to chapter =====
@@ -465,6 +473,18 @@ import Footer from "@/components/Footer.astro";
     window.location.hash = hash;
 
     readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Scroll to highlighted verse after content renders
+    if (highlightVerses.length > 0) {
+      setTimeout(() => {
+        const el = readingContent.querySelector(`[data-verse="${highlightVerses[0]}"]`) as HTMLElement;
+        if (el) {
+          el.classList.add("flash-highlight");
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => el.classList.remove("flash-highlight"), 2000);
+        }
+      }, 200);
+    }
   }
 
   // ===== Render verses =====

@@ -175,6 +175,7 @@ import Footer from "@/components/Footer.astro";
     bGrid.innerHTML="";
     for(const k of books){if(!data?.[k])continue;const btn=document.createElement("button");btn.className=`sel-btn book-btn-${t} py-3 text-xs font-medium`;btn.textContent=BOOK_NAMES[k]||k;btn.setAttribute("data-book",k);btn.addEventListener("click",()=>selBook(k));bGrid.appendChild(btn);}
     showStep("books");
+    setTimeout(()=>stepB.scrollIntoView({behavior:"smooth",block:"start"}),50);
   }));
 
   function selBook(k:string){
@@ -187,6 +188,7 @@ import Footer from "@/components/Footer.astro";
     for(const c of chs){const btn=document.createElement("button");btn.className="sel-btn py-2";btn.textContent=String(c);btn.addEventListener("click",()=>selectChapter(k,c));cGrid.appendChild(btn);}
     showStep("chapters");stepB.classList.remove("hidden");
     rArea.classList.add("hidden");btmNav.classList.add("hidden");
+    setTimeout(()=>stepC.scrollIntoView({behavior:"smooth",block:"start"}),50);
   }
 
   // Step 3: Chapter -> show verse grid (NOT text)
@@ -220,6 +222,9 @@ import Footer from "@/components/Footer.astro";
     stepB.classList.remove("hidden");
     rArea.classList.add("hidden");
     btmNav.classList.add("hidden");
+
+    // Scroll to verse grid
+    setTimeout(()=>stepV.scrollIntoView({behavior:"smooth",block:"start"}),50);
 
     // Update hash
     window.location.hash = `${book}${ch}`;

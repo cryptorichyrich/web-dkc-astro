@@ -137,9 +137,21 @@ const encodedTitle = encodeURIComponent(post.data.title);
     {(() => {
       const coverImg = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
       return coverImg ? (
-        <img src={coverImg} alt={post.data.title} class="w-full rounded-xl mb-8" loading="lazy" onerror="this.style.display='none'" />
+        <img src={coverImg} alt={post.data.title} class="w-full rounded-xl mb-6" loading="lazy" onerror="this.style.display='none'" />
       ) : null;
     })()}
+
+    <!-- Toolbar: TTS + Text Size -->
+    <div class="flex items-center justify-end gap-2 mb-6 pb-4 border-b border-dkc-border/40" id="article-toolbar">
+      <button id="tts-btn" class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors" title="Bacakan Artikel" aria-label="Text-to-Speech">
+        <svg id="tts-icon-play" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <svg id="tts-icon-stop" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+      </button>
+      <button id="text-smaller" class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors text-xs font-bold" title="Perkecil Teks" aria-label="Smaller text">A-</button>
+      <button id="text-larger" class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors text-sm font-bold" title="Perbesar Teks" aria-label="Larger text">A+</button>
+      <span id="text-size-label" class="text-[10px] text-dkc-muted w-8 text-center">100%</span>
+      <button id="text-reset" class="text-[10px] text-dkc-muted hover:text-dkc-gold transition-colors px-1" title="Reset">Reset</button>
+    </div>
 
     <!-- Mobile TOC (expanded, above content) -->
     {tocItems.length > 0 && (
@@ -293,6 +305,103 @@ const encodedTitle = encodeURIComponent(post.data.title);
   // Initialize everything
   initScrollSpy();
   initShareButtons();
+  initTTS();
+  initTextSize();
+
+  // === TTS: Text-to-Speech for article content ===
+  let ttsUtterance: SpeechSynthesisUtterance | null = null;
+  let ttsPlaying = false;
+
+  function initTTS() {
+    const btn = document.getElementById('tts-btn');
+    const iconPlay = document.getElementById('tts-icon-play');
+    const iconStop = document.getElementById('tts-icon-stop');
+    if (!btn || !iconPlay || !iconStop) return;
+
+    btn.addEventListener('click', () => {
+      if (ttsPlaying) {
+        stopTTS();
+      } else {
+        startTTS();
+      }
+    });
+  }
+
+  function startTTS() {
+    const body = document.getElementById('article-body');
+    if (!body) return;
+    // Stop any ongoing
+    window.speechSynthesis.cancel();
+    ttsPlaying = true;
+    const iconPlay = document.getElementById('tts-icon-play');
+    const iconStop = document.getElementById('tts-icon-stop');
+    const btn = document.getElementById('tts-btn');
+    if (iconPlay) iconPlay.classList.add('hidden');
+    if (iconStop) iconStop.classList.remove('hidden');
+    if (btn) { btn.classList.add('text-dkc-gold', 'border-dkc-gold/30'); }
+
+    const text = body.textContent || '';
+    ttsUtterance = new SpeechSynthesisUtterance(text);
+    ttsUtterance.lang = 'id-ID';
+    ttsUtterance.rate = 0.95;
+    ttsUtterance.onend = () => stopTTS();
+    ttsUtterance.onerror = () => stopTTS();
+    window.speechSynthesis.speak(ttsUtterance);
+  }
+
+  function stopTTS() {
+    window.speechSynthesis.cancel();
+    ttsPlaying = false;
+    const iconPlay = document.getElementById('tts-icon-play');
+    const iconStop = document.getElementById('tts-icon-stop');
+    const btn = document.getElementById('tts-btn');
+    if (iconPlay) iconPlay.classList.remove('hidden');
+    if (iconStop) iconStop.classList.add('hidden');
+    if (btn) { btn.classList.remove('text-dkc-gold', 'border-dkc-gold/30'); }
+  }
+
+  // === TEXT SIZE: enlarge/shrink article text ===
+  let textSizeLevel = 0; // -2 to +4
+  const TEXT_SIZES = ['75%', '87%', '100%', '112%', '125%', '140%', '160%'];
+
+  function initTextSize() {
+    const smaller = document.getElementById('text-smaller');
+    const larger = document.getElementById('text-larger');
+    const reset = document.getElementById('text-reset');
+    const label = document.getElementById('text-size-label');
+    const body = document.getElementById('article-body');
+    if (!body) return;
+
+    // Restore saved size
+    const saved = localStorage.getItem('dkc-text-size');
+    if (saved !== null) {
+      textSizeLevel = Math.max(-2, Math.min(4, parseInt(saved)));
+      applyTextSize(body, label);
+    }
+
+    if (smaller) smaller.addEventListener('click', () => {
+      textSizeLevel = Math.max(-2, textSizeLevel - 1);
+      applyTextSize(body, label);
+      localStorage.setItem('dkc-text-size', String(textSizeLevel));
+    });
+
+    if (larger) larger.addEventListener('click', () => {
+      textSizeLevel = Math.min(4, textSizeLevel + 1);
+      applyTextSize(body, label);
+      localStorage.setItem('dkc-text-size', String(textSizeLevel));
+    });
+
+    if (reset) reset.addEventListener('click', () => {
+      textSizeLevel = 0;
+      applyTextSize(body, label);
+      localStorage.removeItem('dkc-text-size');
+    });
+  }
+
+  function applyTextSize(body: HTMLElement, label: HTMLElement | null) {
+    body.style.fontSize = TEXT_SIZES[textSizeLevel + 2];
+    if (label) label.textContent = TEXT_SIZES[textSizeLevel + 2];
+  }
 
   function initShareButtons() {
     const container = document.getElementById('share-buttons');

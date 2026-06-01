@@ -99,7 +99,7 @@ import Footer from "@/components/Footer.astro";
   .deuterocanonical {
     background: rgba(201, 168, 76, 0.03);
   }
-  .deuterocanical-badge {
+  .deuterocanonical-badge {
     font-size: 0.6rem;
     color: var(--color-dkc-gold);
     background: rgba(201, 168, 76, 0.15);
@@ -239,7 +239,7 @@ import Footer from "@/components/Footer.astro";
 
   function rowHTML(b: BookInfo, num: number): string {
     const dc = b.deuterocanonical ? "deuterocanonical" : "";
-    const dcBadge = b.deuterocanonical ? '<span class="deuterocanical-badge">Deuterokanonika</span>' : "";
+    const dcBadge = b.deuterocanonical ? '<span class="deuterocanonical-badge">Deuterokanonika</span>' : "";
     return `<a href="/kitabsuci#${b.abbr}1" class="book-row ${dc} block">
       <span class="book-num">${num}</span>
       <span class="book-abbr">${b.abbr}</span>

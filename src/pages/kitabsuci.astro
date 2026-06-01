@@ -505,22 +505,27 @@ import Footer from "@/components/Footer.astro";
   }
   async function switchVersion(ver: string) {
     if (ver === currentVersion && bibleData) return;
-    currentVersion = ver;
-    localStorage.setItem('dkc-bible-version', ver);
-    updateVersionTabs();
     readingLoading.classList.remove('hidden');
-    const resp = await fetch(VERSIONS[ver].file);
-    bibleData = await resp.json();
-    readingLoading.classList.add('hidden');
-    // Rebuild current view if a book is selected
-    if (currentBook && bibleData[currentBook]) {
-      if (currentChapter && bibleData[currentBook][String(currentChapter)]) {
-        selectChapter(currentBook, currentChapter);
-        loadChapter(currentBook, currentChapter);
-      } else {
-        selectBook(currentBook);
+    try {
+      const resp = await fetch(VERSIONS[ver].file);
+      if (!resp.ok) throw new Error(`Gagal memuat versi ${VERSIONS[ver].label}`);
+      bibleData = await resp.json();
+      currentVersion = ver;
+      localStorage.setItem('dkc-bible-version', ver);
+      updateVersionTabs();
+      // Rebuild current view if a book is selected
+      if (currentBook && bibleData[currentBook]) {
+        if (currentChapter && bibleData[currentBook][String(currentChapter)]) {
+          loadChapter(currentBook, currentChapter);
+        } else {
+          selectBook(currentBook);
+        }
       }
+    } catch (e) {
+      console.error('Version switch failed:', e);
+      alert(`Gagal memuat ${VERSIONS[ver].label}. Silakan coba lagi.`);
     }
+    readingLoading.classList.add('hidden');
   }
   document.querySelectorAll('.version-tab').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -533,8 +538,16 @@ import Footer from "@/components/Footer.astro";
   // Init
   async function init() {
     readingLoading.classList.remove("hidden");
-    const resp = await fetch(VERSIONS[currentVersion].file);
-    bibleData = await resp.json();
+    try {
+      const resp = await fetch(VERSIONS[currentVersion].file);
+      if (!resp.ok) throw new Error(`Gagal memuat ${VERSIONS[currentVersion].label}`);
+      bibleData = await resp.json();
+    } catch (e) {
+      console.error('Init failed:', e);
+      readingContent.innerHTML = `<div class="text-center py-12 text-dkc-muted"><p>Gagal memuat data Alkitab.</p><button onclick="location.reload()" class="mt-3 px-4 py-2 rounded-lg bg-dkc-gold/10 border border-dkc-gold/30 text-dkc-gold text-sm">Coba Lagi</button></div>`;
+      readingLoading.classList.add("hidden");
+      return;
+    }
     readingLoading.classList.add("hidden");
 
     // Check hash

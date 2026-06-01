@@ -6,24 +6,67 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Pencarian</h1>
-    
-    <div class="glass-card p-4 mb-6 flex gap-3">
-      <input type="text" placeholder="Cari artikel, ayat, katekismus..." class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1" autofocus />
-      <button class="bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-sm">Cari</button>
+
+  <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Pencarian</h1>
+      <p class="text-dkc-muted text-sm">Temukan artikel, topik, dan konten Katolik dari seluruh situs</p>
     </div>
 
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-      {["Semua", "Artikel", "Kitab Suci", "Katekismus", "KHK", "Summa", "Doa"].map(f => (
-        <button class="px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold whitespace-nowrap transition-colors">
-          {f}
+    <!-- Search Bar -->
+    <div class="glass-card p-3 mb-5">
+      <div class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Cari artikel, topik, kata kunci..."
+            class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40 transition-colors"
+            autofocus
+          />
+        </div>
+        <button id="clear-btn" class="px-3 py-2.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors hidden">
+          ✕
         </button>
-      ))}
+      </div>
+
+      <!-- Filter Tabs -->
+      <div id="filter-tabs" class="flex gap-2 mt-3 overflow-x-auto pb-1">
+        <button data-filter="all" class="filter-tab filter-tab-active px-3 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted whitespace-nowrap transition-colors">
+          Semua
+        </button>
+      </div>
     </div>
 
-    <p class="text-dkc-muted text-sm text-center py-12">Ketik kata kunci di atas untuk memulai pencarian.</p>
+    <!-- Status -->
+    <div id="search-status" class="text-dkc-muted text-xs mb-4 hidden">
+      <span id="result-count"></span> hasil ditemukan
+    </div>
+
+    <!-- Loading -->
+    <div id="search-loading" class="text-center py-16 text-dkc-muted hidden">
+      <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
+      <p class="text-sm">Memuat indeks pencarian...</p>
+    </div>
+
+    <!-- Results -->
+    <div id="search-results" class="space-y-3 hidden"></div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="text-center py-16">
+      <div class="text-4xl mb-3">🔍</div>
+      <p class="text-dkc-muted text-sm">Ketik kata kunci di atas untuk memulai pencarian</p>
+      <p class="text-dkc-muted/50 text-xs mt-1">461 artikel tersedia</p>
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="text-center py-16 hidden">
+      <div class="text-4xl mb-3">😕</div>
+      <p class="text-dkc-muted text-sm">Tidak ditemukan hasil untuk "<span id="no-results-query"></span>"</p>
+      <p class="text-dkc-muted/50 text-xs mt-1">Coba kata kunci lain atau gunakan filter yang berbeda</p>
+    </div>
   </main>
 
   <Footer />
@@ -33,3 +76,230 @@ import Footer from "@/components/Footer.astro";
   <title>Pencarian — Damai Kasih Channel</title>
   <meta name="description" content="Cari artikel, ayat Alkitab, katekismus, dan konten Katolik lainnya." />
 </slot>
+
+<style>
+  .filter-tab-active {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--color-dkc-gold);
+    border-color: rgba(201, 168, 76, 0.4);
+  }
+  .result-card:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    background: rgba(201, 168, 76, 0.02);
+  }
+  mark {
+    background: rgba(201, 168, 76, 0.25);
+    color: var(--color-dkc-text);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+</style>
+
+<script>
+  import MiniSearch from "minisearch";
+
+  // ===== State =====
+  let miniSearch: MiniSearch | null = null;
+  let allDocs: any[] = [];
+  let currentFilter = "all";
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ===== DOM refs =====
+  const searchInput = document.getElementById("search-input") as HTMLInputElement;
+  const clearBtn = document.getElementById("clear-btn")!;
+  const filterTabs = document.getElementById("filter-tabs")!;
+  const searchStatus = document.getElementById("search-status")!;
+  const resultCount = document.getElementById("result-count")!;
+  const searchLoading = document.getElementById("search-loading")!;
+  const searchResults = document.getElementById("search-results")!;
+  const emptyState = document.getElementById("empty-state")!;
+  const noResults = document.getElementById("no-results")!;
+  const noResultsQuery = document.getElementById("no-results-query")!;
+
+  // ===== Load search index =====
+  async function loadIndex() {
+    searchLoading.classList.remove("hidden");
+    emptyState.classList.add("hidden");
+
+    try {
+      const resp = await fetch("/search-index.json");
+      if (!resp.ok) throw new Error("Failed to load search index");
+      allDocs = await resp.json();
+
+      // Extract unique tags for filter tabs
+      const tagSet = new Set<string>();
+      allDocs.forEach((doc: any) => {
+        if (doc.tags) {
+          doc.tags.split(",").forEach((t: string) => {
+            const trimmed = t.trim();
+            if (trimmed) tagSet.add(trimmed);
+          });
+        }
+      });
+
+      // Build filter tabs (top 12 tags by frequency)
+      const tagCounts: Record<string, number> = {};
+      allDocs.forEach((doc: any) => {
+        if (doc.tags) {
+          doc.tags.split(",").forEach((t: string) => {
+            const trimmed = t.trim();
+            if (trimmed) tagCounts[trimmed] = (tagCounts[trimmed] || 0) + 1;
+          });
+        }
+      });
+      const topTags = Object.entries(tagCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([tag]) => tag);
+
+      topTags.forEach(tag => {
+        const btn = document.createElement("button");
+        btn.className = "filter-tab px-3 py-1.5 rounded-full text-xs border border-dkc-border text-dkc-muted whitespace-nowrap transition-colors";
+        btn.setAttribute("data-filter", tag);
+        btn.textContent = tag;
+        btn.addEventListener("click", () => setFilter(tag, btn));
+        filterTabs.appendChild(btn);
+      });
+
+      // Initialize MiniSearch
+      miniSearch = new MiniSearch({
+        fields: ["title", "subtitle", "tags"],
+        storeFields: ["title", "subtitle", "tags", "slug", "coverImage", "publishedAt"],
+        searchOptions: {
+          boost: { title: 3, tags: 2, subtitle: 1 },
+          fuzzy: 0.2,
+          prefix: true,
+        },
+      });
+      miniSearch.addAll(allDocs);
+
+      searchLoading.classList.add("hidden");
+      emptyState.classList.remove("hidden");
+
+      // Auto-search if query in URL
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q");
+      if (q) {
+        searchInput.value = q;
+        doSearch(q);
+      }
+    } catch (err) {
+      console.error("Search init failed:", err);
+      searchLoading.innerHTML = '<p class="text-red-400 text-sm">Gagal memuat indeks pencarian. Coba refresh halaman.</p>';
+    }
+  }
+
+  // ===== Search =====
+  function doSearch(query: string) {
+    if (!miniSearch || !query.trim()) {
+      searchResults.classList.add("hidden");
+      searchStatus.classList.add("hidden");
+      noResults.classList.add("hidden");
+      emptyState.classList.remove("hidden");
+      return;
+    }
+
+    emptyState.classList.add("hidden");
+    const results = miniSearch.search(query);
+
+    // Apply tag filter
+    const filtered = currentFilter === "all"
+      ? results
+      : results.filter((r: any) => {
+          const tags = (r.tags || "").toLowerCase();
+          return tags.includes(currentFilter.toLowerCase());
+        });
+
+    if (filtered.length === 0) {
+      searchResults.classList.add("hidden");
+      searchStatus.classList.add("hidden");
+      noResults.classList.remove("hidden");
+      noResultsQuery.textContent = query;
+      return;
+    }
+
+    noResults.classList.add("hidden");
+    searchStatus.classList.remove("hidden");
+    resultCount.textContent = String(filtered.length);
+
+    // Render results
+    let html = "";
+    for (const item of filtered.slice(0, 50)) {
+      const title = escapeHtml(item.title);
+      const subtitle = item.subtitle ? `<p class="text-dkc-muted text-xs mt-1 line-clamp-1">${escapeHtml(item.subtitle)}</p>` : "";
+      const tags = item.tags
+        ? `<div class="flex gap-1 mt-2 flex-wrap">${item.tags.split(",").map((t: string) => t.trim()).filter(Boolean).slice(0, 4).map((t: string) =>
+            `<span class="px-2 py-0.5 rounded-full bg-dkc-surface text-dkc-muted text-[10px] border border-dkc-border">${escapeHtml(t)}</span>`
+          ).join("")}</div>`
+        : "";
+      const date = item.publishedAt ? `<span class="text-dkc-muted/60 text-[10px]">${item.publishedAt}</span>` : "";
+      const coverImg = item.coverImage
+        ? `<img src="${item.coverImage}" alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" onerror="this.style.display='none'" />`
+        : "";
+
+      html += `<a href="/blog/${item.slug}" class="result-card block glass-card p-3.5 border border-dkc-border transition-all duration-200">
+        <div class="flex gap-3">
+          ${coverImg}
+          <div class="min-w-0 flex-1">
+            <h3 class="text-sm font-medium text-dkc-text leading-tight">${title}</h3>
+            ${subtitle}
+            <div class="flex items-center gap-2 mt-1.5">
+              ${date}
+            </div>
+            ${tags}
+          </div>
+        </div>
+      </a>`;
+    }
+    searchResults.innerHTML = html;
+    searchResults.classList.remove("hidden");
+  }
+
+  function escapeHtml(str: string): string {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ===== Filter =====
+  function setFilter(filter: string, btn: HTMLElement) {
+    currentFilter = filter;
+    filterTabs.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("filter-tab-active"));
+    btn.classList.add("filter-tab-active");
+    if (searchInput.value.trim()) doSearch(searchInput.value);
+  }
+
+  // "Semua" tab
+  filterTabs.querySelector('[data-filter="all"]')!.addEventListener("click", function() {
+    setFilter("all", this as HTMLElement);
+  });
+
+  // ===== Events =====
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value;
+    clearBtn.classList.toggle("hidden", !q);
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => doSearch(q), 200);
+
+    // Update URL
+    if (q) {
+      window.history.replaceState(null, "", `/search?q=${encodeURIComponent(q)}`);
+    } else {
+      window.history.replaceState(null, "", "/search");
+    }
+  });
+
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    clearBtn.classList.add("hidden");
+    searchResults.classList.add("hidden");
+    searchStatus.classList.add("hidden");
+    noResults.classList.add("hidden");
+    emptyState.classList.remove("hidden");
+    window.history.replaceState(null, "", "/search");
+    searchInput.focus();
+  });
+
+  // ===== Init =====
+  loadIndex();
+</script>

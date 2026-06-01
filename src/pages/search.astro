@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Pencarian</h1>
+    
+    <div class="glass-card p-4 mb-6 flex gap-3">
+      <input type="text" placeholder="Cari artikel, ayat, katekismus..." class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1" autofocus />
+      <button class="bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-sm">Cari</button>
+    </div>
+
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+      {["Semua", "Artikel", "Kitab Suci", "Katekismus", "KHK", "Summa", "Doa"].map(f => (
+        <button class="px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold whitespace-nowrap transition-colors">
+          {f}
+        </button>
+      ))}
+    </div>
+
+    <p class="text-dkc-muted text-sm text-center py-12">Ketik kata kunci di atas untuk memulai pencarian.</p>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Pencarian — Damai Kasih Channel</title>
+  <meta name="description" content="Cari artikel, ayat Alkitab, katekismus, dan konten Katolik lainnya." />
+</slot>

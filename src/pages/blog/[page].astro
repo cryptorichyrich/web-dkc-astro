@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("blog", ({ data }) => data.publishedAt <= new Date());
+  const pageSize = 12;
+  const totalPages = Math.ceil(allPosts.length / pageSize);
+  return Array.from({length: totalPages}, (_, i) => ({
+    params: { page: String(i + 1) },
+    props: { pageNum: i + 1, totalPages },
+  }));
+}
+
+const { pageNum, totalPages } = Astro.props;
+
+const allPosts = await getCollection("blog", ({ data }) => data.publishedAt <= new Date());
+const sorted = allPosts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const pageSize = 12;
+const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="section-title text-3xl">Artikel</h1>
+    
+    {posts.length === 0 ? (
+      <p class="text-dkc-muted">Belum ada artikel.</p>
+    ) : (
+      <div class="grid gap-4">
+        {posts.map(post => (
+          <a href={`/blog/${post.slug}`} class="glass-card p-5 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+            <div class="flex gap-4">
+              {post.data.thumbnailImage && (
+                <img src={post.data.thumbnailImage} alt="" class="w-20 h-20 rounded-lg object-cover shrink-0" loading="lazy" />
+              )}
+              <div class="min-w-0">
+                <span class="text-xs text-dkc-gold font-medium">{post.data.category || 'Umum'}</span>
+                <h2 class="text-white font-semibold mt-1 line-clamp-2">{post.data.title}</h2>
+                {post.data.subtitle && <p class="text-dkc-muted text-sm mt-1 line-clamp-1">{post.data.subtitle}</p>}
+                <div class="flex items-center gap-3 mt-2 text-xs text-dkc-muted">
+                  <span>{post.data.publishedAt.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                  <span>·</span>
+                  <span>{post.data.author}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {totalPages > 1 && (
+      <nav class="flex justify-center items-center gap-4 mt-8">
+        {pageNum > 1 && <a href={`/blog/${pageNum - 1}`} class="text-dkc-gold hover:underline">← Sebelumnya</a>}
+        <span class="text-dkc-muted text-sm">Halaman {pageNum} dari {totalPages}</span>
+        {pageNum < totalPages && <a href={`/blog/${pageNum + 1}`} class="text-dkc-gold hover:underline">Selanjutnya →</a>}
+      </nav>
+    )}
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Artikel — Damai Kasih Channel</title>
+  <meta name="description" content="Kumpulan artikel apologetika Katolik." />
+</slot>

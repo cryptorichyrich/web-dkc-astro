@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Hero -->
+    <section class="text-center py-12 md:py-20">
+      <img 
+        src="/assets/img/avatar.webp" 
+        alt="Damai Kasih Channel" 
+        class="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-dkc-gold/40 mx-auto mb-6"
+      />
+      <h1 class="text-3xl md:text-5xl font-bold text-dkc-gold mb-4">Damai Kasih Channel</h1>
+      <p class="text-dkc-muted text-lg md:text-xl max-w-xl mx-auto">
+        Sumber belajar iman Katolik — Kitab Suci, Katekismus, Doa, Apologetika
+      </p>
+    </section>
+
+    <!-- Quick Access Grid -->
+    <section class="mb-12">
+      <h2 class="section-title">Akses Cepat</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { href: "/kitabsuci", label: "Kitab Suci", icon: "📖", desc: "Baca & cari Alkitab" },
+          { href: "/katekismus", label: "Katekismus", icon: "📜", desc: "Ajaran resmi Gereja" },
+          { href: "/renungan", label: "Renungan", icon: "🙏", desc: "Renungan harian" },
+          { href: "/rosario", label: "Doa Rosario", icon: "📿", desc: "Doa interaktif" },
+          { href: "/kalender-liturgi", label: "Kalender Liturgi", icon: "📅", desc: "Kalender Gereja" },
+          { href: "/diagnosa/ajaran-bidat", label: "Diagnosa Bidat", icon: "⚔️", desc: "Uji ajaran" },
+          { href: "/jalan-salib", label: "Jalan Salib", icon: "✝️", desc: "14 perhentian" },
+          { href: "/khk", label: "Hukum Kanonik", icon: "⚖️", desc: "Kitab Hukum Gereja" },
+        ].map(item => (
+          <a href={item.href} class="glass-card p-4 text-center transition-all active:scale-95 hover:border-dkc-gold/40">
+            <span class="text-2xl">{item.icon}</span>
+            <h3 class="text-dkc-gold font-semibold mt-2 text-sm">{item.label}</h3>
+            <p class="text-dkc-muted text-xs mt-1">{item.desc}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Featured Articles (placeholder — will pull from Content Collections) -->
+    <section>
+      <h2 class="section-title">Artikel Terbaru</h2>
+      <div class="grid gap-4 md:grid-cols-2">
+        <p class="text-dkc-muted text-sm col-span-2">
+          Artikel akan muncul di sini setelah migrasi konten dari 476 posting Jekyll.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Damai Kasih Channel — Belajar Iman Katolik</title>
+  <meta name="description" content="Sumber belajar iman Katolik Indonesia. Kitab Suci, Katekismus, Doa, Apologetika." />
+</slot>

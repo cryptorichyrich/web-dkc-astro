@@ -1,0 +1,41 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-8">Lainnya</h1>
+
+    <div class="grid grid-cols-2 gap-3">
+      {[
+        {href: "/kalender-liturgi", icon: "📅", label: "Kalender Liturgi", desc: "Kalender Gereja Katolik"},
+        {href: "/jalan-salib", icon: "✝️", label: "Jalan Salib", desc: "14 Perhentian"},
+        {href: "/khk", icon: "⚖️", label: "Hukum Kanonik", desc: "Kitab Hukum Gereja (KHK)"},
+        {href: "/kvii", icon: "📜", label: "Konsili Vatikan II", desc: "Dokumen lengkap"},
+        {href: "/summa", icon: "📚", label: "Summa Theologiae", desc: "St. Thomas Aquinas"},
+        {href: "/suksesi-kepausan", icon: "♚", label: "Suksesi Kepausan", desc: "Daftar Paus"},
+        {href: "/diagnosa/ajaran-bidat", icon: "⚔️", label: "Diagnosa Bidat", desc: "Uji ajaran"},
+        {href: "/diagnosa/sedevacantisme", icon: "🛡️", label: "Diagnosa Sedevacantisme", desc: "Uji paham"},
+        {href: "/flix", icon: "🎥", label: "Flix — Video", desc: "Galeri video"},
+        {href: "/tentang", icon: "ℹ️", label: "Tentang", desc: "Tentang DKC"},
+      ].map(item => (
+        <a href={item.href} class="glass-card p-4 text-center transition-all active:scale-95 hover:border-dkc-gold/40 group">
+          <span class="text-2xl block mb-2">{item.icon}</span>
+          <h3 class="text-dkc-gold font-semibold text-sm group-hover:text-dkc-gold/80">{item.label}</h3>
+          <p class="text-dkc-muted text-xs mt-1">{item.desc}</p>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Lainnya — Damai Kasih Channel</title>
+  <meta name="description" content="Semua fitur dan halaman Damai Kasih Channel." />
+</slot>

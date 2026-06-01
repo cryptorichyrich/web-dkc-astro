@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Jalan Salib</h1>
+    <p class="text-dkc-muted mb-8">14 Perhentian Jalan Salib — doa dan refleksi</p>
+
+    <div class="space-y-3">
+      {[
+        {num: 1, title: "Yesus Dihukum Mati", ref: "Mat 27:22-26"},
+        {num: 2, title: "Yesus Memanggul Salib", ref: "Yoh 19:16-17"},
+        {num: 3, title: "Yesus Jatuh untuk Pertama Kali", ref: "Yes 53:4-5"},
+        {num: 4, title: "Yesus Bertemu Ibu-Nya", ref: "Luk 2:34-35"},
+        {num: 5, title: "Simon dari Kirene Membantu Yesus", ref: "Mat 27:32"},
+        {num: 6, title: "Veronika Mengusap Wajah Yesus", ref: "Yes 53:2-3"},
+        {num: 7, title: "Yesus Jatuh untuk Kedua Kali", ref: "Rat 3:1-2"},
+        {num: 8, title: "Yesus Menghibur Perempuan Yerusalem", ref: "Luk 23:27-31"},
+        {num: 9, title: "Yesus Jatuh untuk Ketiga Kali", ref: "Mzm 22:7-8"},
+        {num: 10, title: "Yesus Ditelanjangi", ref: "Mat 27:35"},
+        {num: 11, title: "Yesus Dipaku pada Salib", ref: "Luk 23:33-34"},
+        {num: 12, title: "Yesus Wafat di Salib", ref: "Mat 27:45-50"},
+        {num: 13, title: "Yesus Diturunkan dari Salib", ref: "Yoh 19:38-40"},
+        {num: 14, title: "Yesus Dimakamkan", ref: "Mat 27:59-61"},
+      ].map(s => (
+        <a href="#" class="glass-card p-4 flex items-center gap-4 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+          <span class="w-8 h-8 rounded-full bg-dkc-gold/20 border border-dkc-gold/40 flex items-center justify-center text-dkc-gold text-sm font-bold shrink-0">{s.num}</span>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-white font-medium text-sm">{s.title}</h3>
+            <p class="text-dkc-muted text-xs mt-1">{s.ref}</p>
+          </div>
+          <span class="text-dkc-gold">→</span>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Jalan Salib — Damai Kasih Channel</title>
+  <meta name="description" content="14 Perhentian Jalan Salib dengan doa dan refleksi Katolik." />
+</slot>

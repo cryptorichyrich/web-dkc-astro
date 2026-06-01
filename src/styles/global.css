@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dkc-gold: #c9a84c;
+  --color-dkc-deep: #0a0a0a;
+  --color-dkc-surface: #111111;
+  --color-dkc-card: #1a1a1a;
+  --color-dkc-border: #2a2a2a;
+  --color-dkc-muted: #888888;
+  --color-dkc-text: #e0e0e0;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-dkc-deep text-dkc-text antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+    overscroll-behavior: none;
+  }
+  /* Catholic serif headings */
+  h1, h2, h3 {
+    @apply text-dkc-gold font-serif;
+    font-family: "Lora", "Georgia", serif;
+  }
+  /* Bible verse numbers */
+  sup {
+    @apply text-dkc-gold text-xs mr-1 font-bold;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-dkc-card border border-dkc-border rounded-2xl;
+  }
+  .glass-card-amber {
+    @apply border-dkc-gold/30;
+  }
+  .section-title {
+    @apply text-2xl font-bold text-dkc-gold mb-4;
+  }
+  .mobile-nav-item {
+    @apply flex flex-col items-center gap-1 px-3 py-2 text-xs text-dkc-muted
+           transition-colors duration-200;
+  }
+  .mobile-nav-item.active {
+    @apply text-dkc-gold;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* Blog article prose */
+@layer components {
+  .prose-gold {
+    --tw-prose-body: var(--color-dkc-text);
+    --tw-prose-headings: var(--color-dkc-gold);
+    --tw-prose-links: var(--color-dkc-gold);
+    --tw-prose-bold: var(--color-dkc-text);
+    --tw-prose-quotes: var(--color-dkc-gold);
+    --tw-prose-quote-borders: var(--color-dkc-gold);
+    --tw-prose-code: var(--color-dkc-gold);
+    --tw-prose-hr: var(--color-dkc-border);
+    --tw-prose-bullets: var(--color-dkc-muted);
+  }
+  .prose-gold h2 {
+    @apply text-xl font-bold mt-8 mb-3;
+  }
+  .prose-gold h3 {
+    @apply text-lg font-semibold mt-6 mb-2;
+  }
+  .prose-gold p {
+    @apply mb-4 leading-relaxed;
+  }
+  .prose-gold blockquote {
+    @apply border-l-3 border-dkc-gold/40 pl-4 italic my-4;
+  }
+  .prose-gold img {
+    @apply rounded-xl my-6;
+  }
+  .prose-gold a {
+    @apply underline decoration-dkc-gold/40 hover:decoration-dkc-gold;
+  }
+  .prose-gold ul, .prose-gold ol {
+    @apply my-4 ml-6;
+  }
+  .prose-gold li {
+    @apply mb-1;
+  }
+}

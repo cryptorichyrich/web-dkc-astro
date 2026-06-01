@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Konsili Vatikan II</h1>
+    <p class="text-dkc-muted mb-8">16 Dokumen Konsili Vatikan II — Konstitusi, Dekrit, Deklarasi</p>
+
+    <div class="space-y-3">
+      {[
+        {cat: "Konstitusi", docs: [
+          {title: "Sacrosanctum Concilium", sub: "Liturgi Suci (SC)", date: "1963"},
+          {title: "Lumen Gentium", sub: "Gereja (LG)", date: "1964"},
+          {title: "Dei Verbum", sub: "Wahyu Ilahi (DV)", date: "1965"},
+          {title: "Gaudium et Spes", sub: "Gereja di Dunia Modern (GS)", date: "1965"},
+        ]},
+        {cat: "Dekrit", docs: [
+          {title: "Unitatis Redintegratio", sub: "Ekumenisme", date: "1964"},
+          {title: "Presbyterorum Ordinis", sub: "Imamat (PO)", date: "1965"},
+          {title: "Apostolicam Actuositatem", sub: "Kerasulan Awam (AA)", date: "1965"},
+        ]},
+      ].flatMap(c => [
+        <h2 class="text-dkc-gold font-bold text-sm mt-4 mb-2">{c.cat}</h2>,
+        ...c.docs.map(d => (
+          <a href="#" class="glass-card p-4 flex items-center gap-3 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+            <span class="text-xl">📜</span>
+            <div class="flex-1">
+              <h3 class="text-white font-medium text-sm">{d.title}</h3>
+              <p class="text-dkc-muted text-xs">{d.sub} · {d.date}</p>
+            </div>
+            <span class="text-dkc-gold">→</span>
+          </a>
+        ))
+      ])}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Konsili Vatikan II — Damai Kasih Channel</title>
+  <meta name="description" content="16 Dokumen Konsili Vatikan II lengkap — Sacrosanctum Concilium, Lumen Gentium, Dei Verbum, Gaudium et Spes, dan lainnya." />
+</slot>

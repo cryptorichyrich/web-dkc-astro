@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts
+    .filter(post => post.slug)
+    .map(post => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <article class="max-w-3xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <header class="mb-8">
+      {post.data.category && (
+        <span class="text-xs font-medium text-dkc-gold uppercase tracking-wide">
+          {post.data.category}
+        </span>
+      )}
+      <h1 class="text-2xl md:text-4xl font-bold text-dkc-gold mt-2 mb-3">
+        {post.data.title}
+      </h1>
+      {post.data.subtitle && (
+        <p class="text-dkc-muted text-lg">{post.data.subtitle}</p>
+      )}
+      <div class="flex items-center gap-3 mt-4 text-sm text-dkc-muted">
+        <span>{post.data.author}</span>
+        <span>·</span>
+        <time datetime={post.data.publishedAt.toISOString()}>
+          {post.data.publishedAt.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </div>
+      {post.data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-3">
+          {post.data.tags.map(tag => (
+            <a href={`/blog/tag/${tag}`} class="text-xs px-2 py-1 rounded-full bg-dkc-card border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+
+    {post.data.heroImage && (
+      <img src={post.data.heroImage} alt={post.data.title} class="w-full rounded-xl mb-8" loading="lazy" />
+    )}
+
+    <!-- Article body -->
+    <div class="prose prose-invert prose-gold max-w-none">
+      <Content />
+    </div>
+  </article>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>{post.data.title} — Damai Kasih Channel</title>
+  <meta name="description" content={post.data.subtitle || post.data.title} />
+  {post.data.tags.map(tag => <meta name="keywords" content={tag} />)}
+  <link rel="canonical" href={new URL(`/blog/${post.slug}`, Astro.site).href} />
+  
+  <!-- JSON-LD for Article -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.data.title,
+    author: { "@type": "Person", name: post.data.author },
+    datePublished: post.data.publishedAt.toISOString(),
+    description: post.data.subtitle || "",
+    image: post.data.heroImage || post.data.coverImage,
+  })} />
+</slot>

@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-6">Tentang Kami</h1>
+
+    <div class="glass-card p-6 space-y-4 text-sm leading-relaxed">
+      <p class="text-dkc-text">
+        <strong class="text-dkc-gold">Damai Kasih Channel</strong> adalah platform apologetika Katolik berbahasa Indonesia. Kami menyediakan sumber belajar iman Katolik yang dapat diakses secara gratis oleh siapa saja.
+      </p>
+      <p class="text-dkc-muted">
+        Misi kami adalah membantu umat Katolik Indonesia memahami, menghayati, dan membela iman mereka melalui Kitab Suci, Katekismus, doa, dan apologetika.
+      </p>
+      
+      <h2 class="text-dkc-gold font-bold mt-4">Yang Kami Tawarkan</h2>
+      <ul class="list-disc list-inside text-dkc-muted space-y-1">
+        <li>Kitab Suci lengkap dengan pencarian interaktif</li>
+        <li>Katekismus Gereja Katolik (KGK) digital</li>
+        <li>Renungan harian Katolik</li>
+        <li>Doa Rosario interaktif</li>
+        <li>Artikel apologetika (476+ artikel)</li>
+        <li>Dokumen-dokumen Gereja (KHK, KV II, Summa, dll)</li>
+        <li>Diagnosa ajaran bidat dan sedevacantisme</li>
+        <li>Kalender liturgi</li>
+        <li>Dan masih banyak lagi</li>
+      </ul>
+
+      <h2 class="text-dkc-gold font-bold mt-4">Kontak</h2>
+      <p class="text-dkc-muted">
+        Email: <a href="mailto:damaikasihchannel@gmail.com" class="text-dkc-gold hover:underline">damaikasihchannel@gmail.com</a>
+      </p>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Tentang Kami — Damai Kasih Channel</title>
+  <meta name="description" content="Damai Kasih Channel — platform apologetika Katolik Indonesia." />
+</slot>

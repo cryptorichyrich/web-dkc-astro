@@ -1,0 +1,41 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Diagnosa Ajaran Bidat</h1>
+    <p class="text-dkc-muted mb-8">Uji ajaran berdasarkan Katekismus dan tradisi Gereja Katolik</p>
+
+    <div class="glass-card p-5 mb-6">
+      <h2 class="text-dkc-gold font-bold text-lg mb-4">Pilih Topik</h2>
+      <div class="grid grid-cols-2 gap-2 mb-6">
+        {["Allah Tritunggal", "Kristologi", "Mariologi", "Sakramen", "Eskatologi", "Gereja", "Kitab Suci", "Moral"].map(t => (
+          <button class="p-3 rounded-lg border border-dkc-border text-dkc-muted text-sm text-center hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <h3 class="text-dkc-gold font-semibold mb-2 text-sm">Atau tulis pernyataan:</h3>
+      <textarea placeholder="Tulis pernyataan yang ingin diuji..." class="w-full bg-dkc-surface border border-dkc-border rounded-lg p-3 text-dkc-text text-sm resize-none h-24 mb-3"></textarea>
+      <button class="w-full bg-dkc-gold text-black font-medium py-3 rounded-lg text-sm">Diagnosa Sekarang</button>
+    </div>
+
+    <div class="glass-card p-5 opacity-50">
+      <h2 class="text-dkc-gold font-bold mb-3">Hasil Diagnosa</h2>
+      <p class="text-dkc-muted text-sm italic">Silakan pilih topik atau tulis pernyataan untuk memulai diagnosa.</p>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Diagnosa Ajaran Bidat — Damai Kasih Channel</title>
+  <meta name="description" content="Uji ajaran berdasarkan Katekismus Gereja Katolik." />
+</slot>

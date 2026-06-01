@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Diagnosa Sedevacantisme</h1>
+    <p class="text-dkc-muted mb-8">Uji klaim sedevacantisme berdasarkan ajaran Gereja Katolik</p>
+
+    <div class="glass-card p-5 mb-6">
+      <div class="space-y-3 mb-6">
+        {[
+          {q: "Apakah Konsili Vatikan II sah?", options: ["Ya", "Tidak", "Sebagian"]},
+          {q: "Apakah Paus Fransiskus Paus yang sah?", options: ["Ya", "Tidak", "Ragu"]},
+          {q: "Apakah Misa Novus Ordo sah?", options: ["Ya", "Tidak"]},
+        ].map((item, i) => (
+          <div>
+            <p class="text-white font-medium text-sm mb-2">{i+1}. {item.q}</p>
+            <div class="flex gap-2">
+              {item.options.map(opt => (
+                <button class="px-4 py-2 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <button class="w-full bg-dkc-gold text-black font-medium py-3 rounded-lg text-sm">Diagnosa</button>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Diagnosa Sedevacantisme — Damai Kasih Channel</title>
+  <meta name="description" content="Uji klaim sedevacantisme berdasarkan ajaran Gereja Katolik." />
+</slot>

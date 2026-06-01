@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tagSet = new Set<string>();
+  posts.forEach(p => p.data.tags?.forEach(t => tagSet.add(t)));
+  return Array.from(tagSet).map(tag => ({ params: { tag }, props: { tag } }));
+}
+
+const { tag } = Astro.props;
+const allPosts = await getCollection("blog");
+const posts = allPosts
+  .filter(p => p.data.tags?.includes(tag) && p.data.publishedAt <= new Date())
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">#{tag}</h1>
+    <p class="text-dkc-muted mb-8">{posts.length} artikel</p>
+
+    <div class="grid gap-3">
+      {posts.map(post => (
+        <a href={`/blog/${post.slug}`} class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+          <div class="flex gap-3">
+            {post.data.thumbnailImage && (
+              <img src={post.data.thumbnailImage} alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />
+            )}
+            <div class="min-w-0">
+              <h2 class="text-white font-medium text-sm line-clamp-2">{post.data.title}</h2>
+              <div class="flex items-center gap-3 mt-1 text-xs text-dkc-muted">
+                <span>{post.data.publishedAt.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                <span>·</span>
+                <span>{post.data.author}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>#{tag} — Damai Kasih Channel</title>
+  <meta name="description" content={`Artikel dengan tag ${tag} di Damai Kasih Channel.`} />
+</slot>

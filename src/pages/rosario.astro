@@ -1,0 +1,78 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Doa Rosario</h1>
+    <p class="text-dkc-muted mb-8">Doa Rosario interaktif — panduan langkah demi langkah</p>
+
+    <!-- Mystery Selector -->
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+      {["Gembira", "Sedih", "Mulia", "Terang"].map(m => (
+        <button class="px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold whitespace-nowrap transition-colors">
+          Peristiwa {m}
+        </button>
+      ))}
+    </div>
+
+    <!-- Current Mystery Display -->
+    <div class="glass-card glass-card-amber p-5 mb-6 text-center">
+      <span class="text-xs font-medium bg-dkc-gold/20 text-dkc-gold px-3 py-1 rounded-full mb-3 inline-block">Peristiwa Gembira — Butir 1</span>
+      <h2 class="text-xl text-dkc-gold font-bold mb-2">Maria Menerima Kabar Gembira dari Malaikat Gabriel</h2>
+      <p class="text-dkc-muted text-sm mb-4">Buah: Kerendahan Hati</p>
+      
+      <!-- Progress dots -->
+      <div class="flex justify-center gap-2 mb-4">
+        {[0,1,2,3,4].map(i => (
+          <div class={`w-3 h-3 rounded-full ${i === 1 ? 'bg-dkc-gold' : 'bg-dkc-border'}`}></div>
+        ))}
+      </div>
+      
+      <div class="flex gap-3 justify-center">
+        <button class="px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm">← Sebelumnya</button>
+        <button class="px-4 py-2 rounded-lg bg-dkc-gold text-black font-medium text-sm">Selanjutnya →</button>
+      </div>
+    </div>
+
+    <!-- Prayer Text -->
+    <div class="glass-card p-5 space-y-4 text-sm leading-relaxed">
+      <div class="text-center">
+        <p class="text-dkc-gold font-semibold">Tanda Salib</p>
+        <p class="text-dkc-muted mt-1">Dalam nama Bapa, dan Putra, dan Roh Kudus. Amin.</p>
+      </div>
+      <div class="text-center">
+        <p class="text-dkc-gold font-semibold">Aku Percaya</p>
+        <p class="text-dkc-muted mt-1 text-xs">Aku percaya akan Allah, Bapa yang mahakuasa...</p>
+      </div>
+      <div class="text-center">
+        <p class="text-dkc-gold font-semibold">Bapa Kami</p>
+        <p class="text-dkc-muted mt-1">Bapa kami yang ada di surga, dimuliakanlah nama-Mu...</p>
+      </div>
+      <div class="text-center">
+        <p class="text-dkc-gold font-semibold">Salam Maria (×3)</p>
+        <p class="text-dkc-muted mt-1 text-xs">Salam Maria, penuh rahmat, Tuhan sertamu...</p>
+      </div>
+      <div class="text-center">
+        <p class="text-dkc-gold font-semibold">Kemuliaan</p>
+        <p class="text-dkc-muted mt-1">Kemuliaan kepada Bapa dan Putra dan Roh Kudus...</p>
+      </div>
+    </div>
+
+    <!-- Rosary Beads Counter -->
+    <div class="mt-6 text-center">
+      <span class="text-dkc-muted text-sm">Peristiwa 1/5 · Salam Maria 1/10</span>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Doa Rosario Interaktif — Damai Kasih Channel</title>
+  <meta name="description" content="Doa Rosario interaktif dengan panduan langkah demi langkah. Peristiwa Gembira, Sedih, Mulia, Terang." />
+</slot>

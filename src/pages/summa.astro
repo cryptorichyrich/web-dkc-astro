@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Summa Theologiae</h1>
+    <p class="text-dkc-muted mb-8">Karya St. Thomas Aquinas — teologi sistematis Gereja Katolik</p>
+
+    <div class="glass-card p-4 mb-6 flex gap-3">
+      <input type="text" placeholder="Cari dalam Summa..." class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1" />
+      <button class="bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-sm">Cari</button>
+    </div>
+
+    <div class="space-y-3">
+      {[
+        {part: "Prima Pars", title: "Tentang Allah", q: "1–119", icon: "✨"},
+        {part: "Prima Secundae", title: "Prinsip Moral", q: "1–114", icon: "❤️"},
+        {part: "Secunda Secundae", title: "Kebajikan", q: "1–189", icon: "🕊️"},
+        {part: "Tertia Pars", title: "Kristus & Sakramen", q: "1–90", icon: "✝️"},
+        {part: "Supplementum", title: "Akhir Zaman", q: "1–99", icon: "⭐"},
+      ].map(s => (
+        <a href="#" class="glass-card p-4 flex items-center gap-4 transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+          <span class="text-2xl">{s.icon}</span>
+          <div class="flex-1">
+            <h3 class="text-dkc-gold font-semibold text-sm">{s.part}</h3>
+            <p class="text-white font-medium">{s.title}</p>
+            <p class="text-dkc-muted text-xs">Pertanyaan {s.q}</p>
+          </div>
+          <span class="text-dkc-gold">→</span>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Summa Theologiae — St. Thomas Aquinas — Damai Kasih Channel</title>
+  <meta name="description" content="Summa Theologiae — karya teologi St. Thomas Aquinas. Baca, cari, dan pelajari teologi Katolik." />
+</slot>

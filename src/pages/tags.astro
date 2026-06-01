@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <h1 class="text-3xl font-bold text-dkc-gold mb-8">Kategori & Tag</h1>
+
+    <div class="flex flex-wrap gap-2">
+      {[
+        "apologetika", "Kitab Suci", "doa", "Mariologi", "Ekaristi", "Gereja",
+        "Paus", "Kristologi", "moral", "liturgi", "sakramen", "Trinitas",
+        "Maria", "santo-santa", "sejarah", "ekumenisme", "Vatikan II",
+        "Katekese", "spiritualitas", "keluarga", "muda-mudi", "puasa"
+      ].map(tag => (
+        <a href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`} class="px-3 py-1 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+          #{tag}
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<slot name="head">
+  <title>Kategori & Tag — Damai Kasih Channel</title>
+  <meta name="description" content="Jelajahi artikel berdasarkan kategori dan tag." />
+</slot>

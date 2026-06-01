@@ -1,0 +1,346 @@
+{
+  "prayers": {
+    "tanda_salib": {
+      "title": "Tanda Salib",
+      "text": "Dalam nama Bapa, dan Putra, dan Roh Kudus. Amin.",
+      "latin": "In nomine Patris, et Filii, et Spiritus Sancti. Amen."
+    },
+    "syahadat_iman": {
+      "title": "Syahadat Iman",
+      "text": "Aku percaya akan Allah, Bapa yang mahakuasa, pencipta langit dan bumi. Dan akan Yesus Kristus, Putra-Nya yang tunggal, Tuhan kita, yang dikandung dari Roh Kudus, dilahirkan oleh perawan Maria, yang menderita sengsara dalam pemerintahan Pontius Pilatus, disalibkan, wafat dan dimakamkan, yang turun ke tempat penantian, pada hari ketiga bangkit dari antara orang mati, yang naik ke surga, duduk di sebelah kanan Allah Bapa yang mahakuasa, dari situ Ia akan datang mengadili orang hidup dan orang mati. Aku percaya akan Roh Kudus, Gereja Katolik yang kudus, persekutuan para kudus, pengampunan dosa, kebangkitan badan, kehidupan kekal. Amin.",
+      "latin": "Credo in Deum Patrem omnipotentem, Creatorem caeli et terrae..."
+    },
+    "bapa_kami": {
+      "title": "Bapa Kami",
+      "text": "Bapa kami yang ada di surga, dimuliakanlah nama-Mu, datanglah kerajaan-Mu, jadilah kehendak-Mu di atas bumi seperti di dalam surga. Berilah kami rezeki pada hari ini, dan ampunilah kesalahan kami, seperti kamipun mengampuni yang bersalah kepada kami, dan janganlah masukkan kami ke dalam pencobaan, tetapi bebaskanlah kami dari yang jahat. Amin.",
+      "latin": "Pater noster qui es in caelis, sanctificetur nomen tuum..."
+    },
+    "salam_maria": {
+      "title": "Salam Maria",
+      "text": "Salam Maria, penuh rahmat, Tuhan sertamu. Terpujilah engkau di antara wanita, dan terpujilah buah tubuhmu, Yesus. Santa Maria, Bunda Allah, doakanlah kami yang berdosa ini, sekarang dan waktu kami mati. Amin.",
+      "latin": "Ave Maria, gratia plena, Dominus tecum..."
+    },
+    "kemuliaan": {
+      "title": "Kemuliaan",
+      "text": "Kemuliaan kepada Bapa, dan Putra, dan Roh Kudus, seperti pada permulaan, sekarang, selalu, dan sepanjang segala abad. Amin.",
+      "latin": "Gloria Patri, et Filio, et Spiritui Sancto..."
+    },
+    "terpujilah_nama": {
+      "title": "Terpujilah",
+      "text": "Terpujilah nama Yesus, Maria dan Yosef. Sekarang dan selama-lamanya. Amin.",
+      "latin": "Laudetur Jesus Christus, Maria et Joseph..."
+    },
+    "doa_fatima": {
+      "title": "Doa Fatima",
+      "text": "Ya Yesus yang baik, ampunilah dosa-dosa kami. Selamatkanlah kami dari api neraka, dan hantarlah jiwa-jiwa ke surga, terlebih jiwa-jiwa yang sangat membutuhkan kerahiman-Mu, Amin.",
+      "latin": "O mi Jesu, dimitte nobis debita nostra..."
+    },
+    "salam_ya_ratu": {
+      "title": "Salam, Ya Ratu",
+      "text": "Salam, Ya Ratu, Bunda yang berbelas kasih, hidup, hiburan dan harapan kami. Kami semua memanjatkan permohonan, kami amat susah, mengeluh, mengesah dalam lembah duka ini. Ya Ibunda, ya pelindung kami, limpahkanlah kasih sayangMu yang besar kepada kami. Dan Yesus, PutraMu yang terpuji itu, semoga Kau tunjukkan kepada kami. O Ratu, o Ibu, o Maria Bunda Kristus. Doakanlah kami, ya Santa Bunda Allah. Supaya kami dapat menikmati janji Kristus. Ya Allah, Putra-Mu telah memperoleh bagi kami ganjaran kehidupan kekal melalui hidup, wafat dan kebangkitan-Nya. Kami mohon, agar dengan merenungkan misteri Rosario Suci Santa Perawan Maria, kami dapat menghayati maknanya dan memperoleh apa yang dijanjikan. Demi Kristus, Tuhan kami. Amin",
+      "latin": "Salve Regina, Mater misericordiae..."
+    }
+  },
+  "mysteries": {
+    "gembira": {
+      "title": "Misteri Gembira",
+      "subtitle": "Direnungkan pada hari Senin dan Sabtu",
+      "color": "warning",
+      "icon": "fas fa-baby",
+      "previewImage": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Annunciation_%28Leonardo%29.jpg",
+      "previewImageAlt": "Misteri Gembira - Kabar Gembira",
+      "mysteries": [
+        {
+          "number": 1,
+          "title": "Peristiwa Gembira 1: Maria menerima kabar gembira dari Malaikat Gabriel",
+          "description": "Salam, hai engkau yang dikaruniai, Tuhan menyertai engkau. Jangan takut, hai Maria, sebab engkau beroleh kasih karunia di hadapan Allah. Sesungguhnya engkau akan mengandung dan akan melahirkan seorang anak laki-laki dan hendaklah engkau menamai Dia Yesus. (Luk 1 : 26 – 38)",
+          "scripture": "Salam, hai engkau yang dikaruniai, Tuhan menyertai engkau. (Luk 1:28)",
+          "meditation": "Bapa, jika Engkau bersabda maka semuanya terjadi. Bersabdalah ya Bapa, aku ini adalah hamba-Mu. Terjadilah padaku menurut kehendak-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Annunciation_%28Leonardo%29.jpg",
+          "imageAlt": "Kabar Gembira - Malaikat Gabriel memberitahu Maria"
+        },
+        {
+          "number": 2,
+          "title": "Peristiwa Gembira 2: Maria mengunjungi Elisabeth",
+          "description": "Diberkatilah engkau diantara semua perempuan dan diberkatilah buah rahimmu. Siapakah aku ini sampai ibu Tuhanku datang mengunjungi aku? (Luk 1 : 42 – 43)",
+          "scripture": "Berbahagialah ia, yang percaya, sebab apa yang dikatakan Tuhan kepadanya akan terlaksana. (Luk 1:45)",
+          "meditation": "Bapa, hatiku memuliakan Dikau dan jiwaku bersorak-sorai, karena engkau Allah penuh kasih. Engkau menciptakan dan memelihara kami, anak-anak-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/8/82/Domenico_ghirlandaio%2C_visitazione%2C_louvre_01.jpg",
+          "imageAlt": "Visitasi - Maria mengunjungi Elisabeth"
+        },
+        {
+          "number": 3,
+          "title": "Peristiwa Gembira 3: Yesus dilahirkan di Betlehem",
+          "description": "Maria melahirkan seorang anak laki-laki…. Lalu dibungkusnya dengan kain lampin dan dibaringkannya di dalam palungan, karena tidak ada tempat bagi mereka dirumah penginapan. (Luk 2 : 7)",
+          "scripture": "Hari ini telah lahir bagimu Juruselamat, yaitu Kristus, Tuhan. (Luk 2:11)",
+          "meditation": "Bapa, kami bersyukur karena Engkau telah merelakan Putra-Mu menjadi manusia demi menebus dan mengampuni dosa-dosa kami. Jadikanlah kami layak menjadi anak-anak-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/0/05/Gerard_van_Honthorst_-_Adoration_of_the_Shepherds_%281622%29.jpg",
+          "imageAlt": "Kelahiran Yesus - Bayi Yesus di palungan"
+        },
+        {
+          "number": 4,
+          "title": "Peristiwa Gembira 4: Yesus dipersembahkan dalam Bait Allah",
+          "description": "Simeon berkata kepada Maria, \"Sesungguhnya Anak ini ditentukan untuk menjatuhkan atau membangkitkan banyak orang di Israel dan untuk menjadi suatu tanda yang menimbulkan perbantahan. Kelak suatu pedang akan menembus jiwamu sendiri\". (Luk 2 : 34 – 35)",
+          "scripture": "Sekarang Tuhan, biarkanlah hamba-Mu ini pergi dalam damai sejahtera. (Luk 2:29)",
+          "meditation": "Bapa, kami mempersembahkan segenap diri kami kepada-Mu. Terimalah kami sebagai persembahan yang layak, demi jasa putera-Mu, Juruselamat kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/9/96/Rembrandt_Harmensz._van_Rijn_145.jpg",
+          "imageAlt": "Persembahan di Bait Allah - Simeon menerima bayi Yesus"
+        },
+        {
+          "number": 5,
+          "title": "Peristiwa Gembira 5: Yesus diketemukan dalam Bait Allah",
+          "description": "\"Mengapa kamu mencari Aku? Tidakkah kamu tahu, bahwa Aku harus berada di dalam rumah Bapa-Ku?\" Tetapi mereka tidak mengerti apa yang dikatakan-Nya kepada mereka. (Luk 2 : 49 – 50)",
+          "scripture": "Mengapa kamu mencari Aku? Tidakkah kamu tahu, bahwa Aku harus berada di dalam rumah Bapa-Ku? (Luk 2:49)",
+          "meditation": "Bapa, Putra-Mu sepenuhnya hidup demi kemuliaan-Mu dan keselamatan kami. Bentuklah kami menjadi serupa dengan Putra-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/2/27/William_Holman_Hunt_-_The_Finding_of_the_Saviour_in_the_Temple.jpg",
+          "imageAlt": "Yesus ditemukan di Bait Allah - Yesus muda berdiskusi dengan para ahli Taurat"
+        }
+      ]
+    },
+    "terang": {
+      "title": "Misteri Terang",
+      "subtitle": "Direnungkan pada hari Kamis",
+      "color": "warning",
+      "icon": "fas fa-sun",
+      "previewImage": "https://upload.wikimedia.org/wikipedia/commons/2/29/Verrocchio%2C_Leonardo_da_Vinci_-_Battesimo_di_Cristo.jpg",
+      "previewImageAlt": "Misteri Terang - Pembaptisan Yesus",
+      "mysteries": [
+        {
+          "number": 1,
+          "title": "Peristiwa Terang 1: Yesus dibaptis di Sungai Yordan",
+          "description": "Sesudah dibaptis, Yesus segera keluar dari air dan pada waktu itu juga langit terbuka dan Ia melihat Roh Allah seperti burung merpati turun ke atas-Nya, lalu terdengarlah suara dari surga yang mengatakan: \"Inilah Anak-Ku yang terkasih, kepada-Nya Aku berkenan\". (Mat 3 : 16 – 17)",
+          "scripture": "Inilah Anak-Ku yang Kukasihi, kepada-Nyalah Aku berkenan. (Mat 3:17)",
+          "meditation": "Bapa, kami pun Engkau beri misi sebagai anak-Mu dan pengikut Yesus. Buatlah kami menerima tugas itu dengan hati terbuka dan penuh suka cita.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/2/29/Verrocchio%2C_Leonardo_da_Vinci_-_Battesimo_di_Cristo.jpg",
+          "imageAlt": "Pembaptisan Yesus - Yesus dibaptis oleh Yohanes Pembaptis di Sungai Yordan"
+        },
+        {
+          "number": 2,
+          "title": "Peristiwa Terang 2: Yesus menyatakan diri-Nya dalam pesta pernikahan di Kana",
+          "description": "Atas permintaan Maria bunda-Nya, Yesus mengatasi kekurangan anggur. Hal itu dilakukan Yesus Sebagai yang pertama dari tanda-tanda-Nya dan dengan itu Ia telah menyatakan kemuliaan-Nya dan murid-murid-Nya percaya kepada-Nya. (Yoh 2 : 11)",
+          "scripture": "Apa yang dikatakan-Nya kepadamu, lakukanlah! (Yoh 2:5)",
+          "meditation": "Bapa, tolonglah kami mampu menghadapi setiap masalah hidup ini dengan tenang sambil mengandalkan kasih-Mu kepada kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Paolo_Veronese_008.jpg/1200px-Paolo_Veronese_008.jpg?20130911101054",
+          "imageAlt": "Pernikahan di Kana - Yesus mengubah air menjadi anggur"
+        },
+        {
+          "number": 3,
+          "title": "Peristiwa Terang 3: Yesus memberitakan Kerajaan Allah dan menyerukan pertobatan",
+          "description": "\"Bertobatlah, sebab Kerajaan Surga sudah dekat!\" Yesus pun berkeliling di seluruh Galilea, Ia mengajar dalam rumah-rumah ibadat dan memberitakan Injil Kerajaan Surga serta menyembuhkan orang-orang diantara bangsa itu. (Mat 4 : 17, 23)",
+          "scripture": "Bertobatlah, sebab Kerajaan Sorga sudah dekat! (Mat 4:17)",
+          "meditation": "Bapa, pertobatkanlah kami, ampunilah dosa kami. Jadikanlah kami mampu mengampuni orang yang telah menyakiti kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/9/96/Bloch-SermonOnTheMount.jpg",
+          "imageAlt": "Khotbah di Bukit - Yesus mengajar tentang Kerajaan Allah"
+        },
+        {
+          "number": 4,
+          "title": "Peristiwa Terang 4: Yesus menampakkan kemuliaan-Nya",
+          "description": "Yesus berubah rupa di sebuah gunung yang tinggi, Wajah-Nya bercahaya seperti matahari. Allah bersabda kepada tiga Rasul Yesus, \"Inilah Anak-Ku yang terkasih, kepada-Nyalah Aku berkenan, dengarkanlah Dia. (Mat 17 : 2, 5)",
+          "scripture": "Inilah Anak-Ku yang Kukasihi, dengarkanlah Dia! (Mrk 9:7)",
+          "meditation": "Bapa, ajarilah kami mendengarkan Yesus dan sepenuhnya menerima ajaran-Nya. Izinkanlah kami semakin mengenal Dia, terutama dalam sengsara-Nya.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Transfiguration_Raphael.jpg/960px-Transfiguration_Raphael.jpg?20051202113815",
+          "imageAlt": "Transfigurasi - Yesus berubah rupa di gunung"
+        },
+        {
+          "number": 5,
+          "title": "Peristiwa Terang 5: Yesus menetapkan Ekaristi",
+          "description": "Yesus mengambil roti, mengucap syukur, memecah-mecahkannya lalu memberikannya kepada mereka dan berkata: \"Ambillah, inilah tubuh-Ku\". Sesudah itu Ia mengambil cawan, mengucap syukur lalu memberikannya kepada mereka. Ia berkata, \"Inilah darah-Ku yang ditumpahkan bagi banyak orang\". (Mar 14 : 22 – 24)",
+          "scripture": "Inilah tubuh-Ku yang diserahkan bagi kamu. (Luk 22:19)",
+          "meditation": "Bapa, sucikan dan kuduskanlah kami pada saat kami menerima Tubuh dan Darah Putra-Mu yang terkasih, pakailah kami seturut kehendak-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/4/48/The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg",
+          "imageAlt": "Perjamuan Terakhir - Yesus menetapkan Ekaristi"
+        }
+      ]
+    },
+    "sedih": {
+      "title": "Misteri Sedih",
+      "subtitle": "Direnungkan pada hari Selasa dan Jumat",
+      "color": "danger",
+      "icon": "fas fa-cross",
+      "previewImage": "https://upload.wikimedia.org/wikipedia/en/8/8c/Christ_of_Saint_John_of_the_Cross.jpg",
+      "previewImageAlt": "Misteri Sedih - Penyaliban Yesus",
+      "mysteries": [
+        {
+          "number": 1,
+          "title": "Peristiwa Sedih 1: Yesus berdoa kepada Bapa-Nya di surga dalam sakratul maut",
+          "description": "\"Ya bapa-Ku, jikalau Engkau berkenan, ambillah cawan ini dari hadapan-Ku, tetapi janganlah menurut kehendak-Ku, melainkan kehendak-Mu yang terjadi\". (Mat 26 : 39)",
+          "scripture": "Ya Bapa-Ku, jikalau mungkin, biarlah cawan ini lalu dari pada-Ku, tetapi janganlah seperti yang Kukehendaki, melainkan seperti yang Engkau kehendaki. (Mat 26:39)",
+          "meditation": "Bapa, ajarilah kami selalu mengikuti kehendak-Mu pada saat kami dicobai, Engkau pasti menyertai kami sebagai Bapa, karena Engkau sangat menyayangi kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Mantegna%2C_Andrea_-_Agony_in_the_Garden_-_National_Gallery%2C_London.jpg",
+          "imageAlt": "Doa di Taman Getsemani - Yesus berdoa dalam sakratul maut"
+        },
+        {
+          "number": 2,
+          "title": "Peristiwa Sedih 2: Yesus didera",
+          "description": "\"Mereka memukul kepala-Nya dengan buluh, dan meludahi-Nya dan berlutut menyembah-Nya. Sesudah mengolok-olokkan Dia, mereka menanggalkan jubah ungu yang dipakai-Nya dan mengenakan lagi pakaian-Nya\". (Mrk 15 : 19 – 20a)",
+          "scripture": "Tetapi Dia tertikam oleh karena pemberontakan kita, Dia diremukkan oleh karena kejahatan kita. (Yes 53:5)",
+          "meditation": "Bapa, berilah kami rahmat untuk selalu mengingat sengsara-Mu, agar kami dapat berdiri teguh dan memikul salib dengan kasih.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/a/ad/The_Flagellation_of_Christ-Caravaggio_%281607%29.jpg",
+          "imageAlt": "Penderaan Yesus - Yesus didera oleh tentara Romawi"
+        },
+        {
+          "number": 3,
+          "title": "Peristiwa Sedih 3: Yesus dimahkotai duri",
+          "description": "\"Mereka menganyam sebuah mahkota duri dan menaruh diatas kepala-Nya. Kemudian mereka mulai memberi hormat kepada-Nya, katanya: Salam hai raja orang Yahudi!\" (Mrk 15 : 17 – 18)",
+          "scripture": "Salam, hai Raja orang Yahudi! (Mat 27:29)",
+          "meditation": "Bapa, Putra-Mu dimahkotai duri, tetapi Ia tidak pernah membenci algojonya. Ajarilah kami mengampuni dan memberkati sesama kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/d/df/Ecce_homo%28Caravaggio%29.jpg",
+          "imageAlt": "Mahkota Duri - Yesus dimahkotai duri"
+        },
+        {
+          "number": 4,
+          "title": "Peristiwa Sedih 4: Yesus memanggul salib-Nya ke gunung Kalvari",
+          "description": "\"Sambil memikul salib-Nya, Ia pergi keluar ketempat yang bernama tempat tengkorak, yang dalam bahasa Ibrani disebut Golgota\". (Yoh 19 : 16b)",
+          "scripture": "Barangsiapa mau mengikut Aku, ia harus menyangkal dirinya, memikul salibnya dan mengikut Aku. (Mat 16:24)",
+          "meditation": "Bapa, ajarilah kami memikul salib kehidupan ini tanpa mengeluh dan dengan penuh iman, supaya kami sungguh serupa dengan Yesus, Putra-Mu sendiri.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Hieronymus_Bosch_-_Christ_Carrying_the_Cross_-_WGA02556.jpg",
+          "imageAlt": "Jalan Salib - Yesus memanggul salib menuju Kalvari"
+        },
+        {
+          "number": 5,
+          "title": "Peristiwa Sedih 5: Yesus wafat di salib",
+          "description": "Yesus berseru dengan suara nyaring: \"Ya Bapa, kedalam tangan-Mu Ku serahkan nyawa-Ku\". Sesudah berkata demikian Ia menyerahkan nyawa-Nya. (Luk 23 : 46)",
+          "scripture": "Ya Bapa, ke dalam tangan-Mu Kuserahkan nyawa-Ku. (Luk 23:46)",
+          "meditation": "Bapa, hadirlah dekat kami bersama Putra dan Roh-Mu pada saat kami menghadapai kematian, dan terimalah kami dalam kerajaan kasih-Mu yang kekal.",
+          "image": "https://upload.wikimedia.org/wikipedia/en/8/8c/Christ_of_Saint_John_of_the_Cross.jpg",
+          "imageAlt": "Penyaliban - Yesus wafat di salib"
+        }
+      ]
+    },
+    "mulia": {
+      "title": "Misteri Mulia",
+      "subtitle": "Direnungkan pada hari Rabu dan Minggu",
+      "color": "primary",
+      "icon": "fas fa-crown",
+      "previewImage": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Resurrection.JPG",
+      "previewImageAlt": "Misteri Mulia - Kebangkitan Yesus",
+      "mysteries": [
+        {
+          "number": 1,
+          "title": "Peristiwa Mulia 1: Yesus bangkit dari antara orang mati",
+          "description": "Malaikat itu berkata: \"Janganlah kamu takut, sebab aku tahu kamu mencari Yesus yang disalibkan itu. Ia tidak disini, sebab Ia telah bangkit, sama seperti yang telah dikatakan-Nya. (Mat 28 : 5 – 6)",
+          "scripture": "Ia telah bangkit, Ia tidak ada di sini. (Mrk 16:6)",
+          "meditation": "Bapa, mampukanlah kami melanjutkan misi Putra-Mu yaitu memberitakan Injil kepada semua orang agar kerajaan-Mu menjadi nyata di bumi ini.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Resurrection.JPG",
+          "imageAlt": "Kebangkitan Yesus - Yesus bangkit dari kematian"
+        },
+        {
+          "number": 2,
+          "title": "Peristiwa Mulia 2: Yesus naik ke surga",
+          "description": "Sesudah Ia mengatakan demikian, Ia diangkat ke Surga disaksikan oleh mereka, dan awan menutup-Nya dari pandangan mereka. Hai orang Galilea, mengapa kamu berdiri melihat ke langit? Yesus ini yang diangkat ke Surga meninggalkan kamu, akan kembali dengan cara yang sama seperti kamu melihat Dia naik ke Surga. (Kis 1 : 19 – 11)",
+          "scripture": "Kamu akan menerima kuasa, kalau Roh Kudus turun ke atas kamu. (Kis 1:8)",
+          "meditation": "Bapa, Engkau tumpuan hidup dan harapan kami. Tanamkanlah dalam diri kami keyakinan bahwa Engkau menyertai kami selalu hingga akhir zaman.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Jesus_ascending_to_heaven.jpg",
+          "imageAlt": "Kenaikan Yesus - Yesus naik ke surga"
+        },
+        {
+          "number": 3,
+          "title": "Peristiwa Mulia 3: Roh Kudus turun atas para Rasul",
+          "description": "Tiba-tiba terdengarlah bunyi dari langit seperti tiupan angin keras yang memenuhi seluruh rumah, dimana mereka duduk …. Lalu mereka semua dipenuhi Roh Kudus dan mulai berbicara dalam bahasa lain, seperti yang diberikan oleh Roh itu kepada mereka untuk dikatakan. (Kis 2 : 2, 4)",
+          "scripture": "Maka penuhlah mereka dengan Roh Kudus. (Kis 2:4)",
+          "meditation": "Bapa, semoga Roh Kudus-Mu membimbing hidup kami dalam kasih dan kebenaran-Mu, serta menjadikan kami layak di hadapan-Mu.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Pentecost%C3%A9s_%28El_Greco%2C_1597%29.jpg",
+          "imageAlt": "Pentakosta - Roh Kudus turun atas para Rasul"
+        },
+        {
+          "number": 4,
+          "title": "Peristiwa Mulia 4: Maria diangkat ke surga",
+          "description": "Jikalau kita percaya bahwa, Yesus telah mati dan telah bangkit, maka kita percaya juga bahwa dengan perantaraan Yesus, Allah akan mengumpulkan bersama-sama dengan Dia mereka yang telah meninggal. Sesudah itu kita yang hidup, yang masih tinggal, akan diangkat bersama-sama dengan mereka dalam awan menyongsong Tuhan diangkasa. Demikianlah kita akan selama-lamanya bersama-sama dengan Tuhan. (1 Tes 4 : 14, 17)",
+          "scripture": "Berbahagialah engkau di antara semua perempuan. (Luk 1:42)",
+          "meditation": "Bapa, berilah kami iman yang hidup, dan jadikanlah kami saksi-Mu di hadapan sesama kami.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/9/91/Tiziano%2C_l%27assunta%2C_1516-18.JPG",
+          "imageAlt": "Assumpta - Maria diangkat ke surga"
+        },
+        {
+          "number": 5,
+          "title": "Peristiwa Mulia 5: Maria di mahkotai di Surga",
+          "description": "Tampaklah suatu tanda besar di langit, seorang perempuan berselubungkan matahari, dengan bulan di bawah kakinya dan sebuah mahkota dari dua belas bintang di atas kepalanya. (Why 12 : 1)",
+          "scripture": "Tampaklah suatu tanda besar di langit: seorang perempuan yang berselubungkan matahari. (Why 12:1)",
+          "meditation": "Bapa, satu-satunya sumber kasih sejati, kobarkanlah dalam diri kami semangat kasih-Mu kepada Bunda Putra-Mu sebab kami memandangnya sebagai teladan pengikut Yesus.",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Diego_Vel%C3%A1zquez_-_Coronation_of_the_Virgin_-_Prado.jpg",
+          "imageAlt": "Penobatan Maria - Maria dimahkotai di surga"
+        }
+      ]
+    }
+  },
+  "rosary_structure": {
+    "opening": [
+      "tanda_salib",
+      "syahadat_iman",
+      "bapa_kami",
+      {"prayer": "salam_maria", "count": 3, "intention": "Untuk pertumbuhan iman, harapan, dan kasih"},
+      "kemuliaan",
+      "terpujilah_nama"
+    ],
+    "decades": [
+      {
+        "step": 1,
+        "prayers": [
+          {"prayer": "announce_mystery", "mystery_number": 1},
+          "bapa_kami",
+          {"prayer": "salam_maria", "count": 10},
+          "kemuliaan",
+          "terpujilah_nama",
+          "doa_fatima"
+        ]
+      },
+      {
+        "step": 2,
+        "prayers": [
+          {"prayer": "announce_mystery", "mystery_number": 2},
+          "bapa_kami",
+          {"prayer": "salam_maria", "count": 10},
+          "kemuliaan",
+          "terpujilah_nama",
+          "doa_fatima"
+        ]
+      },
+      {
+        "step": 3,
+        "prayers": [
+          {"prayer": "announce_mystery", "mystery_number": 3},
+          "bapa_kami",
+          {"prayer": "salam_maria", "count": 10},
+          "kemuliaan",
+          "terpujilah_nama",
+          "doa_fatima"
+        ]
+      },
+      {
+        "step": 4,
+        "prayers": [
+          {"prayer": "announce_mystery", "mystery_number": 4},
+          "bapa_kami",
+          {"prayer": "salam_maria", "count": 10},
+          "kemuliaan",
+          "terpujilah_nama",
+          "doa_fatima"
+        ]
+      },
+      {
+        "step": 5,
+        "prayers": [
+          {"prayer": "announce_mystery", "mystery_number": 5},
+          "bapa_kami",
+          {"prayer": "salam_maria", "count": 10},
+          "kemuliaan",
+          "terpujilah_nama",
+          "doa_fatima"
+        ]
+      }
+    ],
+    "closing": [
+      "salam_ya_ratu",
+      "tanda_salib"
+    ]
+  },
+  "daily_mysteries": {
+    "monday": "gembira",
+    "tuesday": "sedih",
+    "wednesday": "mulia",
+    "thursday": "terang",
+    "friday": "sedih",
+    "saturday": "gembira",
+    "sunday": "mulia"
+  }
+}

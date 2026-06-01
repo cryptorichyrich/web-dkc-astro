@@ -230,45 +230,41 @@ import Footer from "@/components/Footer.astro";
     user-select: none;
   }
 
-  /* Interlinear word layout — BibleHub-style */
+  /* Interlinear word layout — flexbox vertical stack */
   #reading-content .word-group {
-    display: inline-table;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 3px;
     vertical-align: top;
-    margin-right: 2px;
-    margin-bottom: 4px;
     text-align: center;
     max-width: 120px;
     overflow-wrap: break-word;
     word-break: break-word;
   }
-  #reading-content .word-group span {
-    display: table-row;
-    line-height: 1.3;
-  }
   #reading-content .word-greek {
     font-family: 'Lora', 'Times New Roman', serif;
-    color: #ef5350 !important;
-    font-size: 1em;
     font-weight: 600;
+    color: #c9a84c !important;
+    font-size: 1.1em;
+    line-height: 1.3;
   }
   #reading-content .word-translit {
-    font-size: 0.65em;
-    color: #9e9e9e !important;
-    font-family: 'Inter', sans-serif;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    padding-bottom: 2px;
-    margin-bottom: 2px;
+    color: #888 !important;
+    font-size: 0.8em;
+    font-style: italic;
+    line-height: 1.3;
   }
   #reading-content .word-english {
-    font-size: 0.7em;
-    color: #4fc3f7 !important;
-    font-family: 'Inter', sans-serif;
-    font-style: italic;
+    color: #aaa !important;
+    font-size: 0.85em;
+    line-height: 1.3;
   }
   #reading-content .word-strongs {
-    font-size: 0.55em;
-    color: rgba(201,168,76,0.5);
-    font-family: 'Inter', sans-serif;
+    color: #666 !important;
+    font-size: 0.75em;
+    font-family: monospace;
+    line-height: 1.3;
   }
 
   /* Greek-only mode */

@@ -140,7 +140,7 @@ import Footer from "@/components/Footer.astro";
   <meta name="description" content="Kitab Suci Katolik Indonesia lengkap. Baca, cari, dan bagikan ayat Alkitab." />
 </slot>
 
-<style>
+<style is:global>
   #reading-content sup { color: rgba(201,168,76,0.7); font-weight: bold; font-size: 0.7rem; margin-right: 0.25rem; }
   #reading-content .verse-row { border-radius: 0.5rem; padding: 0.25rem 0.5rem; margin: 0 -0.5rem; transition: background-color 0.15s; cursor: pointer; }
   #reading-content .verse-row:hover { background: rgba(201,168,76,0.05); }

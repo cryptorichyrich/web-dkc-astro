@@ -25,9 +25,14 @@ const posts = allPosts
     <h1 class="text-3xl font-bold text-dkc-gold mb-2">#{tag}</h1>
     <p class="text-dkc-muted mb-8">{posts.length} artikel</p>
 
-    <div class="grid gap-3">
-      {posts.map(post => (
-        <a href={`/blog/${post.id}`} class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+    <div class="grid gap-3" id="tag-posts-list">
+      {posts.map((post, i) => (
+        <a
+          href={`/blog/${post.id}`}
+          class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30 tag-post-item"
+          data-index={i}
+          style={i >= 10 ? "display:none;" : undefined}
+        >
           <div class="flex gap-3">
             {(() => {
               const thumb = post.data.thumbnailImage || post.data.coverImage || post.data.heroImage;
@@ -47,6 +52,25 @@ const posts = allPosts
         </a>
       ))}
     </div>
+
+    {posts.length > 10 && (
+      <div class="glass-card p-3 mt-4 flex items-center justify-between" id="tag-pagination">
+        <button
+          id="btn-prev"
+          class="px-4 py-2 rounded-lg bg-dkc-surface border border-dkc-border text-dkc-muted text-sm font-medium hover:border-dkc-gold/40 hover:text-dkc-gold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          disabled
+        >
+          ← Sebelumnya
+        </button>
+        <span id="page-info" class="text-dkc-muted text-xs"></span>
+        <button
+          id="btn-next"
+          class="px-4 py-2 rounded-lg bg-dkc-surface border border-dkc-border text-dkc-muted text-sm font-medium hover:border-dkc-gold/40 hover:text-dkc-gold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Selanjutnya →
+        </button>
+      </div>
+    )}
   </main>
 
   <Footer />
@@ -56,3 +80,36 @@ const posts = allPosts
   <title>#{tag} — Damai Kasih Channel</title>
   <meta name="description" content={`Artikel dengan tag ${tag} di Damai Kasih Channel.`} />
 </slot>
+
+<script>
+  const PER_PAGE = 10;
+  const items = document.querySelectorAll<HTMLElement>('.tag-post-item');
+  const total = items.length;
+  if (total <= PER_PAGE) throw new Error('no pagination needed'); // stops script gracefully
+
+  let currentPage = 1;
+  const totalPages = Math.ceil(total / PER_PAGE);
+
+  const btnPrev = document.getElementById('btn-prev') as HTMLButtonElement;
+  const btnNext = document.getElementById('btn-next') as HTMLButtonElement;
+  const pageInfo = document.getElementById('page-info');
+
+  function showPage(page: number) {
+    currentPage = page;
+    const start = (page - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    items.forEach((el, i) => {
+      el.style.display = (i >= start && i < end) ? '' : 'none';
+    });
+    if (btnPrev) btnPrev.disabled = page === 1;
+    if (btnNext) btnNext.disabled = page === totalPages;
+    if (pageInfo) pageInfo.textContent = `Halaman ${page} dari ${totalPages}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  btnPrev?.addEventListener('click', () => { if (currentPage > 1) showPage(currentPage - 1); });
+  btnNext?.addEventListener('click', () => { if (currentPage < totalPages) showPage(currentPage + 1); });
+
+  // Initial page info
+  showPage(1);
+</script>

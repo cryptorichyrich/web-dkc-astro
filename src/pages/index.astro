@@ -10,7 +10,8 @@ const allPosts = await getCollection("blog");
 const sorted = allPosts
   .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
 const latestPosts = sorted.slice(0, 8);
-const featuredPosts = sorted.filter(p => p.data.tags?.some(t => ["Apologetika", "Dogma", "Teologi"].includes(t))).slice(0, 3);
+const featuredPosts = sorted.filter(p => p.data.featured).slice(0, 5);
+const fallbackFeatured = featuredPosts.length > 0 ? featuredPosts : sorted.filter(p => p.data.tags?.some(t => ["Apologetika", "Dogma", "Teologi"].includes(t))).slice(0, 5);
 
 // Tag cloud: extract all tags, count occurrences, sort by count, take top 20
 const tagCounts: Record<string, number> = {};
@@ -220,25 +221,6 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
               <p class="text-dkc-muted text-[10px]">Katekese &amp; Apologetika Katolik</p>
             </div>
           </div>
-          <div class="space-y-2 mb-3">
-            {[
-              { title: "Katekismus Gereja Katolik", thumb: "KGC" },
-              { title: "Apologetika Katolik", thumb: "APO" },
-              { title: "Kitab Suci & Tradisi", thumb: "KS" },
-            ].map(v => (
-              <a
-                href="https://www.youtube.com/@DamaiKasihChannel"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 bg-dkc-surface rounded-lg p-2 hover:border-dkc-gold/40 border border-dkc-border transition-colors group"
-              >
-                <div class="w-14 h-9 rounded bg-dkc-card flex items-center justify-center text-dkc-gold text-xs font-bold shrink-0">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <span class="text-dkc-text text-[11px] leading-tight line-clamp-2 group-hover:text-dkc-gold transition-colors">{v.title}</span>
-              </a>
-            ))}
-          </div>
           <a
             href="https://www.youtube.com/@DamaiKasihChannel?sub_confirmation=1"
             target="_blank"
@@ -247,6 +229,14 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20H14V4H10V20ZM4 20H8V12H4V20ZM16 9V20H20V9H16Z"/></svg>
             Subscribe
+          </a>
+          <a
+            href="https://www.youtube.com/@DamaiKasihChannel"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 w-full py-2 mt-2 rounded-lg bg-dkc-surface border border-dkc-border hover:border-dkc-gold/40 text-dkc-gold text-xs font-semibold transition-colors"
+          >
+            Kunjungi Channel →
           </a>
         </div>
 
@@ -327,7 +317,7 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
             <span>⭐</span> Artikel Pilihan
           </h3>
           <div class="space-y-3">
-            {featuredPosts.map(post => (
+            {fallbackFeatured.map(post => (
               <a href={`/blog/${post.id}`} class="flex gap-3 group">
                 <div class="w-16 h-16 rounded-lg bg-dkc-card overflow-hidden shrink-0">
                   {(() => {

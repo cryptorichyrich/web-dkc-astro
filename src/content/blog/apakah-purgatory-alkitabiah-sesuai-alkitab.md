@@ -4,6 +4,7 @@ subtitle: "Katekismus dengan jelas meneguhkan kepercayaan Gereja akan Api Penyuc
 author: "Thomas Aquinas BPN (Tim DKC)"
 publishedAt: 2025-02-01
 tags: ["Katolik", "Api Penyucian", "Gereja", "Alkitab", "KGK"]
+featured: true
 coverImage: "/assets/img/purgatory-sesuai-alkitab.webp"
 thumbnailImage: "/assets/img/purgatory-sesuai-alkitab.webp"
 ---

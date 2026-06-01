@@ -4,6 +4,7 @@ subtitle: "Misa Kudus adalah jembatan yang menghubungkan kefanaan manusia dengan
 author: "Quovadis (Tim Inti DKC)"
 publishedAt: 2026-02-28
 tags: []
+featured: true
 coverImage: "/assets/img/image_2026-02-28_163642574.webp"
 thumbnailImage: "/assets/img/image_2026-02-28_163642574.webp"
 ---

@@ -4,6 +4,7 @@ subtitle: "Yesus mengecam orang-orang Yahudi yang mau menyelidiki Kitab Suci unt
 author: "Mgr. Pidyarto, O.Carm"
 publishedAt: 2025-01-01
 tags: ["Katolik", "katekese", "Sejarah"]
+featured: true
 coverImage: "/assets/img/QueenofallSaints.webp"
 thumbnailImage: "/assets/img/QueenofallSaints.webp"
 ---

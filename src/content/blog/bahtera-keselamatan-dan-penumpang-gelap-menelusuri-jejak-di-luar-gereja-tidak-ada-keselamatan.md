@@ -3,6 +3,7 @@ title: "'Bahtera Keselamatan dan Penumpang Gelap&#58; Menelusuri Jejak \"Di Luar
 author: "Erick (Tim DKC)"
 publishedAt: 2026-03-27
 tags: []
+featured: true
 coverImage: "/assets/img/bahtera keselamatan dan penumpang gelap.png"
 thumbnailImage: "/assets/img/bahtera keselamatan dan penumpang gelap.png"
 ---

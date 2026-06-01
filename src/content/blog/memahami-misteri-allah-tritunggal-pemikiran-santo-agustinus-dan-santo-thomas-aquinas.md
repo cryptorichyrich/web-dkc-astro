@@ -4,6 +4,7 @@ subtitle: "Tritunggal adalah jawaban bagi kerinduan manusia akan makna&#58; bahw
 author: "Quovadis (Tim Inti DKC)"
 publishedAt: 2026-03-07
 tags: []
+featured: true
 coverImage: "/assets/img/image_2026-03-07_172059689.webp"
 thumbnailImage: "/assets/img/image_2026-03-07_172059689.webp"
 ---

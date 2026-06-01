@@ -17,6 +17,16 @@ import "@/styles/global.css";
       media="print"
       onload="this.media='all'"
     />
+    <!-- Prevent flash of wrong theme -->
+    <script is:inline>
+      (function(){
+        var t = localStorage.getItem('dkc-theme');
+        if (t === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+      })();
+    </script>
     <slot name="head" />
   </head>
   <body>
@@ -24,12 +34,6 @@ import "@/styles/global.css";
 
     <!-- Global Reading Progress Bar -->
     <div id="global-progress-bar"><div id="global-progress-fill"></div></div>
-
-    <!-- Global TTS Floating Button -->
-    <button id="global-tts-btn" title="Bacakan halaman ini" aria-label="Text-to-Speech">
-      <svg id="global-tts-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-      <svg id="global-tts-icon-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
-    </button>
   </body>
 </html>
 
@@ -38,32 +42,45 @@ import "@/styles/global.css";
   #global-progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 9999; pointer-events: none; background: rgba(17,17,17,0.5); }
   #global-progress-fill { height: 100%; width: 0%; background: linear-gradient(to right, #c9a84c, #c9a84ccc); transition: width 100ms ease-out; }
 
-  /* TTS Button */
-  #global-tts-btn { position: fixed; bottom: 88px; right: 16px; z-index: 9998; width: 44px; height: 44px; border-radius: 50%; background: #1a1a1a; border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center; color: #888; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.2s; }
-  #global-tts-icon-play, #global-tts-icon-stop { width: 18px; height: 18px; }
-  #global-tts-icon-stop { display: none; }
-
-  @media (min-width: 768px) {
-    #global-tts-btn {
-      bottom: 24px !important;
-    }
+  /* Dark mode toggle */
+  #dkc-theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 10000;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
-  /* TTS pulsing animation while speaking */
-  @keyframes tts-pulse {
-    0%, 100% { box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 0 rgba(201,168,76,0.4); }
-    50% { box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 8px rgba(201,168,76,0); }
-  }
-  #global-tts-btn.tts-speaking {
-    animation: tts-pulse 1.5s ease-in-out infinite;
-    color: #c9a84c !important;
-    border-color: rgba(201,168,76,0.4) !important;
-  }
-  #global-tts-btn:active {
-    transform: scale(0.93);
-  }
-  #global-tts-btn:hover {
+  #dkc-theme-toggle:hover {
     color: #c9a84c;
     border-color: rgba(201,168,76,0.3);
+  }
+  #dkc-theme-toggle svg { width: 16px; height: 16px; }
+  html.light #dkc-theme-toggle {
+    background: #ffffff;
+    border-color: #e0e0e0;
+    color: #666;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  html.light #dkc-theme-toggle:hover {
+    color: #c9a84c;
+    border-color: rgba(201,168,76,0.3);
+  }
+  @media (min-width: 768px) {
+    #dkc-theme-toggle {
+      top: 16px;
+      right: 16px;
+    }
   }
 </style>
 
@@ -73,7 +90,6 @@ import "@/styles/global.css";
   var fill = document.getElementById('global-progress-fill');
   var bar = document.getElementById('global-progress-bar');
   if (fill && bar) {
-    // Hide on homepage
     if (window.location.pathname === '/') {
       bar.style.display = 'none';
     } else {
@@ -90,109 +106,34 @@ import "@/styles/global.css";
     }
   }
 
-  // ===== Global TTS Button =====
-  var ttsBtn = document.getElementById('global-tts-btn');
-  var ttsIconPlay = document.getElementById('global-tts-icon-play');
-  var ttsIconStop = document.getElementById('global-tts-icon-stop');
-  if (!ttsBtn || !ttsIconPlay || !ttsIconStop) return;
+  // ===== Dark Mode Toggle =====
+  var toggle = document.createElement('button');
+  toggle.id = 'dkc-theme-toggle';
+  toggle.setAttribute('aria-label', 'Toggle dark/light mode');
+  toggle.title = 'Toggle mode';
 
-  var ttsPlaying = false;
-
-  function getMainText() {
-    var selectors = [
-      '#article-body',
-      '#reading-content',
-      '#ref-results',
-      '#kvii-content',
-      '.prayer-content',
-      'main',
-      'article'
-    ];
-    for (var i = 0; i < selectors.length; i++) {
-      var el = document.querySelector(selectors[i]);
-      if (el && el.textContent && el.textContent.trim().length > 50) {
-        return el.textContent.trim();
-      }
-    }
-    return '';
+  function updateIcon() {
+    var isLight = document.documentElement.classList.contains('light');
+    toggle.innerHTML = isLight
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
   }
 
-  function stopTTS() {
-    window.speechSynthesis.cancel();
-    ttsPlaying = false;
-    ttsIconPlay.style.display = '';
-    ttsIconStop.style.display = 'none';
-    ttsBtn.classList.remove('tts-speaking');
-  }
-
-  ttsBtn.addEventListener('click', function() {
-    if (ttsPlaying) {
-      stopTTS();
-      return;
-    }
-    var text = getMainText();
-    if (!text) return;
-
-    // Cancel any existing speech
-    window.speechSynthesis.cancel();
-
-    ttsPlaying = true;
-    ttsIconPlay.style.display = 'none';
-    ttsIconStop.style.display = '';
-    ttsBtn.classList.add('tts-speaking');
-
-    // Truncate for reasonable TTS length
-    var maxLen = 10000;
-    var ttsText = text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
-
-    // Cancel any existing speech (needed on some mobile browsers to "unlock" audio)
-    window.speechSynthesis.cancel();
-
-    var utterance = new SpeechSynthesisUtterance(ttsText);
-
-    // Detect language
-    var path = window.location.pathname;
-    if (path.indexOf('interlinear-greek') !== -1) {
-      utterance.lang = 'en-US';
-      utterance.rate = 0.85;
-    } else if (path.indexOf('vulgata') !== -1) {
-      utterance.lang = 'la';
-      utterance.rate = 0.8;
+  toggle.addEventListener('click', function() {
+    var isLight = document.documentElement.classList.contains('light');
+    if (isLight) {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('dkc-theme', 'dark');
     } else {
-      utterance.lang = 'id-ID';
-      utterance.rate = 0.95;
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+      localStorage.setItem('dkc-theme', 'light');
     }
-
-    // Try to find id-ID voice
-    var voices = window.speechSynthesis.getVoices();
-    if (utterance.lang === 'id-ID' && voices.length > 0) {
-      for (var v = 0; v < voices.length; v++) {
-        if (voices[v].lang.indexOf('id') === 0) {
-          utterance.voice = voices[v];
-          break;
-        }
-      }
-    }
-
-    utterance.onend = function() { stopTTS(); };
-    utterance.onerror = function() {
-      ttsBtn.style.background = 'rgba(239,83,80,0.2)';
-      setTimeout(function() { ttsBtn.style.background = ''; }, 500);
-      stopTTS();
-    };
-
-    // Call speak() synchronously within the click handler for mobile compatibility
-    window.speechSynthesis.speak(utterance);
+    updateIcon();
   });
 
-  // Stop TTS when leaving page
-  window.addEventListener('beforeunload', function() {
-    if (ttsPlaying) window.speechSynthesis.cancel();
-  });
-
-  // Preload voices (needed for some browsers)
-  if (window.speechSynthesis.onvoiceschanged !== undefined) {
-    window.speechSynthesis.onvoiceschanged = function() {};
-  }
+  updateIcon();
+  document.body.appendChild(toggle);
 })();
 </script>

@@ -254,6 +254,13 @@ const encodedTitle = encodeURIComponent(post.data.title);
   .prose-gold h3[id] {
     scroll-margin-top: 5rem;
   }
+  /* TTS highlight style */
+  .tts-highlight {
+    background-color: #FFD700 !important;
+    color: #000000 !important;
+    border-radius: 2px;
+    transition: background-color 0.15s, color 0.15s;
+  }
 </style>
 
 <script>
@@ -262,7 +269,6 @@ const encodedTitle = encodeURIComponent(post.data.title);
     const tocLinks = document.querySelectorAll('[data-toc-link]');
     if (tocLinks.length === 0) return;
 
-    // Collect the IDs that the TOC links point to
     const headingIds: string[] = [];
     tocLinks.forEach(link => {
       const href = link.getAttribute('href');
@@ -276,7 +282,6 @@ const encodedTitle = encodeURIComponent(post.data.title);
       .filter((el): el is HTMLElement => el !== null);
 
     if (headingEls.length === 0) return;
-
     let currentActiveId: string | null = null;
 
     const observer = new IntersectionObserver(
@@ -302,15 +307,17 @@ const encodedTitle = encodeURIComponent(post.data.title);
     headingEls.forEach(h => observer.observe(h));
   }
 
-  // Initialize everything
-  initScrollSpy();
-  initShareButtons();
-  initTTS();
-  initTextSize();
-
-  // === TTS: Text-to-Speech for article content ===
+  // === TTS: Text-to-Speech for article content with yellow highlighting ===
   let ttsUtterance: SpeechSynthesisUtterance | null = null;
   let ttsPlaying = false;
+  let currentHighlight: HTMLElement | null = null;
+
+  function clearHighlight() {
+    if (currentHighlight) {
+      currentHighlight.classList.remove('tts-highlight');
+      currentHighlight = null;
+    }
+  }
 
   function initTTS() {
     const btn = document.getElementById('tts-btn');
@@ -330,9 +337,9 @@ const encodedTitle = encodeURIComponent(post.data.title);
   function startTTS() {
     const body = document.getElementById('article-body');
     if (!body) return;
-    // Stop any ongoing
     window.speechSynthesis.cancel();
     ttsPlaying = true;
+
     const iconPlay = document.getElementById('tts-icon-play');
     const iconStop = document.getElementById('tts-icon-stop');
     const btn = document.getElementById('tts-btn');
@@ -340,18 +347,67 @@ const encodedTitle = encodeURIComponent(post.data.title);
     if (iconStop) iconStop.classList.remove('hidden');
     if (btn) { btn.classList.add('text-dkc-gold', 'border-dkc-gold/30'); }
 
+    // Build utterance from paragraphs, splitting into chunks for highlighting
     const text = body.textContent || '';
-    ttsUtterance = new SpeechSynthesisUtterance(text);
+    if (!text.trim()) { stopTTS(); return; }
+
+    // Cap at 10000 chars
+    const ttsText = text.length > 10000 ? text.slice(0, 10000) + '...' : text;
+
+    ttsUtterance = new SpeechSynthesisUtterance(ttsText);
     ttsUtterance.lang = 'id-ID';
     ttsUtterance.rate = 0.95;
-    ttsUtterance.onend = () => stopTTS();
-    ttsUtterance.onerror = () => stopTTS();
+
+    // Try to find Indonesian voice
+    const voices = window.speechSynthesis.getVoices();
+    for (let i = 0; i < voices.length; i++) {
+      if (voices[i].lang.indexOf('id') === 0) {
+        ttsUtterance.voice = voices[i];
+        break;
+      }
+    }
+
+    // Highlight words during speech using onboundary
+    ttsUtterance.onboundary = (event: SpeechSynthesisEvent) => {
+      if (event.name !== 'word') return;
+      const charIndex = event.charIndex;
+      const charLength = event.charLength || 1;
+
+      // Find which paragraph contains this character offset
+      const paragraphs = body.querySelectorAll('p, li, h2, h3, h4, blockquote, td, th');
+      let runningLen = 0;
+
+      for (let i = 0; i < paragraphs.length; i++) {
+        const pText = paragraphs[i].textContent || '';
+        if (charIndex >= runningLen && charIndex < runningLen + pText.length) {
+          // Found the paragraph
+          clearHighlight();
+          paragraphs[i].classList.add('tts-highlight');
+          currentHighlight = paragraphs[i] as HTMLElement;
+          // Scroll into view
+          currentHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          break;
+        }
+        runningLen += pText.length + 1; // +1 for the space between elements
+      }
+    };
+
+    ttsUtterance.onend = () => {
+      clearHighlight();
+      stopTTS();
+    };
+    ttsUtterance.onerror = () => {
+      clearHighlight();
+      stopTTS();
+    };
+
     window.speechSynthesis.speak(ttsUtterance);
   }
 
   function stopTTS() {
     window.speechSynthesis.cancel();
     ttsPlaying = false;
+    clearHighlight();
     const iconPlay = document.getElementById('tts-icon-play');
     const iconStop = document.getElementById('tts-icon-stop');
     const btn = document.getElementById('tts-btn');
@@ -442,4 +498,23 @@ const encodedTitle = encodeURIComponent(post.data.title);
       });
     });
   }
+
+  // Preload voices for TTS
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+    }
+  }
+
+  // Stop TTS when leaving page
+  window.addEventListener('beforeunload', () => {
+    if (ttsPlaying) window.speechSynthesis.cancel();
+  });
+
+  // Initialize everything
+  initScrollSpy();
+  initShareButtons();
+  initTTS();
+  initTextSize();
 </script>

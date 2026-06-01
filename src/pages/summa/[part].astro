@@ -1,0 +1,95 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const parts = ["part1", "part2", "part3", "part4", "part5"];
+  return parts.map((part) => ({ params: { part }, props: { partSlug: part } }));
+};
+
+const { partSlug } = Astro.props;
+const allQuestions = await getCollection("summa");
+const partQuestions = allQuestions
+  .filter((q) => q.data.partSlug === partSlug)
+  .sort((a, b) => a.data.questionNumber - b.data.questionNumber);
+
+const partTitles: Record<string, string> = {
+  part1: "Prima Pars",
+  part2: "Prima Secundæ Partis",
+  part3: "Secunda Secundæ Partis",
+  part4: "Tertia Pars",
+  part5: "Supplementum Tertiæ Partis",
+};
+const partTitle = partTitles[partSlug] || partSlug;
+const pageTitle = `${partTitle} — Summa Theologiae`;
+
+const partDescriptions: Record<string, string> = {
+  part1: "Prima Pars — Sacred Doctrine, The One God, The Blessed Trinity, Creation, The Angels, The Six Days, Man, The Government of Creatures.",
+  part2: "Prima Secundæ Partis — Man's Last End, Human Acts, Passions, Habits, Virtues, Sin, Law, Grace.",
+  part3: "Secunda Secundæ Partis — Faith, Hope, Charity, Prudence, Justice, Fortitude, Temperance, Acts Pertaining to Certain Men.",
+  part4: "Tertia Pars — The Incarnation, The Life of Christ, The Sacraments, Baptism, Confirmation, The Eucharist, Penance.",
+  part5: "Supplementum Tertiæ Partis — Penance (continued), Extreme Unction, Holy Orders, Matrimony, The Resurrection, The Last Things.",
+};
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Breadcrumb -->
+    <nav class="flex flex-wrap gap-1 text-sm text-dkc-muted mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-dkc-gold transition-colors">Home</a>
+      <span>›</span>
+      <a href="/summa/" class="hover:text-dkc-gold transition-colors">Summa Theologiae</a>
+      <span>›</span>
+      <span class="text-dkc-gold" aria-current="page">{partTitle}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-text mb-3">{partTitle}</h1>
+      <p class="text-dkc-muted text-sm leading-relaxed">{partDescriptions[partSlug]}</p>
+    </div>
+
+    <!-- Questions List -->
+    <div class="space-y-2 mb-8">
+      <h2 class="text-lg font-semibold text-dkc-text mb-4">{partQuestions.length} Questions</h2>
+      
+      {partQuestions.map((q) => (
+        <a
+          href={`/summa/${partSlug}/question${q.data.questionNumber}/`}
+          class="block p-4 rounded-lg border border-dkc-border bg-dkc-surface/50 hover:border-dkc-gold hover:bg-dkc-surface transition-all group"
+        >
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-10 h-10 rounded-full bg-dkc-gold/10 border border-dkc-gold/20 flex items-center justify-center text-sm font-bold text-dkc-gold group-hover:bg-dkc-gold/20 transition-colors">
+              {q.data.questionNumber}
+            </span>
+            <div>
+              <h3 class="text-dkc-text font-medium group-hover:text-dkc-gold transition-colors">
+                Question {q.data.questionNumber}. {q.data.title}
+              </h3>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Back -->
+    <div class="pt-4 border-t border-dkc-border">
+      <a href="/summa/" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Summa Index
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<Fragment slot="head">
+  <title>{pageTitle}</title>
+  <meta name="description" content={`${partTitle} dari Summa Theologiae Santo Thomas Aquinas — ${partQuestions.length} pertanyaan.`} />
+</Fragment>

@@ -1,227 +1,79 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
 
-const parts = [
-  {
-    id: "prima",
-    numeral: "I",
-    title: "Prima Pars",
-    subtitle: "Tentang Allah",
-    questions: 119,
-    articles: 584,
-    icon: "✦",
-    topics: [
-      "Keberadaan Allah (Q.2)",
-      "Sifat-sifat Allah (Q.3–11)",
-      "Tritunggal Mahakudus (Q.27–43)",
-      "Penciptaan (Q.44–49)",
-      "Malaikat (Q.50–64)",
-      "Alam materi (Q.65–74)",
-      "Manusia (Q.75–102)",
-      "Pemerintahan ilahi (Q.103–119)",
-    ],
-  },
-  {
-    id: "prima-secundae",
-    numeral: "I–II",
-    title: "Prima Secundae",
-    subtitle: "Kebajikan & Moral",
-    questions: 114,
-    articles: 578,
-    icon: "✦",
-    topics: [
-      "Tujuan akhir / kebahagiaan (Q.1–5)",
-      "Tindakan manusia (Q.6–17)",
-      "Passi / dorongan jiwa (Q.22–48)",
-      "Kebiasaan & kebajikan (Q.49–67)",
-      "Dosa (Q.71–89)",
-      "Hukum (Q.90–108)",
-      "Rahmat (Q.109–114)",
-    ],
-  },
-  {
-    id: "secunda-secundae",
-    numeral: "II–II",
-    title: "Secunda Secundae",
-    subtitle: "Teologi Kebajikan",
-    questions: 189,
-    articles: 914,
-    icon: "✦",
-    topics: [
-      "Iman (Q.1–16)",
-      "Harapan (Q.17–22)",
-      "Kasih (Q.23–46)",
-      "Keadilan (Q.57–79)",
-      "Kebijaksanaan (Q.47–56)",
-      "Kematangan / keberanian (Q.123–140)",
-      "Karunia Roh Kudus (Q.1–7, 45, 52, dll.)",
-      "Status hidup (Q.171–189)",
-    ],
-  },
-  {
-    id: "tertia",
-    numeral: "III",
-    title: "Tertia Pars",
-    subtitle: "Kristus & Sakramen",
-    questions: 90,
-    articles: 593,
-    icon: "✦",
-    topics: [
-      "Inkarnasi (Q.1–26)",
-      "Kehidupan Kristus (Q.27–59)",
-      "Sakramen umum (Q.60–65)",
-      "Baptis (Q.66–71)",
-      "Krisma (Q.72)",
-      "Ekaristi (Q.73–83)",
-      "Pekhidmatan / Sakramen lainnya (Q.84–90)",
-    ],
-  },
-];
+const summaQuestions = await getCollection("summa");
+const searchData = summaQuestions.map((q) => ({
+  title: q.data.title,
+  part: q.data.part,
+  partNum: q.data.partNum,
+  questionNumber: q.data.questionNumber,
+  partSlug: q.data.partSlug,
+  url: `/summa/${q.data.partSlug}/question${q.data.questionNumber}/`,
+  snippet: q.body?.substring(0, 300) || "",
+}));
+
+const totalQuestions = searchData.length;
+const totalParts = 5;
 ---
 
 <BaseLayout>
   <Navbar />
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <!-- Header -->
     <div class="text-center mb-8">
       <a href="/summa" class="inline-flex items-center gap-1.5 text-dkc-muted text-xs hover:text-dkc-gold transition-colors mb-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Kembali ke Ringkasan
+        Kembali ke Summa Index
       </a>
       <span class="text-4xl">🔍</span>
-      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Jelajahi Summa Theologiae</h1>
-      <p class="text-dkc-muted text-sm mt-1">512 Pertanyaan · 2.669 Artikel · Santo Thomas Aquinas, O.P.</p>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Cari Summa Theologiae</h1>
+      <p class="text-dkc-muted text-sm mt-1">{totalQuestions} Pertanyaan · {totalParts} Bagian · Santo Thomas Aquinas, O.P.</p>
     </div>
 
-    <!-- Search Bar (cosmetic — links to external search) -->
+    <!-- Search Bar -->
     <div class="glass-card p-4 mb-6">
-      <form action="https://www.google.com/search" method="get" target="_blank" rel="noopener" class="flex items-center gap-3">
-        <input
-          type="hidden"
-          name="q"
-          id="search-hidden"
-          value="site:newadvent.org/summa/ "
-        />
+      <div class="flex items-center gap-3">
         <div class="relative flex-1">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input
             type="text"
-            id="summa-search"
-            placeholder="Cari topik di Summa Theologiae…"
+            id="summa-search-input"
+            placeholder="Cari topik, kata kunci, atau nomor pertanyaan…"
             class="w-full bg-dkc-surface border border-dkc-border rounded-xl pl-10 pr-4 py-3 text-sm text-dkc-text placeholder:text-dkc-muted/60 focus:outline-none focus:border-dkc-gold/40 transition-colors"
           />
         </div>
-        <button
-          type="submit"
-          class="shrink-0 bg-dkc-gold/15 hover:bg-dkc-gold/25 border border-dkc-gold/30 text-dkc-gold text-sm font-medium px-4 py-3 rounded-xl transition-all duration-200"
-        >
-          Cari ↗
-        </button>
-      </form>
-      <p class="text-dkc-muted text-[11px] mt-2 text-center">Pencarian via New Advent (bahasa Inggris)</p>
+        <span id="result-count" class="text-dkc-muted text-xs shrink-0 hidden"></span>
+      </div>
+      <p class="text-dkc-muted text-[11px] mt-2 text-center">Ketik untuk mencari — hasil langsung dari teks Summa Theologiae di situs ini</p>
     </div>
 
-    <!-- Part Cards -->
-    <div class="space-y-4" id="part-cards">
-      {parts.map((part, idx) => (
-        <div class="glass-card overflow-hidden" data-part-card={part.id}>
-          <!-- Card Header (always visible) -->
-          <button
-            class="w-full flex items-center gap-4 p-4 md:p-5 text-left group"
-            data-toggle={part.id}
-          >
-            <span class="text-dkc-gold font-bold text-sm bg-dkc-gold/10 w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-dkc-gold/15">
-              {part.numeral}
-            </span>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2">
-                <h2 class="text-dkc-gold font-semibold text-sm md:text-base leading-tight">{part.title}</h2>
-                <span class="text-dkc-muted text-[10px] md:text-xs">— {part.subtitle}</span>
-              </div>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-[10px] md:text-xs px-2 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
-                  {part.questions} Q
-                </span>
-                <span class="text-[10px] md:text-xs px-2 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
-                  {part.articles} Art.
-                </span>
-              </div>
-            </div>
-            <svg
-              class="chevron w-5 h-5 text-dkc-muted shrink-0 transition-transform duration-300 group-hover:text-dkc-gold"
-              data-chevron={part.id}
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-
-          <!-- Expandable Content -->
-          <div
-            class="expandable overflow-hidden"
-            data-expandable={part.id}
-            style="max-height: 0; transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1);"
-          >
-            <div class="px-4 md:px-5 pb-4 md:pb-5 pt-0">
-              <div class="border-t border-dkc-border/60 pt-4">
-                <h3 class="text-dkc-muted text-[11px] uppercase tracking-wider mb-2.5 font-sans">Topik Pertanyaan</h3>
-                <div class="space-y-1.5">
-                  {part.topics.map(topic => (
-                    <a
-                      href={`https://www.google.com/search?q=site:newadvent.org/summa/+${encodeURIComponent(topic)}`}
-                      target="_blank"
-                      rel="noopener"
-                      class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-dkc-surface/60 border border-transparent hover:border-dkc-gold/20 hover:bg-dkc-gold/5 transition-all duration-200 group/item"
-                    >
-                      <span class="text-dkc-gold/40 group-hover/item:text-dkc-gold text-[10px] transition-colors">●</span>
-                      <span class="text-dkc-text text-xs md:text-sm leading-tight">{topic}</span>
-                      <svg class="w-3 h-3 text-dkc-muted/40 group-hover/item:text-dkc-gold/60 ml-auto shrink-0 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <!-- Stats Summary -->
-    <div class="glass-card p-5 mt-6">
-      <div class="grid grid-cols-3 gap-4 text-center">
-        <div>
-          <p class="text-dkc-gold text-xl md:text-2xl font-bold font-serif">4</p>
-          <p class="text-dkc-muted text-[10px] md:text-xs">Bagian</p>
-        </div>
-        <div>
-          <p class="text-dkc-gold text-xl md:text-2xl font-bold font-serif">512</p>
-          <p class="text-dkc-muted text-[10px] md:text-xs">Pertanyaan</p>
-        </div>
-        <div>
-          <p class="text-dkc-gold text-xl md:text-2xl font-bold font-serif">2.669</p>
-          <p class="text-dkc-muted text-[10px] md:text-xs">Artikel</p>
-        </div>
+    <!-- Results -->
+    <div id="search-results" class="space-y-3 mb-6">
+      <div class="text-center text-dkc-muted text-sm py-8" id="no-results-msg">
+        Ketik kata kunci untuk mencari di {totalQuestions} pertanyaan Summa Theologiae
       </div>
     </div>
 
-    <!-- External Resources -->
+    <!-- Stats -->
+    <div class="glass-card p-5 mt-6">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div><p class="text-dkc-gold text-xl md:text-2xl font-bold">5</p><p class="text-dkc-muted text-[10px] md:text-xs">Bagian</p></div>
+        <div><p class="text-dkc-gold text-xl md:text-2xl font-bold">{totalQuestions}</p><p class="text-dkc-muted text-[10px] md:text-xs">Pertanyaan</p></div>
+        <div><p class="text-dkc-gold text-xl md:text-2xl font-bold">2.669</p><p class="text-dkc-muted text-[10px] md:text-xs">Artikel</p></div>
+      </div>
+    </div>
+
+    <!-- External -->
     <div class="glass-card p-5 mt-4">
-      <h3 class="text-dkc-gold font-semibold text-sm mb-3">🔗 Sumber Bacaan Lengkap</h3>
+      <h3 class="text-dkc-gold font-semibold text-sm mb-3">🔗 Sumber Eksternal</h3>
       <div class="space-y-2">
         <a href="https://www.newadvent.org/summa/" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-dkc-surface/60 border border-transparent hover:border-dkc-gold/20 hover:bg-dkc-gold/5 transition-all duration-200 group/ext">
           <span class="text-lg">🌐</span>
           <div class="min-w-0">
             <span class="text-dkc-text text-sm font-medium block group-hover/ext:text-dkc-gold transition-colors">New Advent</span>
             <span class="text-dkc-muted text-[11px]">Teks lengkap bahasa Inggris — Summa Theologiae</span>
-          </div>
-        </a>
-        <a href="https://www.corpusthomisticum.org/iopera.html" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-dkc-surface/60 border border-transparent hover:border-dkc-gold/20 hover:bg-dkc-gold/5 transition-all duration-200 group/ext">
-          <span class="text-lg">🌐</span>
-          <div class="min-w-0">
-            <span class="text-dkc-text text-sm font-medium block group-hover/ext:text-dkc-gold transition-colors">Corpus Thomisticum</span>
-            <span class="text-dkc-muted text-[11px]">Teks asli Latin — karya lengkap Aquinas</span>
           </div>
         </a>
         <a href="https://aquinas101.thomisticinstitute.org/" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-dkc-surface/60 border border-transparent hover:border-dkc-gold/20 hover:bg-dkc-gold/5 transition-all duration-200 group/ext">
@@ -233,45 +85,68 @@ const parts = [
         </a>
       </div>
     </div>
-
-    <!-- Back link -->
-    <div class="text-center mt-6">
-      <a href="/summa" class="inline-flex items-center gap-1.5 text-dkc-muted text-xs hover:text-dkc-gold transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Ringkasan Summa Theologiae
-      </a>
-    </div>
   </main>
   <Footer />
 </BaseLayout>
 
-<script>
-  // Expandable part cards
-  document.querySelectorAll("[data-toggle]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-toggle");
-      const expandable = document.querySelector(`[data-expandable="${id}"]`) as HTMLElement;
-      const chevron = document.querySelector(`[data-chevron="${id}"]`) as HTMLElement;
-      if (!expandable) return;
+<Fragment slot="head">
+  <title>Cari Summa Theologiae — Damai Kasih Channel</title>
+  <meta name="description" content={`Cari di ${totalQuestions} pertanyaan Summa Theologiae Santo Thomas Aquinas.`} />
+</Fragment>
 
-      const isOpen = expandable.style.maxHeight !== "0px" && expandable.style.maxHeight !== "";
+<script is:inline>
+  const SEARCH_DATA = [{searchData.map(d => JSON.stringify(d)).join(",")}];
+  
+  const input = document.getElementById("summa-search-input");
+  const results = document.getElementById("search-results");
+  const noResults = document.getElementById("no-results-msg");
+  const count = document.getElementById("result-count");
 
-      if (isOpen) {
-        expandable.style.maxHeight = "0px";
-        if (chevron) chevron.style.transform = "rotate(0deg)";
-      } else {
-        expandable.style.maxHeight = expandable.scrollHeight + "px";
-        if (chevron) chevron.style.transform = "rotate(180deg)";
-      }
-    });
-  });
+  function doSearch(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      results.innerHTML = "";
+      results.appendChild(noResults);
+      noResults.textContent = `Ketik kata kunci untuk mencari di ${SEARCH_DATA.length} pertanyaan Summa Theologiae`;
+      noResults.style.display = "";
+      count.classList.add("hidden");
+      return;
+    }
 
-  // Search bar: prepend site: filter to Google search
-  const searchInput = document.getElementById("summa-search") as HTMLInputElement;
-  const searchHidden = document.getElementById("search-hidden") as HTMLInputElement;
-  if (searchInput && searchHidden) {
-    searchInput.addEventListener("input", () => {
-      searchHidden.value = `site:newadvent.org/summa/ ${searchInput.value}`;
-    });
+    const matches = SEARCH_DATA.filter(d => 
+      d.title.toLowerCase().includes(q) || 
+      d.snippet.toLowerCase().includes(q) ||
+      d.part.toLowerCase().includes(q)
+    );
+
+    if (matches.length === 0) {
+      results.innerHTML = `<div class="text-center text-dkc-muted text-sm py-8">Tidak ditemukan untuk "${query}". Coba kata kunci lain.</div>`;
+      count.classList.add("hidden");
+      return;
+    }
+
+    count.textContent = `${matches.length} hasil`;
+    count.classList.remove("hidden");
+
+    results.innerHTML = matches.slice(0, 30).map(d => {
+      const partNums = { part1: "I", part2: "I-II", part3: "II-II", part4: "III", part5: "Suppl." };
+      const pn = partNums[d.partSlug] || d.partSlug;
+      return `
+        <a href="${d.url}" class="block glass-card p-4 hover:border-dkc-gold hover:bg-dkc-surface transition-all group">
+          <div class="flex items-start gap-3">
+            <span class="shrink-0 w-8 h-8 rounded-lg bg-dkc-gold/10 border border-dkc-gold/20 flex items-center justify-center text-xs font-bold text-dkc-gold">${d.questionNumber}</span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-dkc-surface border border-dkc-border text-dkc-muted">${pn}</span>
+                <h3 class="text-dkc-text text-sm font-medium group-hover:text-dkc-gold transition-colors truncate">Question ${d.questionNumber}. ${d.title}</h3>
+              </div>
+              <p class="text-dkc-muted text-xs line-clamp-2">${d.snippet.replace(/[#*\[\]\(\)]/g, "").substring(0, 200)}</p>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join("");
   }
+
+  input.addEventListener("input", () => doSearch(input.value));
 </script>

@@ -1,0 +1,209 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const questions = await getCollection("summa");
+  return questions.map((q) => ({
+    params: {
+      part: q.data.partSlug,
+      question: `question${q.data.questionNumber}`,
+    },
+    props: { question: q },
+  }));
+};
+
+const { question } = Astro.props;
+const { title, part, partNum, questionNumber, partSlug } = question.data;
+
+// Find max question number for this part
+const allQuestions = await getCollection("summa");
+const partQuestions = allQuestions.filter((q) => q.data.partSlug === partSlug);
+const maxQuestion = Math.max(...partQuestions.map((q) => q.data.questionNumber));
+const minQuestion = Math.min(...partQuestions.map((q) => q.data.questionNumber));
+
+const prevQuestion = questionNumber > minQuestion ? questionNumber - 1 : null;
+const nextQuestion = questionNumber < maxQuestion ? questionNumber + 1 : null;
+
+const partTitles: Record<string, string> = {
+  part1: "Prima Pars",
+  part2: "Prima Secundæ Partis",
+  part3: "Secunda Secundæ Partis",
+  part4: "Tertia Pars",
+  part5: "Supplementum Tertiæ Partis",
+};
+
+const partTitle = partTitles[partSlug] || part;
+const pageTitle = `Question ${questionNumber}. ${title} — Summa Theologiae`;
+---
+
+<BaseLayout>
+  <Navbar />
+  
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Breadcrumb -->
+    <nav class="flex flex-wrap gap-1 text-sm text-dkc-muted mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-dkc-gold transition-colors">Home</a>
+      <span>›</span>
+      <a href="/summa/" class="hover:text-dkc-gold transition-colors">Summa Theologiae</a>
+      <span>›</span>
+      <a href={`/summa/${partSlug}/`} class="hover:text-dkc-gold transition-colors">{partTitle}</a>
+      <span>›</span>
+      <span class="text-dkc-gold" aria-current="page">Question {questionNumber}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-dkc-gold/20 text-dkc-gold border border-dkc-gold/30">
+          {partTitle}
+        </span>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-dkc-surface text-dkc-muted border border-dkc-border">
+          Question {questionNumber}
+        </span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-text leading-tight">
+        Question {questionNumber}. {title}
+      </h1>
+    </div>
+
+    <!-- Top Navigation -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-8 p-4 rounded-xl border border-dkc-border bg-dkc-surface/50">
+      <div class="flex-1">
+        {prevQuestion ? (
+          <a href={`/summa/${partSlug}/question${prevQuestion}/`}
+             class="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Previous Question
+          </a>
+        ) : <span class="inline-flex px-3 py-2 text-sm text-dkc-muted">First Question</span>}
+      </div>
+      <div>
+        <a href="/summa/" class="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+           Index
+        </a>
+      </div>
+      <div class="flex-1 text-right">
+        {nextQuestion ? (
+          <a href={`/summa/${partSlug}/question${nextQuestion}/`}
+             class="inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+            Next Question
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        ) : <span class="inline-flex px-3 py-2 text-sm text-dkc-muted">Last Question</span>}
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="summa-content prose prose-invert max-w-none">
+      {question.body}
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mt-8 pt-6 p-4 rounded-xl border-t border-dkc-border bg-dkc-surface/50">
+      <div class="flex-1">
+        {prevQuestion ? (
+          <a href={`/summa/${partSlug}/question${prevQuestion}/`}
+             class="inline-flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Previous Question
+          </a>
+        ) : <span class="inline-flex px-4 py-2 text-sm text-dkc-muted">First Question</span>}
+      </div>
+      <div>
+        <a href="/summa/" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+          Back to Index
+        </a>
+      </div>
+      <div class="flex-1 text-right">
+        {nextQuestion ? (
+          <a href={`/summa/${partSlug}/question${nextQuestion}/`}
+             class="inline-flex items-center gap-1 px-4 py-2 rounded-lg border border-dkc-border text-dkc-text hover:border-dkc-gold hover:text-dkc-gold transition-all">
+            Next Question
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        ) : <span class="inline-flex px-4 py-2 text-sm text-dkc-muted">Last Question</span>}
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="mt-10 pt-6 border-t border-dkc-border">
+      <h5 class="text-dkc-text font-semibold mb-2">About the Summa Theologiae</h5>
+      <p class="text-dkc-muted text-sm">
+        The <em>Summa Theologiae</em> (also known as the <em>Summa Theologica</em>) is the best-known work of
+        St. Thomas Aquinas (1225–1274), a scholastic theologian and Doctor of the Church. Written between 1265 and 1273,
+        it is intended as a manual for beginners in theology and a compendium of all of the main theological teachings
+        of the Catholic Church.
+      </p>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<Fragment slot="head">
+  <title>{pageTitle}</title>
+  <meta name="description" content={`Summa Theologiae — ${partTitle}, Question ${questionNumber}: ${title}`} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "name": `Question ${questionNumber}. ${title}`,
+    "description": `Summa Theologiae oleh Santo Thomas Aquinas — ${partTitle}, Question ${questionNumber}: ${title}`,
+    "url": `https://damaikasihchannel.com/summa/${partSlug}/question${questionNumber}/`,
+    "author": { "@type": "Person", "name": "Santo Thomas Aquinas" },
+    "isPartOf": { "@type": "Book", "name": "Summa Theologiae", "url": "https://damaikasihchannel.com/summa/" },
+    "inLanguage": "en"
+  })} />
+</Fragment>
+
+<style>
+  .summa-content :global(h1) {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-dkc-gold);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-dkc-border);
+    padding-bottom: 0.5rem;
+  }
+  .summa-content :global(h2) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-dkc-text);
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .summa-content :global(h3) {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-dkc-muted);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .summa-content :global(p) {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    font-size: 0.95rem;
+    color: var(--color-dkc-text);
+  }
+  .summa-content :global(strong) {
+    color: var(--color-dkc-gold);
+  }
+  .summa-content :global(em) {
+    color: var(--color-dkc-muted);
+  }
+  .summa-content :global(blockquote) {
+    border-left: 3px solid var(--color-dkc-gold);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--color-dkc-muted);
+    font-style: italic;
+  }
+  .summa-content :global(hr) {
+    border-color: var(--color-dkc-border);
+    margin: 2rem 0;
+  }
+</style>

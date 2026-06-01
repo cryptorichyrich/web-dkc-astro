@@ -15,11 +15,109 @@
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* ===== DARK MODE (default) ===== */
   body {
     @apply bg-dkc-deep text-dkc-text antialiased;
     font-family: "Inter", system-ui, sans-serif;
     overscroll-behavior: none;
   }
+
+  /* ===== LIGHT MODE ===== */
+  html.light {
+    --tw-prose-body: #1a1a1a;
+  }
+  html.light body {
+    background: #fafafa;
+    color: #1a1a1a;
+  }
+  html.light .bg-dkc-deep,
+  html.light [class*="bg-dkc-deep"] {
+    background: #fafafa !important;
+  }
+  html.light .bg-dkc-surface {
+    background: #ffffff !important;
+  }
+  html.light .bg-dkc-surface\/90 {
+    background: rgba(255,255,255,0.92) !important;
+  }
+  html.light .bg-dkc-surface\/95 {
+    background: rgba(255,255,255,0.96) !important;
+  }
+  html.light .bg-dkc-card {
+    background: #ffffff !important;
+  }
+  html.light .border-dkc-border {
+    border-color: #e0e0e0 !important;
+  }
+  html.light .border-dkc-border\/60 {
+    border-color: rgba(224,224,224,0.6) !important;
+  }
+  html.light .border-dkc-border\/40 {
+    border-color: rgba(224,224,224,0.4) !important;
+  }
+  html.light .border-b-dkc-border,
+  html.light .border-t-dkc-border {
+    border-color: #e0e0e0 !important;
+  }
+  html.light .border-dkc-border {
+    border-color: #e0e0e0 !important;
+  }
+  html.light .text-dkc-muted {
+    color: #666 !important;
+  }
+  html.light .text-dkc-text {
+    color: #1a1a1a !important;
+  }
+  html.light .text-white {
+    color: #1a1a1a !important;
+  }
+  html.light .glass-card {
+    background: #ffffff;
+    border-color: #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  html.light .bg-dkc-card\/80 {
+    background: rgba(255,255,255,0.8) !important;
+  }
+  html.light .border-dkc-border\/80 {
+    border-color: rgba(224,224,224,0.8) !important;
+  }
+  html.light .bg-black\/60 {
+    background: rgba(0,0,0,0.3) !important;
+  }
+  html.light .bg-black\/50 {
+    background: rgba(0,0,0,0.2) !important;
+  }
+  html.light .bg-dkc-deep\/85 {
+    background: rgba(250,250,250,0.9) !important;
+  }
+  html.light .shadow-lg {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  }
+  html.light #global-progress-bar {
+    background: rgba(224,224,224,0.5);
+  }
+  html.light .prose-gold {
+    --tw-prose-body: #1a1a1a;
+    --tw-prose-headings: #c9a84c;
+    --tw-prose-links: #c9a84c;
+    --tw-prose-bold: #1a1a1a;
+    --tw-prose-quotes: #c9a84c;
+    --tw-prose-quote-borders: #c9a84c;
+    --tw-prose-code: #c9a84c;
+    --tw-prose-hr: #e0e0e0;
+    --tw-prose-bullets: #666;
+    color: #1a1a1a;
+  }
+  html.light .prose-invert {
+    --tw-prose-body: #1a1a1a;
+    color: #1a1a1a;
+  }
+  html.light .bnav-panel-glass {
+    background: rgba(255,255,255,0.96) !important;
+  }
+
   /* Catholic serif headings */
   h1, h2, h3 {
     @apply text-dkc-gold font-serif;

@@ -19,4 +19,15 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const summa = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/summa" }),
+  schema: z.object({
+    title: z.string(),
+    part: z.string(),
+    partNum: z.number(),
+    questionNumber: z.number(),
+    partSlug: z.string(),
+  }),
+});
+
+export const collections = { blog, summa };

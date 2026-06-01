@@ -19,6 +19,11 @@ const posts = allPosts
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>#{tag} — Damai Kasih Channel</title>
+    <meta name="description" content={`Artikel dengan tag ${tag} di Damai Kasih Channel.`} />
+  </Fragment>
+
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -76,16 +81,11 @@ const posts = allPosts
   <Footer />
 </BaseLayout>
 
-<slot name="head">
-  <title>#{tag} — Damai Kasih Channel</title>
-  <meta name="description" content={`Artikel dengan tag ${tag} di Damai Kasih Channel.`} />
-</slot>
-
 <script>
   const PER_PAGE = 10;
   const items = document.querySelectorAll<HTMLElement>('.tag-post-item');
   const total = items.length;
-  if (total <= PER_PAGE) throw new Error('no pagination needed'); // stops script gracefully
+  if (total <= PER_PAGE) throw new Error('no pagination needed');
 
   let currentPage = 1;
   const totalPages = Math.ceil(total / PER_PAGE);
@@ -110,6 +110,5 @@ const posts = allPosts
   btnPrev?.addEventListener('click', () => { if (currentPage > 1) showPage(currentPage - 1); });
   btnNext?.addEventListener('click', () => { if (currentPage < totalPages) showPage(currentPage + 1); });
 
-  // Initial page info
   showPage(1);
 </script>

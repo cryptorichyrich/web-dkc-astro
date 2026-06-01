@@ -42,46 +42,28 @@ import "@/styles/global.css";
   #global-progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 9999; pointer-events: none; background: rgba(17,17,17,0.5); }
   #global-progress-fill { height: 100%; width: 0%; background: linear-gradient(to right, #c9a84c, #c9a84ccc); transition: width 100ms ease-out; }
 
-  /* Dark mode toggle */
-  #dkc-theme-toggle {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 10000;
+  /* Dark mode toggle — embedded in navbar */
+  .dkc-theme-btn {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
+    background: var(--color-dkc-card, #1a1a1a);
+    border: 1px solid var(--color-dkc-border, #2a2a2a);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #888;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
-  #dkc-theme-toggle:hover {
-    color: #c9a84c;
-    border-color: rgba(201,168,76,0.3);
-  }
-  #dkc-theme-toggle svg { width: 16px; height: 16px; }
-  html.light #dkc-theme-toggle {
-    background: #ffffff;
-    border-color: #e0e0e0;
+  .dkc-theme-btn:hover { color: #c9a84c; border-color: rgba(201,168,76,0.3); }
+  .dkc-theme-btn svg { width: 16px; height: 16px; }
+  html.light .dkc-theme-btn {
+    background: #f5f0e8;
+    border-color: #e0d8c8;
     color: #666;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-  html.light #dkc-theme-toggle:hover {
-    color: #c9a84c;
-    border-color: rgba(201,168,76,0.3);
-  }
-  @media (min-width: 768px) {
-    #dkc-theme-toggle {
-      top: 16px;
-      right: 16px;
-    }
-  }
+  html.light .dkc-theme-btn:hover { color: #c9a84c; border-color: rgba(201,168,76,0.3); }
 </style>
 
 <script is:inline>
@@ -106,34 +88,34 @@ import "@/styles/global.css";
     }
   }
 
-  // ===== Dark Mode Toggle =====
-  var toggle = document.createElement('button');
-  toggle.id = 'dkc-theme-toggle';
-  toggle.setAttribute('aria-label', 'Toggle dark/light mode');
-  toggle.title = 'Toggle mode';
+  // ===== Dark Mode Toggle — find buttons in Navbar =====
+  var themeButtons = document.querySelectorAll('.dkc-theme-btn');
 
-  function updateIcon() {
+  function updateThemeIcons() {
     var isLight = document.documentElement.classList.contains('light');
-    toggle.innerHTML = isLight
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    var sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    var moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    themeButtons.forEach(function(btn) {
+      btn.innerHTML = isLight ? moonIcon : sunIcon;
+    });
   }
 
-  toggle.addEventListener('click', function() {
-    var isLight = document.documentElement.classList.contains('light');
-    if (isLight) {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('dkc-theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-      localStorage.setItem('dkc-theme', 'light');
-    }
-    updateIcon();
+  themeButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var isLight = document.documentElement.classList.contains('light');
+      if (isLight) {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('dkc-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('dkc-theme', 'light');
+      }
+      updateThemeIcons();
+    });
   });
 
-  updateIcon();
-  document.body.appendChild(toggle);
+  updateThemeIcons();
 })();
 </script>

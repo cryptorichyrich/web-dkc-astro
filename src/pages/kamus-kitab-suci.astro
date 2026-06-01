@@ -1,0 +1,269 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-2">Kamus Kitab Suci</h1>
+      <p class="text-dkc-muted text-sm">Daftar lengkap 73 kitab dalam Alkitab Katolik</p>
+      <!-- Search -->
+      <div class="mt-4 max-w-md mx-auto relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="book-search" type="text" placeholder="Cari kitab..." class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40" />
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-3 mb-8 text-center">
+      <div class="glass-card p-3">
+        <div class="text-2xl font-bold text-dkc-gold">46</div>
+        <div class="text-[11px] text-dkc-muted">Perjanjian Lama</div>
+      </div>
+      <div class="glass-card p-3">
+        <div class="text-2xl font-bold text-dkc-gold">27</div>
+        <div class="text-[11px] text-dkc-muted">Perjanjian Baru</div>
+      </div>
+      <div class="glass-card p-3">
+        <div class="text-2xl font-bold text-dkc-gold">73</div>
+        <div class="text-[11px] text-dkc-muted">Total Kitab</div>
+      </div>
+    </div>
+
+    <!-- Book list container -->
+    <div id="book-list"></div>
+
+    <!-- No results -->
+    <div id="no-results" class="hidden text-center py-12">
+      <div class="text-4xl mb-3">🔍</div>
+      <p class="text-dkc-muted">Tidak ada kitab yang cocok</p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .book-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-dkc-border);
+    transition: background 0.15s;
+  }
+  .book-row:hover {
+    background: rgba(201, 168, 76, 0.05);
+  }
+  .book-num {
+    width: 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-dkc-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .book-abbr {
+    font-size: 0.7rem;
+    color: var(--color-dkc-gold);
+    background: rgba(201, 168, 76, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    min-width: 2.5rem;
+    text-align: center;
+  }
+  .book-name {
+    font-weight: 600;
+    color: var(--color-dkc-text);
+    font-size: 0.875rem;
+  }
+  .book-meta {
+    font-size: 0.7rem;
+    color: var(--color-dkc-muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .book-link {
+    color: var(--color-dkc-gold);
+    font-size: 0.75rem;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .book-row:hover .book-link {
+    opacity: 1;
+  }
+  .deuterocanonical {
+    background: rgba(201, 168, 76, 0.03);
+  }
+  .deuterocanical-badge {
+    font-size: 0.6rem;
+    color: var(--color-dkc-gold);
+    background: rgba(201, 168, 76, 0.15);
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+  }
+</style>
+
+<script>
+  const BOOK_NAMES: Record<string, string> = {
+    kej:"Kejadian",kel:"Keluaran",im:"Imamat",bil:"Bilangan",ul:"Ulangan",
+    yos:"Yosua",hak:"Hakim-Hakim",rut:"Rut","1sam":"1 Samuel","2sam":"2 Samuel",
+    "1raj":"1 Raja-Raja","2raj":"2 Raja-Raja","1taw":"1 Tawarikh","2taw":"2 Tawarikh",
+    ezr:"Ezra",neh:"Nehemia",tob:"Tobit",ydt:"Yudit",est:"Ester",
+    ayb:"Ayub",mzm:"Mazmur",ams:"Amsal",pkh:"Pengkhotbah",kid:"Kidung Agung",
+    keb:"Kebijaksanaan",sir:"Sirakh",yes:"Yesaya",yer:"Yeremia",rat:"Ratapan",
+    bar:"Barukh",yeh:"Yehezkiel",dan:"Daniel",hos:"Hosea",yl:"Yoel",am:"Amos",
+    ob:"Obaja",yun:"Yunus",mi:"Mikha",nah:"Nahum",hab:"Habakuk",zef:"Zefanya",
+    hag:"Hagai",za:"Zakharia",mal:"Maleakhi","1mak":"1 Makabe","2mak":"2 Makabe",
+    mat:"Matius",mrk:"Markus",luk:"Lukas",yoh:"Yohanes",kis:"Kisah Para Rasul",
+    rm:"Roma","1kor":"1 Korintus","2kor":"2 Korintus",gal:"Galatia",ef:"Efesus",
+    flp:"Filipi",kol:"Kolose","1tes":"1 Tesalonika","2tes":"2 Tesalonika",
+    "1tim":"1 Timotius","2tim":"2 Timotius",tit:"Titus",flm:"Filemon",
+    ibr:"Ibrani",yak:"Yakobus","1ptr":"1 Petrus","2ptr":"2 Petrus",
+    "1yoh":"1 Yohanes","2yoh":"2 Yohanes","3yoh":"3 Yohanes",yud:"Yudas",why:"Wahyu"
+  };
+
+  // Deuterokanonika (only in Catholic Bible, not Protestant)
+  const DEUTERO = new Set(["tob","ydt","keb","sir","bar","1mak","2mak"]);
+
+  // Categories
+  const PL_BOOKS = ["kej","kel","im","bil","ul","yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh","tob","ydt","est","ayb","mzm","ams","pkh","kid","keb","sir","yes","yer","rat","bar","yeh","dan","hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal","1mak","2mak"];
+  const PB_BOOKS = ["mat","mrk","luk","yoh","kis","rm","1kor","2kor","gal","ef","flp","kol","1tes","2tes","1tim","2tim","tit","flm","ibr","yak","1ptr","2ptr","1yoh","2yoh","3yoh","yud","why"];
+
+  // PL sub-categories
+  const TORAH = new Set(["kej","kel","im","bil","ul"]);
+  const HISTORICAL_PL = new Set(["yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh","tob","ydt","est"]);
+  const WISDOM = new Set(["ayb","mzm","ams","pkh","kid","keb","sir"]);
+  const PROPHETS = new Set(["yes","yer","rat","bar","yeh","dan","hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal","1mak","2mak"]);
+
+  // PB sub-categories
+  const GOSPELS = new Set(["mat","mrk","luk","yoh"]);
+  const ACTS = "kis";
+  const PAULINE = new Set(["rm","1kor","2kor","gal","ef","flp","kol","1tes","2tes","1tim","2tim","tit","flm"]);
+  const CATHOLIC_EP = new Set(["ibr","yak","1ptr","2ptr","1yoh","2yoh","3yoh","yud"]);
+  const APOCALYPSE = "why";
+
+  function getCategory(abbr: string): string {
+    if (TORAH.has(abbr)) return "Taurat (Pentateukh)";
+    if (HISTORICAL_PL.has(abbr)) return "Sejarah";
+    if (WISDOM.has(abbr)) return "Hikmat & Puisi";
+    if (PROPHETS.has(abbr)) return "Nabi";
+    if (GOSPELS.has(abbr)) return "Injil";
+    if (abbr === ACTS) return "Kisah Para Rasul";
+    if (PAULINE.has(abbr)) return "Surat Paulus";
+    if (CATHOLIC_EP.has(abbr)) return "Surat Katolik";
+    if (abbr === APOCALYPSE) return "Wahyu";
+    return "";
+  }
+
+  interface BookInfo {
+    abbr: string;
+    name: string;
+    chapters: number;
+    category: string;
+    testament: "PL" | "PB";
+    deuterocanonical: boolean;
+  }
+
+  let allBooks: BookInfo[] = [];
+
+  async function loadData() {
+    const resp = await fetch("/assets/data/ks.json");
+    const data = await resp.json();
+
+    for (const abbr of [...PL_BOOKS, ...PB_BOOKS]) {
+      const book = data[abbr];
+      if (!book) continue;
+      allBooks.push({
+        abbr,
+        name: BOOK_NAMES[abbr] || abbr,
+        chapters: Object.keys(book).length,
+        category: getCategory(abbr),
+        testament: PL_BOOKS.includes(abbr) ? "PL" : "PB",
+        deuterocanonical: DEUTERO.has(abbr),
+      });
+    }
+
+    render(allBooks);
+  }
+
+  function render(books: BookInfo[]) {
+    const container = document.getElementById("book-list")!;
+    const noResults = document.getElementById("no-results")!;
+
+    if (books.length === 0) {
+      container.innerHTML = "";
+      noResults.classList.remove("hidden");
+      return;
+    }
+    noResults.classList.add("hidden");
+
+    // Group by testament then category
+    const plBooks = books.filter(b => b.testament === "PL");
+    const pbBooks = books.filter(b => b.testament === "PB");
+
+    let html = "";
+
+    // Perjanjian Lama
+    if (plBooks.length) {
+      html += `<div class="mb-8">`;
+      html += `<h2 class="text-lg font-bold text-dkc-gold mb-3 flex items-center gap-2">📖 Perjanjian Lama <span class="text-xs font-normal text-dkc-muted">(${plBooks.length} kitab)</span></h2>`;
+      html += `<div class="glass-card overflow-hidden">`;
+      let num = 1;
+      for (const b of plBooks) {
+        html += rowHTML(b, num++);
+      }
+      html += `</div></div>`;
+    }
+
+    // Perjanjian Baru
+    if (pbBooks.length) {
+      const offset = plBooks.length;
+      html += `<div class="mb-8">`;
+      html += `<h2 class="text-lg font-bold text-dkc-gold mb-3 flex items-center gap-2">✝️ Perjanjian Baru <span class="text-xs font-normal text-dkc-muted">(${pbBooks.length} kitab)</span></h2>`;
+      html += `<div class="glass-card overflow-hidden">`;
+      let num = offset + 1;
+      for (const b of pbBooks) {
+        html += rowHTML(b, num++);
+      }
+      html += `</div></div>`;
+    }
+
+    container.innerHTML = html;
+  }
+
+  function rowHTML(b: BookInfo, num: number): string {
+    const dc = b.deuterocanonical ? "deuterocanonical" : "";
+    const dcBadge = b.deuterocanonical ? '<span class="deuterocanical-badge">Deuterokanonika</span>' : "";
+    return `<a href="/kitabsuci#${b.abbr}1" class="book-row ${dc} block">
+      <span class="book-num">${num}</span>
+      <span class="book-abbr">${b.abbr}</span>
+      <span class="book-name">${b.name}${dcBadge}</span>
+      <span class="book-meta">${b.chapters} bab • ${b.category}</span>
+      <span class="book-link">Buka →</span>
+    </a>`;
+  }
+
+  // Search
+  const searchInput = document.getElementById("book-search") as HTMLInputElement;
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase().trim();
+    if (!q) {
+      render(allBooks);
+      return;
+    }
+    const filtered = allBooks.filter(b =>
+      b.name.toLowerCase().includes(q) ||
+      b.abbr.toLowerCase().includes(q) ||
+      b.category.toLowerCase().includes(q)
+    );
+    render(filtered);
+  });
+
+  loadData();
+</script>

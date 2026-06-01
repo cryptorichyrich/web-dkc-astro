@@ -15,6 +15,12 @@ import Footer from "@/components/Footer.astro";
     <div class="text-center mb-6">
       <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Kitab Suci</h1>
       <p class="text-dkc-muted text-sm">Alkitab Katolik Indonesia — lengkap dengan Deuterokanonika</p>
+      <!-- Version Tabs -->
+      <div class="flex justify-center gap-2 mt-3">
+        <button data-version="tb1" class="version-tab px-3 py-1 rounded-lg border border-dkc-border text-dkc-muted text-xs font-medium hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">TB</button>
+        <button data-version="tb2" class="version-tab px-3 py-1 rounded-lg border border-dkc-border text-dkc-muted text-xs font-medium hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">TB2</button>
+        <button data-version="lds" class="version-tab px-3 py-1 rounded-lg border border-dkc-border text-dkc-muted text-xs font-medium hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">LDS</button>
+      </div>
     </div>
 
     <!-- Citation Quick Jump -->
@@ -152,6 +158,7 @@ import Footer from "@/components/Footer.astro";
   .book-btn-pb:hover, .book-btn-pb.active { border-color: rgba(200,60,60,0.6); background: rgba(200,60,60,0.1); }
   .testament-btn-active { transform: scale(0.97); }
   .font-size-active { border-color: rgba(201,168,76,0.5) !important; color: var(--color-dkc-gold) !important; }
+  .version-tab-active { border-color: rgba(201,168,76,0.6) !important; color: var(--color-dkc-gold) !important; background: rgba(201,168,76,0.1); font-weight: 700; }
 </style>
 
 <script>
@@ -184,6 +191,14 @@ import Footer from "@/components/Footer.astro";
   let highlightedVerses: Set<number> = new Set();
   let ttsTimer: any = null;
   let ttsSeconds = 0;
+
+  // Version switching
+  const VERSIONS: Record<string, { file: string; label: string }> = {
+    tb1: { file: '/assets/data/ks.json', label: 'TB' },
+    tb2: { file: '/assets/data/ks_tb2.json', label: 'TB2' },
+    lds: { file: '/assets/data/ks_2.json', label: 'LDS' },
+  };
+  let currentVersion = localStorage.getItem('dkc-bible-version') || 'tb1';
 
   // DOM
   const stepTestament = document.getElementById("step-testament")!;
@@ -482,10 +497,43 @@ import Footer from "@/components/Footer.astro";
   // Progress bar
   window.addEventListener("scroll", () => { const h=document.documentElement; progressBar.style.width = Math.min((h.scrollTop/(h.scrollHeight-h.clientHeight))*100,100)+"%"; });
 
+  // Version tabs
+  function updateVersionTabs() {
+    document.querySelectorAll('.version-tab').forEach(btn => {
+      btn.classList.toggle('version-tab-active', btn.getAttribute('data-version') === currentVersion);
+    });
+  }
+  async function switchVersion(ver: string) {
+    if (ver === currentVersion && bibleData) return;
+    currentVersion = ver;
+    localStorage.setItem('dkc-bible-version', ver);
+    updateVersionTabs();
+    readingLoading.classList.remove('hidden');
+    const resp = await fetch(VERSIONS[ver].file);
+    bibleData = await resp.json();
+    readingLoading.classList.add('hidden');
+    // Rebuild current view if a book is selected
+    if (currentBook && bibleData[currentBook]) {
+      if (currentChapter && bibleData[currentBook][String(currentChapter)]) {
+        selectChapter(currentBook, currentChapter);
+        loadChapter(currentBook, currentChapter);
+      } else {
+        selectBook(currentBook);
+      }
+    }
+  }
+  document.querySelectorAll('.version-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ver = btn.getAttribute('data-version');
+      if (ver) switchVersion(ver);
+    });
+  });
+  updateVersionTabs();
+
   // Init
   async function init() {
     readingLoading.classList.remove("hidden");
-    const resp = await fetch("/assets/data/ks.json");
+    const resp = await fetch(VERSIONS[currentVersion].file);
     bibleData = await resp.json();
     readingLoading.classList.add("hidden");
 

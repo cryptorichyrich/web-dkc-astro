@@ -150,11 +150,24 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
                 <p id="countdown-timer" class="text-dkc-gold text-lg font-bold mt-1"></p>
               </div>
             </div>
-            <!-- Next prayer -->
-            <div id="next-prayer" class="text-center">
-              <p class="text-dkc-muted text-[10px] uppercase tracking-wider">Doa Berikutnya</p>
-              <p id="next-prayer-name" class="text-dkc-gold text-xs font-medium mt-0.5"></p>
-              <p id="next-prayer-time" class="text-dkc-text text-[11px] mt-0.5"></p>
+            <!-- All prayer times for today -->
+            <div class="grid grid-cols-2 gap-2 text-center" id="prayer-schedule">
+              <a href="/doa-malaikat-tuhan/" class="prayer-slot bg-dkc-surface/60 rounded-lg p-2 hover:bg-dkc-gold/10 transition-colors" data-hour="6">
+                <span class="text-xs">06:00</span>
+                <p class="text-[10px] text-dkc-muted mt-0.5 prayer-slot-name">Angelus</p>
+              </a>
+              <a href="/doa-malaikat-tuhan/" class="prayer-slot bg-dkc-surface/60 rounded-lg p-2 hover:bg-dkc-gold/10 transition-colors" data-hour="12">
+                <span class="text-xs">12:00</span>
+                <p class="text-[10px] text-dkc-muted mt-0.5 prayer-slot-name">Angelus</p>
+              </a>
+              <a href="/koronka-kerahiman-ilahi/" class="prayer-slot bg-dkc-surface/60 rounded-lg p-2 hover:bg-dkc-gold/10 transition-colors" data-hour="15">
+                <span class="text-xs">15:00</span>
+                <p class="text-[10px] text-dkc-muted mt-0.5 prayer-slot-name">Koronka</p>
+              </a>
+              <a href="/doa-malaikat-tuhan/" class="prayer-slot bg-dkc-surface/60 rounded-lg p-2 hover:bg-dkc-gold/10 transition-colors" data-hour="18">
+                <span class="text-xs">18:00</span>
+                <p class="text-[10px] text-dkc-muted mt-0.5 prayer-slot-name">Angelus</p>
+              </a>
             </div>
           </div>
         </div>
@@ -457,8 +470,8 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
       const labelEl = document.getElementById("prayer-label");
       const rangeEl = document.getElementById("prayer-time-range");
       const linkEl = document.getElementById("prayer-link");
-      if (labelEl) labelEl.textContent = `${activePrayer.icon} ${activePrayer.shortName}`;
-      if (rangeEl) rangeEl.textContent = `Sekarang waktunya doa ${activePrayer.shortName}`;
+      if (labelEl) labelEl.innerHTML = `${activePrayer.icon} <a href="${activePrayer.link}" class="underline hover:text-dkc-gold/80">${activePrayer.shortName}</a>`;
+      if (rangeEl) rangeEl.innerHTML = `Sekarang waktunya doa <a href="${activePrayer.link}" class="underline hover:text-dkc-gold/80">${activePrayer.shortName}</a>`;
       if (linkEl) linkEl.href = activePrayer.link;
     } else {
       // Show countdown to next prayer
@@ -466,7 +479,7 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
       if (countdownDiv) countdownDiv.classList.remove("hidden");
       const countLabel = document.getElementById("countdown-label");
       const countTimer = document.getElementById("countdown-timer");
-      if (countLabel) countLabel.textContent = `Menuju ${nextPrayer.shortName}`;
+      if (countLabel) countLabel.innerHTML = `Menuju <a href="${nextPrayer.link}" class="text-dkc-gold underline hover:text-dkc-gold/80">${nextPrayer.shortName}</a>`;
       const nextMinutes = nextPrayer.hour * 60;
       const remainingMinutes = nextMinutes - currentMinutes;
       if (remainingMinutes <= 0) {
@@ -485,14 +498,41 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
     }
 
     // Always show the next prayer
-    if (nextNameEl) nextNameEl.textContent = `${nextPrayer.icon} ${nextPrayer.shortName}`;
+    if (nextNameEl) nextNameEl.innerHTML = `${nextPrayer.icon} <a href="${nextPrayer.link}" class="underline hover:text-dkc-gold/80">${nextPrayer.shortName}</a>`;
     if (nextTimeEl) {
       const displayHour = nextPrayer.hour % 24;
       nextTimeEl.textContent = `Pukul ${String(displayHour).padStart(2,'0')}:00 WIB`;
     }
+
+    // --- Highlight active prayer slot ---
+    const allSlots = document.querySelectorAll('.prayer-slot');
+    allSlots.forEach(slot => {
+      slot.classList.remove('border', 'border-dkc-gold/50', 'bg-dkc-gold/10');
+    });
+    if (activePrayer) {
+      const activeSlot = document.querySelector(`.prayer-slot[data-hour="${activePrayer.hour}"]`);
+      if (activeSlot) {
+        activeSlot.classList.add('border', 'border-dkc-gold/50', 'bg-dkc-gold/10');
+      }
+    }
+
+    // --- Update Angelus slots for Easter season ---
+    const angelusHours = [6, 12, 18];
+    angelusHours.forEach(hr => {
+      const slot = document.querySelector(`.prayer-slot[data-hour="${hr}"]`);
+      if (!slot) return;
+      const nameEl = slot.querySelector('.prayer-slot-name');
+      if (easter) {
+        if (nameEl) nameEl.textContent = 'Regina Caeli';
+        slot.setAttribute('href', '/doa-ratu-surga/');
+      } else {
+        if (nameEl) nameEl.textContent = 'Angelus';
+        slot.setAttribute('href', '/doa-malaikat-tuhan/');
+      }
+    });
   }
   updatePrayerTime();
-  setInterval(updatePrayerTime, 60000);
+  setInterval(updatePrayerTime, 1000);
 
   // === KALENDER LITURGI ===
   function computeLiturgi() {

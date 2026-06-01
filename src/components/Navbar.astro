@@ -112,9 +112,9 @@ function activeClass(href: string): string {
     <button id="hamburger-btn" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-gold hover:bg-dkc-gold/10 hover:border-dkc-gold/30 transition-all active:scale-95" aria-label="Menu">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <!-- Center: Logo -->
+    <!-- Center: Site name with glow -->
     <a href="/" class="absolute left-1/2 -translate-x-1/2 flex items-center">
-      <img src="/assets/img/channels4_profile.webp" alt="DKC" class="w-8 h-8 rounded-full border-2 border-dkc-gold/50 shadow-sm shadow-dkc-gold/10" />
+      <span class="text-white text-sm font-semibold tracking-wide" style="text-shadow: 0 0 12px rgba(201,168,76,0.5), 0 0 24px rgba(201,168,76,0.2);">Damai Kasih Channel</span>
     </a>
     <!-- Right: Search -->
     <a href="/search" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors">
@@ -266,38 +266,209 @@ function activeClass(href: string): string {
 <!-- Spacer for mobile bottom nav -->
 <div class="md:hidden h-16"></div>
 
+<!-- ==================== BOTTOM NAV QUICK POPUPS ==================== -->
+<!-- Popup: Devosi -->
+<div id="popup-devosi" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+  <div class="flex items-center gap-2 px-1 pb-2">
+    <span class="text-xs">📿</span>
+    <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Devosi</h4>
+    <div class="flex-1 h-px bg-gradient-to-r from-dkc-gold/20 to-transparent"></div>
+  </div>
+  <div class="grid grid-cols-2 gap-1">
+    <a href="/rosario" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📿</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Doa Rosario</span><span class="text-[9px] text-dkc-muted block leading-tight">Misteri lengkap</span></div>
+    </a>
+    <a href="/jalan-salib" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">✝️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Jalan Salib</span><span class="text-[9px] text-dkc-muted block leading-tight">14 Perhentian</span></div>
+    </a>
+    <a href="/doa-tobat" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🙏</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Doa Tobat</span><span class="text-[9px] text-dkc-muted block leading-tight">Doa pertobatan</span></div>
+    </a>
+    <a href="/doa-malaikat-tuhan" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">👼</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Angelus</span><span class="text-[9px] text-dkc-muted block leading-tight">Malaikat Tuhan</span></div>
+    </a>
+    <a href="/doa-ratu-surga" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">👑</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Regina Caeli</span><span class="text-[9px] text-dkc-muted block leading-tight">Ratu Surga</span></div>
+    </a>
+    <a href="/koronka-kerahiman-ilahi" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">✨</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Koronka</span><span class="text-[9px] text-dkc-muted block leading-tight">Kerahiman Ilahi</span></div>
+    </a>
+    <a href="/kalender-liturgi" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📅</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Kalender Liturgi</span><span class="text-[9px] text-dkc-muted block leading-tight">Kalender Gereja</span></div>
+    </a>
+    <a href="/renungan" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🕐</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Renungan</span><span class="text-[9px] text-dkc-muted block leading-tight">Renungan Harian</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- Popup: Artikel -->
+<div id="popup-artikel" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+  <div class="flex items-center gap-2 px-1 pb-2">
+    <span class="text-xs">📝</span>
+    <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Artikel</h4>
+    <div class="flex-1 h-px bg-gradient-to-r from-dkc-gold/20 to-transparent"></div>
+  </div>
+  <div class="grid grid-cols-2 gap-1">
+    <a href="/blog" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📝</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Semua Artikel</span><span class="text-[9px] text-dkc-muted block leading-tight">Daftar artikel terbaru</span></div>
+    </a>
+    <a href="/search" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🔍</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Pencarian</span><span class="text-[9px] text-dkc-muted block leading-tight">Cari di seluruh situs</span></div>
+    </a>
+    <a href="/tags" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🏷️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Topik / Tag</span><span class="text-[9px] text-dkc-muted block leading-tight">Jelajahi per topik</span></div>
+    </a>
+    <a href="/diagnosa/ajaran-bidat" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">⚔️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Diagnosa Bidat</span><span class="text-[9px] text-dkc-muted block leading-tight">Uji ajaran sesat</span></div>
+    </a>
+    <a href="/diagnosa/sedevacantisme" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🛡️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Sedevacantisme</span><span class="text-[9px] text-dkc-muted block leading-tight">Uji paham</span></div>
+    </a>
+    <a href="/flix" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🎥</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">DKC Flix</span><span class="text-[9px] text-dkc-muted block leading-tight">Galeri video</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- Popup: Kitab Suci -->
+<div id="popup-kitabsuci" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+  <div class="flex items-center gap-2 px-1 pb-2">
+    <span class="text-xs">📖</span>
+    <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Kitab Suci</h4>
+    <div class="flex-1 h-px bg-gradient-to-r from-dkc-gold/20 to-transparent"></div>
+  </div>
+  <div class="grid grid-cols-2 gap-1">
+    <a href="/kitabsuci" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📖</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Alkitab TB</span><span class="text-[9px] text-dkc-muted block leading-tight">Deuterokanonika</span></div>
+    </a>
+    <a href="/vulgata" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🏛️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Vulgata Latin</span><span class="text-[9px] text-dkc-muted block leading-tight">Alkitab bahasa Latin</span></div>
+    </a>
+    <a href="/interlinear-greek" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">🔤</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Interlinear Yunani</span><span class="text-[9px] text-dkc-muted block leading-tight">Teks Yunani asli</span></div>
+    </a>
+    <a href="/kemenag" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📋</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Kemenag / Quran</span><span class="text-[9px] text-dkc-muted block leading-tight">Untuk perbandingan</span></div>
+    </a>
+    <a href="/timeline-kanon-kitabsuci" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all col-span-2">
+      <span class="text-sm shrink-0">📜</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Sejarah Kanon Kitab Suci</span><span class="text-[9px] text-dkc-muted block leading-tight">Timeline pembentukan kanon</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- Popup: Dokumen -->
+<div id="popup-dokumen" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+  <div class="flex items-center gap-2 px-1 pb-2">
+    <span class="text-xs">📕</span>
+    <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Dokumen</h4>
+    <div class="flex-1 h-px bg-gradient-to-r from-dkc-gold/20 to-transparent"></div>
+  </div>
+  <div class="grid grid-cols-2 gap-1">
+    <a href="/katekismus" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📕</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">KGK</span><span class="text-[9px] text-dkc-muted block leading-tight">Katekismus Gereja Katolik</span></div>
+    </a>
+    <a href="/khk" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">⚖️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">KHK</span><span class="text-[9px] text-dkc-muted block leading-tight">Kitab Hukum Kanonik</span></div>
+    </a>
+    <a href="/kvii" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📜</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Konsili Vatikan II</span><span class="text-[9px] text-dkc-muted block leading-tight">Dokumen KV II</span></div>
+    </a>
+    <a href="/summa" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📚</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Summa Theologiae</span><span class="text-[9px] text-dkc-muted block leading-tight">St. Thomas Aquinas</span></div>
+    </a>
+    <a href="/kompendium-katekismus-gereja-katolik" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📘</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Kompendium KGK</span><span class="text-[9px] text-dkc-muted block leading-tight">Ringkasan Katekismus</span></div>
+    </a>
+    <a href="/suksesi-kepausan" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">♚</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Suksesi Kepausan</span><span class="text-[9px] text-dkc-muted block leading-tight">Rantai para Paus</span></div>
+    </a>
+    <a href="/timeline-sejarah-21-konsili-ekumenis" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all col-span-2">
+      <span class="text-sm shrink-0">🏛️</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">21 Konsili Ekumenis</span><span class="text-[9px] text-dkc-muted block leading-tight">Timeline konsili Gereja</span></div>
+    </a>
+  </div>
+</div>
+
 <!-- ==================== MOBILE BOTTOM NAV ==================== -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60" style="padding-bottom: max(env(safe-area-inset-bottom), 4px); transform: translateZ(0); -webkit-transform: translateZ(0);">
+<nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60" style="padding-bottom: max(env(safe-area-inset-bottom), 4px); transform: translateZ(0); -webkit-transform: translateZ(0);">
   <div class="flex justify-around items-center px-1 pt-1.5 pb-1">
     <!-- Devosi -->
-    <a href="/rosario" data-nav-section="devosi" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath === "/rosario" || currentPath === "/jalan-salib" || currentPath === "/kalender-liturgi" || currentPath === "/renungan" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="devosi" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath === "/rosario" || currentPath === "/jalan-salib" || currentPath === "/kalender-liturgi" || currentPath === "/renungan" || currentPath === "/doa-tobat" || currentPath === "/doa-malaikat-tuhan" || currentPath === "/doa-ratu-surga" || currentPath === "/koronka-kerahiman-ilahi" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
       <span class="text-[10px] leading-none">Devosi</span>
-    </a>
-    <!-- Artikel (newspaper icon) -->
-    <a href="/blog" data-nav-section="artikel" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/blog") || currentPath === "/search" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    </button>
+    <!-- Artikel -->
+    <button type="button" data-bnav="artikel" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/blog") || currentPath === "/search" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
       <span class="text-[10px] leading-none">Artikel</span>
-    </a>
-    <!-- Center: Logo (home) -->
+    </button>
+    <!-- Center: Logo (home) — direct link, no megamenu -->
     <a href="/" class="flex flex-col items-center -mt-4">
       <div class="relative">
         <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md"></div>
         <img src="/assets/img/channels4_profile.webp" alt="Home" class:list={["relative w-11 h-11 rounded-full border-2 shadow-lg shadow-dkc-gold/10 transition-all", currentPath === "/" ? "border-dkc-gold" : "border-dkc-gold/50"]} />
       </div>
     </a>
-    <!-- Kitab Suci (bible icon) -->
-    <a href="/kitabsuci" data-nav-section="kitabsuci" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/kitabsuci") || currentPath === "/vulgata" || currentPath === "/interlinear-greek" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <!-- Kitab Suci -->
+    <button type="button" data-bnav="kitabsuci" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/kitabsuci") || currentPath === "/vulgata" || currentPath === "/interlinear-greek" || currentPath === "/kamus-kitab-suci" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
       <span class="text-[10px] leading-none">Kitab Suci</span>
-    </a>
+    </button>
     <!-- Dokumen -->
-    <a href="/katekismus" data-nav-section="dokumen" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/katekismus") || currentPath.startsWith("/khk") || currentPath.startsWith("/kvii") || currentPath.startsWith("/summa") || currentPath.startsWith("/diagnosa") || currentPath.startsWith("/kemenag") ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="dokumen" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/katekismus") || currentPath.startsWith("/khk") || currentPath.startsWith("/kvii") || currentPath.startsWith("/summa") || currentPath.startsWith("/diagnosa") ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
       <span class="text-[10px] leading-none">Dokumen</span>
-    </a>
+    </button>
   </div>
 </nav>
+
+<!-- ==================== BOTTOM NAV MEGAMENU PANEL ==================== -->
+<div id="bnav-megamenu" class="md:hidden fixed inset-0 z-[55] pointer-events-none" style="opacity:0; transition: opacity 0.25s ease;">
+  <!-- Backdrop -->
+  <div id="bnav-megamenu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+  <!-- Slide-up Panel -->
+  <div id="bnav-megamenu-panel" class="absolute left-0 right-0 max-h-[70vh] overflow-y-auto overscroll-contain bnav-panel-glass" style="transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);">
+    <!-- Drag handle -->
+    <div class="flex justify-center pt-2.5 pb-1">
+      <div class="w-10 h-1 rounded-full bg-dkc-gold/20"></div>
+    </div>
+    <!-- Header -->
+    <div class="bnav-panel-header sticky top-0 z-10 px-4 pt-1 pb-3 flex items-center justify-between">
+      <h3 id="bnav-megamenu-title" class="text-dkc-gold font-serif font-bold text-sm tracking-wide uppercase"></h3>
+      <button id="bnav-megamenu-close" type="button" class="w-7 h-7 rounded-full bg-dkc-card/80 border border-dkc-border/60 flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all active:scale-90" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Content injected by JS -->
+    <div id="bnav-megamenu-content" class="px-4 pb-6"></div>
+  </div>
+</div>
 
 <style>
   /* ===== DESKTOP TRIGGER STYLES ===== */
@@ -359,6 +530,85 @@ function activeClass(href: string): string {
     background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
     border: 1px solid rgba(201, 168, 76, 0.1);
     box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ===== BOTTOM NAV MEGAMENU ===== */
+  #bnav-megamenu.bnav-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  #bnav-megamenu.bnav-open #bnav-megamenu-panel {
+    transform: translateY(0) !important;
+  }
+  .bnav-panel-glass {
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.98) 0%, rgba(17, 17, 17, 0.99) 100%);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(201, 168, 76, 0.15);
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.6);
+  }
+  .bnav-panel-header {
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.97) 0%, rgba(26, 26, 26, 0.92) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  }
+  .bnav-active {
+    color: var(--color-dkc-gold) !important;
+  }
+  /* Bnav megamenu link items */
+  .bnav-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    transition: background 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bnav-link:active {
+    transform: scale(0.98);
+    background: rgba(201, 168, 76, 0.06);
+  }
+  .bnav-section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.25rem 0.5rem;
+  }
+  .bnav-section-divider h4 {
+    color: rgba(201, 168, 76, 0.8);
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .bnav-section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(201, 168, 76, 0.2), transparent);
+  }
+  .bnav-footer-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    flex: 1;
+    padding: 0.625rem;
+    border-radius: 0.75rem;
+    background: rgba(201, 168, 76, 0.1);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    color: var(--color-dkc-gold);
+    font-weight: 500;
+    font-size: 0.75rem;
+    transition: background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bnav-footer-link:active {
+    background: rgba(201, 168, 76, 0.15);
   }
 </style>
 
@@ -516,6 +766,194 @@ function activeClass(href: string): string {
 
   // Esc key
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") { hideMega(); closeMegaMenu(); }
+    if (e.key === "Escape") { hideMega(); closeMegaMenu(); closeBnavMenu(); }
   });
+
+  // ===== BOTTOM NAV MEGAMENU =====
+  const BNAV_MENUS = {
+    devosi: {
+      title: "Devosi",
+      items: [
+        { href: "/rosario", icon: "📿", label: "Doa Rosario", desc: "Misteri Gembira, Sedih, Mulia, Terang" },
+        { href: "/jalan-salib", icon: "✝️", label: "Jalan Salib", desc: "14 Perhentian lengkap" },
+        { href: "/doa-tobat", icon: "🙏", label: "Doa Tobat", desc: "Doa pertobatan & rekonsiliasi" },
+        { href: "/doa-malaikat-tuhan", icon: "👼", label: "Malaikat Tuhan (Angelus)", desc: "Doa Angelus tradisional" },
+        { href: "/doa-ratu-surga", icon: "👑", label: "Ratu Surga (Regina Caeli)", desc: "Doa Regina Caeli" },
+        { href: "/koronka-kerahiman-ilahi", icon: "✨", label: "Koronka Kerahiman Ilahi", desc: "Doa kerahiman ilahi" },
+        { href: "/kalender-liturgi", icon: "📅", label: "Kalender Liturgi", desc: "Kalender Gereja — pesta & peringatan" },
+        { href: "/renungan", icon: "🕐", label: "Renungan Harian", desc: "Renungan harian" },
+      ],
+      linkAll: { href: "/devosi", label: "Semua Devosi →" },
+    },
+    artikel: {
+      title: "Artikel",
+      sections: [
+        {
+          heading: "Kategori",
+          items: [
+            { href: "/blog/tag/Apologetika", icon: "🛡️", label: "Apologetika", desc: "Pembelaan iman Katolik" },
+            { href: "/blog/tag/Dogma", icon: "📕", label: "Dogma", desc: "Dogma Gereja Katolik" },
+            { href: "/blog/tag/Alkitab", icon: "📜", label: "Alkitab", desc: "Kajian & tafsir" },
+            { href: "/blog/tag/Sejarah", icon: "🏛️", label: "Sejarah", desc: "Sejarah Gereja" },
+          ],
+        },
+      ],
+      links: [
+        { href: "/blog", icon: "📝", label: "Semua Artikel" },
+        { href: "/search", icon: "🔍", label: "Cari Artikel" },
+      ],
+    },
+    kitabsuci: {
+      title: "Kitab Suci",
+      items: [
+        { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
+        { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+        { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
+        { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
+        { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },
+      ],
+    },
+    dokumen: {
+      title: "Dokumen",
+      items: [
+        { href: "/katekismus", icon: "📕", label: "Katekismus Gereja Katolik (KGK)", desc: "Katekismus lengkap" },
+        { href: "/khk", icon: "⚖️", label: "Hukum Kanonik (KHK)", desc: "Kitab Hukum Gereja" },
+        { href: "/kvii", icon: "📜", label: "Konsili Vatikan II", desc: "Dokumen lengkap KV II" },
+        { href: "/summa", icon: "📚", label: "Summa Theologiae", desc: "St. Thomas Aquinas — teologi sistematis" },
+        { href: "/diagnosa/ajaran-bidat", icon: "⚔️", label: "Diagnosa Ajaran Bidat", desc: "Uji & identifikasi ajaran sesat" },
+        { href: "/diagnosa/sedevacantisme", icon: "🛡️", label: "Diagnosa Sedevacantisme", desc: "Uji paham sedevacantisme" },
+      ],
+    },
+  };
+
+  const bnavMegamenu = document.getElementById("bnav-megamenu");
+  const bnavPanel = document.getElementById("bnav-megamenu-panel");
+  const bnavTitle = document.getElementById("bnav-megamenu-title");
+  const bnavContent = document.getElementById("bnav-megamenu-content");
+  const bnavBackdrop = document.getElementById("bnav-megamenu-backdrop");
+  const bnavCloseBtn = document.getElementById("bnav-megamenu-close");
+  const bottomNav = document.getElementById("mobile-bottom-nav");
+  let bnavOpen = null;
+
+  function buildBnavLinkHTML(item) {
+    return `<a href="${item.href}" class="bnav-link">
+      <span style="font-size:1rem;margin-top:2px;flex-shrink:0">${item.icon}</span>
+      <div style="min-width:0">
+        <span style="font-size:0.8125rem;font-weight:500;display:block;line-height:1.3;color:var(--color-dkc-text)">${item.label}</span>
+        <span style="font-size:0.65625rem;color:var(--color-dkc-muted);display:block;margin-top:2px;line-height:1.3">${item.desc}</span>
+      </div>
+    </a>`;
+  }
+
+  function buildBnavHTML(section) {
+    const data = BNAV_MENUS[section];
+    if (!data) return "";
+
+    let html = '<div style="display:flex;flex-direction:column;gap:2px">';
+
+    // Simple items list
+    if (data.items) {
+      data.items.forEach(item => { html += buildBnavLinkHTML(item); });
+    }
+
+    // Grouped sections (for artikel)
+    if (data.sections) {
+      data.sections.forEach(sec => {
+        html += `</div>`; // close previous gap container
+        html += `<div class="bnav-section-divider" style="margin-top:0.75rem"><h4>${sec.heading}</h4></div>`;
+        html += `<div style="display:flex;flex-direction:column;gap:2px">`;
+        sec.items.forEach(item => { html += buildBnavLinkHTML(item); });
+        html += `</div>`;
+        html += `<div style="display:flex;flex-direction:column;gap:2px">`; // reopen for anything after
+      });
+    }
+
+    html += '</div>';
+
+    // "See all" link
+    if (data.linkAll) {
+      html += `<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(201,168,76,0.12)">
+        <a href="${data.linkAll.href}" class="bnav-link" style="color:var(--color-dkc-gold);font-weight:500;font-size:0.8125rem">
+          ${data.linkAll.label}
+        </a>
+      </div>`;
+    }
+
+    // Footer links (for artikel)
+    if (data.links) {
+      html += `<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(201,168,76,0.12);display:flex;gap:0.5rem">`;
+      data.links.forEach(link => {
+        html += `<a href="${link.href}" class="bnav-footer-link">
+          <span>${link.icon}</span>
+          <span>${link.label}</span>
+        </a>`;
+      });
+      html += `</div>`;
+    }
+
+    return html;
+  }
+
+  function openBnavMenu(section) {
+    // Toggle: if same section, close
+    if (bnavOpen === section) {
+      closeBnavMenu();
+      return;
+    }
+
+    // Close any currently open popup
+    closeBnavMenu();
+
+    const popup = document.getElementById("popup-" + section);
+    if (!popup) return;
+
+    bnavOpen = section;
+
+    // Show the popup
+    popup.classList.remove("hidden");
+
+    // Highlight active button
+    document.querySelectorAll("[data-bnav]").forEach(btn => btn.classList.remove("bnav-active"));
+    const activeBtn = document.querySelector(`[data-bnav="${section}"]`);
+    if (activeBtn) activeBtn.classList.add("bnav-active");
+  }
+
+  function closeBnavMenu() {
+    if (!bnavOpen) return;
+
+    // Hide all popups
+    document.querySelectorAll("[id^='popup-']").forEach(p => p.classList.add("hidden"));
+
+    bnavOpen = null;
+    document.querySelectorAll("[data-bnav]").forEach(btn => btn.classList.remove("bnav-active"));
+  }
+
+  // Attach click listeners to bottom nav buttons
+  document.querySelectorAll("[data-bnav]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const section = btn.getAttribute("data-bnav");
+      openBnavMenu(section);
+    });
+  });
+
+  // Close popups when clicking outside (not on popup or nav button)
+  document.addEventListener("click", (e) => {
+    if (!bnavOpen) return;
+    const target = e.target;
+    // Don't close if clicking inside a popup
+    const openPopup = document.getElementById("popup-" + bnavOpen);
+    if (openPopup && openPopup.contains(target)) return;
+    // Don't close if clicking a bottom nav button (handled by its own listener)
+    if (target.closest("[data-bnav]")) return;
+    closeBnavMenu();
+  });
+
+  // Close on backdrop click (legacy bnav-megamenu, kept for compatibility)
+  if (bnavBackdrop) {
+    bnavBackdrop.addEventListener("click", closeBnavMenu);
+  }
+  if (bnavCloseBtn) {
+    bnavCloseBtn.addEventListener("click", closeBnavMenu);
+  }
 </script>

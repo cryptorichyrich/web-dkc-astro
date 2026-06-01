@@ -1,0 +1,313 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main class="max-w-5xl mx-auto px-4 pt-8 pb-24">
+
+    <!-- ═══════════════ Section 1: Hero ═══════════════ -->
+    <section class="text-center mb-12 pt-4">
+      <span class="text-5xl block mb-4">🕊️</span>
+      <h1 class="text-3xl md:text-4xl font-bold text-dkc-gold">Devosi &amp; Doa Katolik</h1>
+      <p class="text-dkc-muted text-sm mt-2 max-w-md mx-auto">
+        Kumpulan doa dan devosi Katolik untuk mendalami iman sehari-hari
+      </p>
+      <!-- Gold divider -->
+      <div class="flex items-center justify-center gap-3 mt-6">
+        <span class="block h-px w-16 bg-gradient-to-r from-transparent to-dkc-gold/50"></span>
+        <span class="block w-2 h-2 rounded-full bg-dkc-gold/70"></span>
+        <span class="block h-px w-16 bg-gradient-to-l from-transparent to-dkc-gold/50"></span>
+      </div>
+    </section>
+
+    <!-- ═══════════════ Section 2: Waktu Doa ═══════════════ -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold text-dkc-gold text-center mb-6">⏰ Waktu Doa</h2>
+      <div id="prayer-time-widget" class="glass-card glass-card-amber p-6 md:p-8 text-center">
+        <!-- Populated by JS -->
+        <div class="animate-pulse space-y-4">
+          <div class="h-4 bg-dkc-border rounded w-1/2 mx-auto"></div>
+          <div class="h-8 bg-dkc-border rounded w-3/4 mx-auto"></div>
+          <div class="h-4 bg-dkc-border rounded w-1/3 mx-auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ Section 3: Prayer Card Grid ═══════════════ -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold text-dkc-gold text-center mb-6">📿 Kumpulan Doa</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Doa Rosario -->
+        <a href="/rosario"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">📿</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Doa Rosario</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">Doa interaktif dengan 4 set misteri</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+        <!-- Jalan Salib -->
+        <a href="/jalan-salib"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">✝️</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Jalan Salib</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">14 Perhentian dengan navigasi interaktif</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+        <!-- Doa Tobat -->
+        <a href="/doa-tobat"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">🙏</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Doa Tobat</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">Puji Syukur no 25</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+        <!-- Doa Malaikat Tuhan -->
+        <a href="/doa-malaikat-tuhan"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">🕊️</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Doa Malaikat Tuhan</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">Angelus — 3x sehari (06:00, 12:00, 18:00)</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+        <!-- Doa Ratu Surga -->
+        <a href="/doa-ratu-surga"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">👑</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Doa Ratu Surga</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">Regina Caeli — Menggantikan Angelus selama Paskah</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+        <!-- Koronka Kerahiman Ilahi -->
+        <a href="/koronka-kerahiman-ilahi"
+           class="glass-card p-5 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+          <div class="text-3xl mb-3">💖</div>
+          <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Koronka Kerahiman Ilahi</h3>
+          <p class="text-dkc-muted text-sm mt-1 leading-relaxed">Chaplet of Divine Mercy — Jam Kerahiman 15:00</p>
+          <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════ Section 4 & 5: Liturgi & Renungan ═══════════════ -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+
+      <!-- Kalender Liturgi -->
+      <a href="/kalender-liturgi"
+         class="glass-card p-6 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+        <div class="flex items-start gap-4">
+          <div class="text-3xl">📅</div>
+          <div>
+            <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Kalender Liturgi</h3>
+            <p id="today-date" class="text-dkc-muted text-sm mt-1">—</p>
+            <p class="text-dkc-muted text-xs mt-2">Lihat kalender liturgi hari ini</p>
+          </div>
+        </div>
+        <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+      </a>
+
+      <!-- Renungan Harian -->
+      <a href="/renungan"
+         class="glass-card p-6 group hover:border-dkc-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-dkc-gold/5">
+        <div class="flex items-start gap-4">
+          <div class="text-3xl">📖</div>
+          <div>
+            <h3 class="text-base font-bold text-dkc-gold group-hover:text-dkc-gold transition-colors">Renungan Harian</h3>
+            <p class="text-dkc-muted text-sm mt-1">Sabda Tuhan menjadi pelita langkahmu</p>
+            <p class="text-dkc-muted text-xs mt-2">Renungan harian dari Sabda Allah</p>
+          </div>
+        </div>
+        <span class="inline-block mt-3 text-xs text-dkc-gold/60 group-hover:text-dkc-gold transition-colors">Buka →</span>
+      </a>
+
+    </section>
+
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  // ── Computus: Anonymous Gregorian algorithm ──
+  function computeEaster(year: number): Date {
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31); // 3=March, 4=April
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+
+  function isEasterSeason(now: Date): boolean {
+    const year = now.getFullYear();
+    const easter = computeEaster(year);
+    const diff = (now.getTime() - easter.getTime()) / (1000 * 60 * 60 * 24);
+    return diff >= 0 && diff <= 50;
+  }
+
+  // ── Prayer schedule (WIB = UTC+7) ──
+  interface PrayerSlot {
+    hour: number;
+    minute: number;
+    name: string;
+    nameEaster: string;
+    href: string;
+    hrefEaster: string;
+    icon: string;
+  }
+
+  const prayerSchedule: PrayerSlot[] = [
+    { hour: 6,  minute: 0, name: 'Doa Malaikat Tuhan', nameEaster: 'Doa Ratu Surga', href: '/doa-malaikat-tuhan', hrefEaster: '/doa-ratu-surga', icon: '🕊️' },
+    { hour: 12, minute: 0, name: 'Doa Malaikat Tuhan', nameEaster: 'Doa Ratu Surga', href: '/doa-malaikat-tuhan', hrefEaster: '/doa-ratu-surga', icon: '🕊️' },
+    { hour: 15, minute: 0, name: 'Koronka Kerahiman Ilahi', nameEaster: 'Koronka Kerahiman Ilahi', href: '/koronka-kerahiman-ilahi', hrefEaster: '/koronka-kerahiman-ilahi', icon: '💖' },
+    { hour: 18, minute: 0, name: 'Doa Malaikat Tuhan', nameEaster: 'Doa Ratu Surga', href: '/doa-malaikat-tuhan', hrefEaster: '/doa-ratu-surga', icon: '🕊️' },
+  ];
+
+  function getWIBNow(): Date {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    return new Date(utc + 7 * 3600000);
+  }
+
+  function getPrayerForSlot(slot: PrayerSlot, easter: boolean) {
+    return {
+      name: easter ? slot.nameEaster : slot.name,
+      href: easter ? slot.hrefEaster : slot.href,
+      icon: slot.icon,
+    };
+  }
+
+  function formatCountdown(ms: number): string {
+    if (ms <= 0) return 'sekarang';
+    const totalMin = Math.floor(ms / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    if (h > 0) return `${h} jam ${m} menit`;
+    return `${m} menit`;
+  }
+
+  function updateWidget() {
+    const widget = document.getElementById('prayer-time-widget');
+    if (!widget) return;
+
+    const now = getWIBNow();
+    const easter = isEasterSeason(now);
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    // Find active prayer (within 30 min window after scheduled time)
+    let activeSlot: PrayerSlot | null = null;
+    let nextSlot: PrayerSlot | null = null;
+    let nextDiff = Infinity;
+
+    for (const slot of prayerSchedule) {
+      const slotMinutes = slot.hour * 60 + slot.minute;
+      const diff = currentMinutes - slotMinutes;
+
+      // Active if within last 30 minutes
+      if (diff >= 0 && diff < 30) {
+        activeSlot = slot;
+      }
+
+      // Next upcoming
+      const timeToSlot = slotMinutes - currentMinutes;
+      if (timeToSlot > 0 && timeToSlot < nextDiff) {
+        nextDiff = timeToSlot;
+        nextSlot = slot;
+      }
+    }
+
+    // If no next slot today, wrap to tomorrow's first
+    let nextCountdownMs = 0;
+    if (!nextSlot) {
+      nextSlot = prayerSchedule[0];
+      const tomorrowWIB = new Date(now);
+      tomorrowWIB.setDate(tomorrowWIB.getDate() + 1);
+      tomorrowWIB.setHours(nextSlot.hour, nextSlot.minute, 0, 0);
+      nextCountdownMs = tomorrowWIB.getTime() - now.getTime();
+    } else {
+      nextCountdownMs = nextDiff * 60000;
+    }
+
+    const active = activeSlot ? getPrayerForSlot(activeSlot, easter) : null;
+    const next = nextSlot ? getPrayerForSlot(nextSlot, easter) : null;
+
+    const wibTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const seasonLabel = easter
+      ? '<span class="text-dkc-gold/80 text-xs uppercase tracking-wider">🌸 Masa Paskah — Regina Caeli</span>'
+      : '<span class="text-dkc-muted text-xs uppercase tracking-wider">🙏 Masa Biasa — Angelus</span>';
+
+    let html = `<div class="space-y-4">`;
+
+    // Current time display
+    html += `
+      <div class="text-dkc-muted text-sm">Waktu WIB: <span class="text-dkc-gold font-mono text-lg font-bold">${wibTime}</span></div>
+      <div>${seasonLabel}</div>
+    `;
+
+    // Active prayer
+    if (active && activeSlot) {
+      html += `
+        <div class="bg-dkc-gold/10 border border-dkc-gold/20 rounded-xl p-4 mt-2">
+          <div class="text-xs text-dkc-gold/60 uppercase tracking-wider mb-1">Doa Aktif Sekarang</div>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-2xl">${active.icon}</span>
+            <a href="${active.href}" class="text-lg font-bold text-dkc-gold hover:underline">${active.name}</a>
+          </div>
+          <div class="text-dkc-muted text-xs mt-1">Waktu doa pukul ${String(activeSlot.hour).padStart(2,'0')}:00 WIB</div>
+        </div>
+      `;
+    }
+
+    // Next prayer
+    if (next && nextSlot) {
+      html += `
+        <div class="border-t border-dkc-border pt-3 mt-2">
+          <div class="text-xs text-dkc-muted mb-1">Doa Berikutnya</div>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-xl">${next.icon}</span>
+            <a href="${next.href}" class="text-base font-semibold text-dkc-gold/80 hover:text-dkc-gold hover:underline transition-colors">${next.name}</a>
+          </div>
+          <div class="text-dkc-muted text-xs mt-1">
+            Pukul ${String(nextSlot.hour).padStart(2,'0')}:00 WIB — dalam <span class="text-dkc-gold font-semibold">${formatCountdown(nextCountdownMs)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+    widget.innerHTML = html;
+  }
+
+  // ── Today's date for Kalender Liturgi card ──
+  function updateTodayDate() {
+    const el = document.getElementById('today-date');
+    if (!el) return;
+    const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const now = new Date();
+    el.textContent = `${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
+  // ── Initialize ──
+  updateWidget();
+  updateTodayDate();
+  setInterval(updateWidget, 60000);
+</script>

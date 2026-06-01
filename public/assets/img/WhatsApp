@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="id-ID">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="audio-session-mode" content="default">
+  <meta name="google-adsense-account" content="ca-pub-4750255309176392">
+  <!-- AdSense: lazy-loaded after first interaction to avoid blocking render -->
+  <script>
+  function loadAdSense(){var s=document.createElement('script');s.async=true;s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4750255309176392';s.crossOrigin='anonymous';document.head.appendChild(s);window.removeEventListener('scroll',loadAdSense);window.removeEventListener('click',loadAdSense);window.removeEventListener('mousemove',loadAdSense);}
+  window.addEventListener('scroll',loadAdSense,{once:true,passive:true});window.addEventListener('click',loadAdSense,{once:true});window.addEventListener('mousemove',loadAdSense,{once:true});
+  </script>
+  <!-- <script>
+// Disable right-click context menu
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
+
+// Disable F12 key and other keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Prevent F12
+    if(e.key === 'F12' || e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+I
+    if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+J
+    if(e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+U (View Source)
+    if(e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+let bukaDevTools = function() {
+    const threshold = 320;
+
+    // Only apply the logic if not on a mobile device
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+    if (isMobile) {
+        return; // Skip detection for mobile devices
+    }
+
+    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+    if (widthThreshold || heightThreshold) {
+        document.body.innerHTML = 'bukaDevTools detected! Please close developer tools to view this page.';
+    }
+};
+
+
+// Check for bukaDevTools periodically
+setInterval(bukaDevTools, 1000);
+
+// Clear console to hide any console.log messages
+console.clear();
+
+// Disable console.log and other console methods
+(function() {
+    const methods = [
+        'log', 'debug', 'info', 'warn', 
+        'error', 'assert', 'dir', 'trace'
+    ];
+    
+    methods.forEach(function(method) {
+        console[method] = function() {
+            return false;
+        };
+    });
+})();
+
+// Add a warning message if someone tries to view source
+window.addEventListener('load', function() {
+    const warningMessage = document.createComment(`
+        ====================================
+        WARNING: This code is protected!
+        Attempting to inspect or modify this code
+        may result in security measures being triggered.
+        ====================================
+    `);
+    document.documentElement.prepend(warningMessage);
+});   
+
+document.addEventListener('keydown', function(event) {
+  if (event.ctrlKey && event.key === 's') {
+    event.preventDefault();
+  }
+});
+  </script> -->
+  
+
+  
+
+  
+
+  <title>404 - Page not found</title>
+
+  
+  
+  <meta name="author" content="DKC TEAM  •  obedientia sicut cadaver">
+  
+
+  <meta name="description" content="Halaman Tidak Ditemukan Seperti domba yang hilang, halaman yang Anda cari tidak dapat ditemukan. &quot;Siapakah di antara kamu yang mempunyai seratus ekor domba, dan jikalau ia kehilangan seekor di antaranya, tidak meninggalkan yang sembilan puluh sembilan ekor di padang gurun dan pergi mencari yang sesat itu sampai ia menemukannya?&quot; Lukas...">
+
+  
+  <meta name="robots" content="noindex, nofollow">
+  
+
+  
+
+  
+  <meta name="keywords" content="Apologetic, Katolik, Dogma, Gereja, Paus, Tuhan Yesus, Bunda Maria, sejarah, Bapa Gereja, Damai kasih channel, DKC">
+  
+
+  
+  <link rel="alternate" type="application/rss+xml" title="DAMAI KASIH CHANNEL" href="https://damaikasihchannel.com/feed.xml">
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LS7JKWJBEH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LS7JKWJBEH');
+</script>
+
+
+  
+
+  
+
+  
+  
+  
+
+
+  <!-- Critical CSS to prevent FOUC (Flash of Unstyled Content) -->
+  <style>
+    /* Prevent flash of unstyled content */
+    html {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    body {
+      opacity: 0;
+      transition: opacity 0.3s ease-in;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
+
+    /* Hide navbar during page load except logo */
+    .navbar-custom .navbar-brand,
+    .navbar-custom .navbar-toggler,
+    .navbar-custom .navbar-collapse {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in, visibility 0.3s ease-in;
+    }
+
+    /* Keep avatar logo visible during page load */
+    .navbar-custom .avatar-container {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    /* Show navbar elements when page is loaded */
+    body.loaded .navbar-custom .navbar-brand,
+    body.loaded .navbar-custom .navbar-toggler,
+    body.loaded .navbar-custom .navbar-collapse {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Keep navbar collapsed during page transitions */
+    .navbar-collapse.collapsing,
+    .navbar-collapse.show {
+      transition: none !important;
+    }
+
+    /* Loading overlay with skeleton */
+    .page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.98), rgba(20, 20, 20, 0.95));
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    body.loaded .page-loader {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Skeleton loader animation */
+    @keyframes skeleton-loading {
+      0% {
+        background-position: -200px 0;
+      }
+      100% {
+        background-position: calc(200px + 100%) 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, rgba(200, 169, 112, 0.1) 0px, rgba(200, 169, 112, 0.3) 40px, rgba(200, 169, 112, 0.1) 80px);
+      background-size: 200px 100%;
+      animation: skeleton-loading 1.5s infinite;
+    }
+  </style>
+
+  <!-- Preconnect to critical origins -->
+  <link rel="preconnect" href="https://stackpath.bootstrapcdn.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  
+  
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+  
+
+  
+  
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" media="print" onload="this.media='all'">
+    
+      <style type="text/css">@font-face {font-family:Lora;font-style:normal;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/cyrillic/400/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/cyrillic-ext/400/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/vietnamese/400/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/cyrillic/700/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/cyrillic-ext/700/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Lora;font-style:normal;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/vietnamese/700/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/cyrillic-ext/400/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/latin-ext/400/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/vietnamese/400/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/latin/400/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:400;src:url(/cf-fonts/s/lora/5.0.11/cyrillic/400/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/latin/700/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/vietnamese/700/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/cyrillic/700/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/latin-ext/700/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Lora;font-style:italic;font-weight:700;src:url(/cf-fonts/s/lora/5.0.11/cyrillic-ext/700/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}</style>
+    
+      <style type="text/css">@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/latin/300/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/300/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/300/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/300/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/greek/300/italic.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/300/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/300/italic.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/300/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/400/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/400/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/greek/400/italic.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/400/italic.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/400/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/latin/400/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/400/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/400/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/600/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/600/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/600/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/greek/600/italic.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/600/italic.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/600/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/latin/600/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/600/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/700/italic.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/greek/700/italic.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/700/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/700/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/latin/700/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/700/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/700/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/700/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/800/italic.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/latin/800/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/800/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/800/italic.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/800/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/800/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/greek/800/italic.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:italic;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/800/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/400/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/greek/400/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/400/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/400/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/400/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:400;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/400/normal.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/300/normal.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/greek/300/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/300/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/300/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/300/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:300;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/300/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/600/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/600/normal.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/600/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/600/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/600/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:600;src:url(/cf-fonts/s/open-sans/5.0.20/greek/600/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/700/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/700/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/700/normal.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/700/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/greek/700/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/700/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:700;src:url(/cf-fonts/s/open-sans/5.0.20/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic-ext/800/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/latin/800/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/greek-ext/800/normal.woff2);unicode-range:U+1F00-1FFF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/latin-ext/800/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/cyrillic/800/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/hebrew/800/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/greek/800/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:Open Sans;font-style:normal;font-weight:800;src:url(/cf-fonts/s/open-sans/5.0.20/vietnamese/800/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}</style>
+    
+    <noscript>
+      
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&display=swap">
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&display=swap">
+      
+    </noscript>
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/custom-styles.css">
+    
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="DAMAI KASIH CHANNEL">
+  <meta property="og:title" content="404 - Page not found">
+  <meta property="og:description" content="Halaman Tidak Ditemukan Seperti domba yang hilang, halaman yang Anda cari tidak dapat ditemukan. &quot;Siapakah di antara kamu yang mempunyai seratus ekor domba, dan jikalau ia kehilangan seekor di antaranya, tidak meninggalkan yang sembilan puluh sembilan ekor di padang gurun dan pergi mencari yang sesat itu sampai ia menemukannya?&quot; Lukas...">
+  <meta property="og:locale" content="id_ID">
+
+  
+  <meta property="og:image" content="https://damaikasihchannel.com/assets/img/channels4_profile.webp">
+  <meta property="og:image:alt" content="404 - Page not found">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://damaikasihchannel.com/404.html">
+  <link rel="canonical" href="https://damaikasihchannel.com/404.html">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta name="twitter:title" content="404 - Page not found">
+  <meta name="twitter:description" content="Halaman Tidak Ditemukan Seperti domba yang hilang, halaman yang Anda cari tidak dapat ditemukan. &quot;Siapakah di antara kamu yang mempunyai seratus ekor domba, dan jikalau ia kehilangan seekor di antaranya, tidak meninggalkan yang sembilan puluh sembilan ekor di padang gurun dan pergi mencari yang sesat itu sampai ia menemukannya?&quot; Lukas...">
+
+  
+  <meta name="twitter:image" content="https://damaikasihchannel.com/assets/img/channels4_profile.webp">
+  <meta name="twitter:image:alt" content="404 - Page not found">
+  
+
+  
+
+
+  
+
+  
+  
+  <link rel="icon" href="/favicon.ico" />
+  
+
+  
+
+  <!-- Structured Data for SEO - Website and Navigation -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DAMAI KASIH CHANNEL",
+    "url": "https://damaikasihchannel.com",
+    "description": "Catholic Apologetics, Liturgy, Prayers, and Church Documents",
+    "publisher": {
+      "@type": "Organization",
+      "name": "DAMAI KASIH CHANNEL",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://damaikasihchannel.com/assets/img/channels4_profile.webp"
+      }
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://damaikasihchannel.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Breadcrumb Structured Data -->
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://damaikasihchannel.com"
+      }
+      
+      
+      
+        
+      
+        
+          
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "404.html",
+            "item": "https://damaikasihchannel.com/404.html"
+          }
+        
+      
+    ]
+  }
+  </script>
+  
+
+</head>
+
+
+<body>
+  <!-- Page Loader with Skeleton -->
+  <div class="page-loader">
+    <div class="loader-content">
+      <div class="loader-spinner" style="text-align: center;">
+        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem; border-width: 0.3rem;">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  <!-- Skip to main content for accessibility -->
+<!-- <a href="#main-content" class="skip-to-main-content">Skip to main content</a> -->
+
+<!-- Main Navigation with enhanced SEO and accessibility -->
+<nav class="glossy-black navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"
+     role="navigation"
+     aria-label="Main navigation"
+     itemscope
+     itemtype="https://schema.org/SiteNavigationElement">
+
+  <div class="container-fluid"><a class="navbar-brand" href="https://damaikasihchannel.com/" aria-label="Home - DAMAI KASIH CHANNEL" itemprop="url">
+        <span itemprop="name">DAMAI KASIH CHANNEL</span>
+      </a><button class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#main-navbar"
+            aria-controls="main-navbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="navbar-nav ml-auto" role="menubar"><li class="nav-item dropdown mega-menu" role="none">
+              <a class="nav-link dropdown-toggle "
+                 href="#"
+                 id="kitab-suci-dropdown-1"
+                 role="menuitem"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 itemprop="url">
+                <span itemprop="name">Kitab Suci</span>
+              </a><div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="kitab-suci-dropdown-1"
+                     role="menu">
+                  <div class="mega-menu-content"><div class="mega-menu-column">
+                        <div class="mega-menu-header">Terjemahan</div>
+                        <a class="dropdown-item featured "
+                           href="/kitabsuci/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Kitab Suci Indonesia</span>
+                        </a>
+                        <a class="dropdown-item featured "
+                           href="/kitabsuci/pbtb2/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Perjanjian Baru TB2</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/kemenag/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Terjemahan KEMENAG</span>
+                        </a>
+                      </div>
+                      <div class="mega-menu-column">
+                        <div class="mega-menu-header">Bahasa Asli & Studi</div>
+                        <a class="dropdown-item "
+                           href="/vulgata/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Vulgata Latin</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/interlinear-greek/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Greek Interlinear</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/artikel/kamus-kitab-suci/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Kamus Kitab Suci</span>
+                        </a>
+                      </div></div>
+                </div></li>
+          <li class="nav-item dropdown " role="none">
+              <a class="nav-link dropdown-toggle "
+                 href="#"
+                 id="devosi-dropdown-2"
+                 role="menuitem"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 itemprop="url">
+                <span itemprop="name">Devosi</span>
+              </a><div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="devosi-dropdown-2"
+                     role="menu">
+                      <a class="dropdown-item "
+                         href="/renungan/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Renungan</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/kalender/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Kalender Liturgi</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/doa-rosario/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Doa Rosario</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/jalan-salib/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Jalan Salib</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/doa-tobat/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Doa Tobat</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/doa-malaikat-tuhan/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Doa Malaikat Tuhan</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/doa-ratu-surga/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Doa Ratu Surga</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/koronka-kerahiman-ilahi/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Koronka & Kerahiman Ilahi</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="/artikel/sejarah-doa-yudas-thadeus/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Santo Yudas Thadeus</span>
+                      </a>
+                </div></li>
+          <li class="nav-item dropdown mega-menu" role="none">
+              <a class="nav-link dropdown-toggle "
+                 href="#"
+                 id="ajaran-gereja-dropdown-3"
+                 role="menuitem"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 itemprop="url">
+                <span itemprop="name">Ajaran Gereja</span>
+              </a><div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="ajaran-gereja-dropdown-3"
+                     role="menu">
+                  <div class="mega-menu-content"><div class="mega-menu-column">
+                        <div class="mega-menu-header">Katekismus</div>
+                        <a class="dropdown-item featured "
+                           href="/kgk/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Katekismus Gereja Katolik</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/kompendium-katekismus-gereja-katolik/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Kompendium Katekismus</span>
+                        </a>
+                      </div>
+                      <div class="mega-menu-column">
+                        <div class="mega-menu-header featured">Hukum & Konsili</div>
+                        <a class="dropdown-item "
+                           href="/khk/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Kitab Hukum Kanonik</span>
+                        </a>
+                        <a class="dropdown-item featured "
+                           href="/kv2/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Konsili Vatikan II</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/timeline-sejarah-21-konsili-ekumenis/" role="menuitem" itemprop="url">
+                          <span itemprop="name">21 Konsili Ekumenis</span>
+                        </a>
+                      </div>
+                      <div class="mega-menu-column">
+                        <div class="mega-menu-header">Teologi & Sejarah</div>
+                        <a class="dropdown-item featured "
+                           href="/summa/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Summa Theologiae</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/summa/search/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Pencarian Summa</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/suksesi-kepausan/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Suksesi Kepausan</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/timeline-kanon-kitabsuci/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Timeline Kanon Kitab Suci</span>
+                        </a>
+                      </div></div>
+                </div></li>
+          <li class="nav-item dropdown mega-menu" role="none">
+              <a class="nav-link dropdown-toggle "
+                 href="#"
+                 id="apologetika-dropdown-4"
+                 role="menuitem"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 itemprop="url">
+                <span itemprop="name">Apologetika</span>
+              </a><div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="apologetika-dropdown-4"
+                     role="menu">
+                  <div class="mega-menu-content"><div class="mega-menu-column">
+                        <div class="mega-menu-header">Diagnosa Ajaran</div>
+                        <a class="dropdown-item featured "
+                           href="/diagnosa-ajaran-bidat/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Diagnosa Ajaran Bidat</span>
+                        </a>
+                        <a class="dropdown-item "
+                           href="/diagnosa-sedevacantisme/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Diagnosa Sedevacantisme</span>
+                        </a>
+                      </div>
+                      <div class="mega-menu-column">
+                        <div class="mega-menu-header">Artikel & Sumber</div>
+                        <a class="dropdown-item "
+                           href="/tags/" role="menuitem" itemprop="url">
+                          <span itemprop="name">Artikel & Kategori</span>
+                        </a>
+                      </div></div>
+                </div></li>
+          <li class="nav-item dropdown " role="none">
+              <a class="nav-link dropdown-toggle "
+                 href="#"
+                 id="media-dropdown-5"
+                 role="menuitem"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 itemprop="url">
+                <span itemprop="name">Media</span>
+              </a><div class="dropdown-menu dropdown-menu-right"
+                     aria-labelledby="media-dropdown-5"
+                     role="menu">
+                      <a class="dropdown-item "
+                         href="/flix"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">Flix</span>
+                      </a>
+                      <a class="dropdown-item "
+                         href="https://ai.damaikasihchannel.com/"
+                         role="menuitem"
+                         itemprop="url">
+                        <span itemprop="name">A.I.</span>
+                      </a>
+                </div></li>
+          
+            <li class="nav-item" role="none">
+              <a class="nav-link "
+                 href="https://shop.damaikasihchannel.com/"
+                 role="menuitem"
+                 itemprop="url">
+                <span itemprop="name">Shop</span>
+              </a>
+            </li>
+          <li class="nav-item nav-search-container" role="none">
+            <!-- Desktop: Inline search -->
+            <div class="nav-search-inline d-none d-xl-flex">
+              <input type="text"
+                     id="nav-search-input-inline"
+                     class="nav-search-input-inline"
+                     placeholder="Cari..."
+                     aria-label="Search the website">
+              <button type="button"
+                      class="nav-search-button-inline"
+                      aria-label="Search">
+                <i class="fa fa-search"></i>
+              </button>
+              <div id="search-results-inline" class="search-results-dropdown"></div>
+            </div>
+
+            <!-- Mobile: Search icon that opens overlay -->
+            <a class="nav-link nav-search-link d-xl-none"
+               id="nav-search-link"
+               href="#"
+               role="menuitem"
+               aria-label="Search the website"
+               title="Search">
+              <span id="nav-search-icon" class="fa fa-search" aria-hidden="true"></span>
+              <span id="nav-search-text">Search</span>
+            </a>
+          </li></ul>
+    </div>
+
+    
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a href="https://damaikasihchannel.com/" aria-label="Home">
+            <img alt="Damai Kasih Channel" class="avatar-img" src="/assets/img/channels4_profile.webp" />
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</nav>
+
+
+
+<div id="beautifuljekyll-search-overlay">
+
+  <div id="nav-search-exit" title="Exit search">✕</div>
+  <input type="text" id="nav-search-input" placeholder="Cari . . . .">
+  <ul id="search-results-container"></ul>
+  
+  <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+  <script>
+    SimpleJekyllSearch({
+      searchInput: document.getElementById('nav-search-input'),
+      resultsContainer: document.getElementById('search-results-container'),
+      json: '/assets/data/searchcorpus.json' 
+    });
+  </script>
+</div>
+
+
+
+
+
+  <!-- Add this before the closing </head> tag -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+<!-- Add this before the closing </body> tag -->
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
+
+<main id="main-content" class=" container-md " role="main">
+  
+
+  <div class="text-center col-xl-10 offset-xl-1 col-lg-12">
+  <h1>Halaman Tidak Ditemukan</h1>
+  <p class="lead">Seperti domba yang hilang, halaman yang Anda cari tidak dapat ditemukan.</p>
+  <br/>
+
+  <img src="/assets/img/404-lost-lamb.jpg" alt="Domba yang hilang - halaman 404" />
+
+  <p style="font-size:1.2rem;max-width: 80%;margin:auto;margin-top:30px;">
+    "Siapakah di antara kamu yang mempunyai seratus ekor domba, dan jikalau ia kehilangan seekor di antaranya, tidak meninggalkan yang sembilan puluh sembilan ekor di padang gurun dan pergi mencari yang sesat itu sampai ia menemukannya?"</p>
+  <p class="font-weight-bold">Lukas 15:4</p>
+
+  <p style="margin-top:2rem;"><a href="/" class="btn btn-dark">Kembali ke Beranda</a></p>
+</div>
+
+
+  
+</main>
+
+
+  <button id="scrollToTop" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000;">△</button>
+<footer>
+  <!-- Comprehensive Footer Navigation -->
+  <div class="footer-sitemap">
+    <div class="container-md">
+      <div class="row">
+        <!-- Column 1: Scripture -->
+        <div class="col-lg-3 col-md-6 footer-column">
+          <h4 class="footer-heading">Kitab Suci</h4>
+          <ul class="footer-links">
+            <li><a href="/kitabsuci/">Kitab Suci Indonesia</a></li>
+            <li><a href="/kitabsuci/pbtb2/">Perjanjian Baru TB2</a></li>
+            <li><a href="/vulgata/">Vulgata Latin</a></li>
+            <li><a href="/interlinear-greek/">Greek Interlinear</a></li>
+            <li><a href="/artikel/kamus-kitab-suci/">Kamus Kitab Suci</a></li>
+            <li><a href="/kemenag/">Terjemahan KEMENAG</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Faith & Devotion -->
+        <div class="col-lg-3 col-md-6 footer-column">
+          <h4 class="footer-heading">Iman & Devosi</h4>
+          <ul class="footer-links">
+            <li><a href="/kalender/">Kalender Liturgi</a></li>
+            <li><a href="/doa-rosario/">Doa Rosario</a></li>
+            <li><a href="/jalan-salib/">Jalan Salib</a></li>
+            <li><a href="/doa-tobat/">Doa Tobat</a></li>
+            <li><a href="/doa-malaikat-tuhan/">Doa Malaikat Tuhan</a></li>
+            <li><a href="/doa-ratu-surga/">Doa Ratu Surga</a></li>
+            <li><a href="/koronka-kerahiman-ilahi/">Koronka & Kerahiman Ilahi</a></li>
+            <li><a href="/artikel/sejarah-doa-yudas-thadeus/">Santo Yudas Thadeus</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Church Teaching -->
+        <div class="col-lg-3 col-md-6 footer-column">
+          <h4 class="footer-heading">Ajaran Gereja</h4>
+          <ul class="footer-links">
+            <li><a href="/kgk/">Katekismus Gereja Katolik</a></li>
+            <li><a href="/kompendium-katekismus-gereja-katolik/">Kompendium Katekismus</a></li>
+            <li><a href="/khk/">Kitab Hukum Kanonik</a></li>
+            <li><a href="/kv2/">Konsili Vatikan II</a></li>
+            <li><a href="/summa/">Summa Theologiae</a></li>
+            <li><a href="/summa/search/">Pencarian Summa</a></li>
+            <li><a href="/suksesi-kepausan/">Suksesi Kepausan</a></li>
+            <li><a href="/timeline-sejarah-21-konsili-ekumenis/">21 Konsili Ekumenis</a></li>
+            <li><a href="/timeline-kanon-kitabsuci/">Timeline Kanon Kitab Suci</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Apologetics & Media -->
+        <div class="col-lg-3 col-md-6 footer-column">
+          <h4 class="footer-heading">Apologetika & Media</h4>
+          <ul class="footer-links">
+            <li><a href="/diagnosa-ajaran-bidat/">Diagnosa Ajaran Bidat</a></li>
+            <li><a href="/diagnosa-sedevacantisme/">Diagnosa Sedevacantisme</a></li>
+            <li><a href="/tags/">Artikel & Kategori</a></li>
+            <li><a href="/flix">DKC Media</a></li>
+          </ul>
+
+          <h4 class="footer-heading mt-4">Tentang</h4>
+          <ul class="footer-links">
+            <li><a href="/about-dkc/">Tentang Kami</a></li>
+            <li><a href="/renungan/">Renungan Harian</a></li>
+            <li><a href="/iklan/">Iklan</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copyright Section - Unified Dark Design -->
+  <div class="footer-copyright">
+    <div class="container-md">
+      <div class="row">
+        <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+          
+<ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a target="_blank" href="/cdn-cgi/l/email-protection#aec7c9c0cfdac7dbdd80cbdcc7cdc59c97eec9c3cfc7c280cdc1c3" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a target="_blank"  href="/feed.xml" title="RSS">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+        <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">RSS</span>
+    </a>
+  </li><li class="list-inline-item">
+    <a target="_blank"  href="https://www.youtube.com/@damaikasihchannel9153" title="YouTube">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+        <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">YouTube</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a target="_blank"  href="https://www.tiktok.com/@dkc_team.apologetik" title="TikTok">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+        <i class="fab fa-tiktok fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">YouTube</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a target="_blank"  href="https://www.instagram.com/damaikasihchannel" title="Instagram">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Instagram</span>
+   </a>
+  </li></ul>
+
+
+
+          
+
+          <p class="copyright-text">
+            
+              <span class="copyright-author">DKC TEAM  •  obedientia sicut cadaver</span>
+              <span class="copyright-separator">•</span>
+            
+            <span class="copyright-year">2026</span>
+            <span class="copyright-separator">•</span>
+            <a href="/about-dkc/" class="copyright-link">Tentang Kami</a>
+            <span class="copyright-separator">•</span>
+            <a href="/iklan/" class="copyright-link">Iklan ❤️</a>
+            
+              <span class="copyright-separator">•</span>
+              <a href="https://damaikasihchannel.com/" class="copyright-link">damaikasihchannel.com</a>
+            
+
+            
+
+            
+          </p>
+
+          
+          <p class="powered-by">
+            <span class="powered-icon">⚡</span>
+            Powered by
+            <a href="https://biotama.cv" class="powered-link">✨ biotama.cv ✨</a>
+          </p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+<script defer src="/assets/js/ads.js"></script>
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script defer src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+  
+    
+      
+      
+        <script src="/assets/js/custom.js"></script>
+      
+    
+  
+    
+      <script defer src="/assets/js/highlight.js"></script>
+    
+  
+    
+      <script defer src="/assets/js/rosario.js"></script>
+    
+  
+    
+      <script defer src="/assets/js/time-based-prayer.js"></script>
+    
+  
+
+
+
+
+
+
+
+<style>
+/* Dark Mode Toggle - Navbar Style */
+#darkModeToggle {
+  height: 40px;
+  width: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+#darkModeToggle::before {
+  content: '☀️';
+  transition: all 0.3s ease;
+}
+
+#darkModeToggle.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+#darkModeToggle.active::before {
+  content: '🌙';
+}
+
+#darkModeToggle:hover {
+  background-color: rgba(200, 169, 112, 0.2);
+  border-color: var(--hover-col);
+  transform: scale(1.1);
+}
+
+/* Mobile: Full width nav item style */
+@media (max-width: 1199.98px) {
+  #darkModeToggle {
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    margin-left: 0;
+    margin-top: 10px;
+    justify-content: center;
+  }
+}
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    // Create a style element for our dynamic CSS
+    let styles = document.createElement('style');
+    document.head.appendChild(styles);
+    const tocAndFeaturedBg = '#f0f0f0';
+    const tocAndFeaturedText = '#000000';
+    const lightText = '#000000';  // Added this as it was missing but used in CSS
+    const darkText = '#f8f8ff';
+    let toggleButton;
+  
+    // Function to apply dark mode styles
+    function applyDarkStyles() {
+      styles.textContent = `
+        .quiz-container, .question-text, .progress-text{
+          color:white;
+        }
+        body {
+          background-color: #141414;
+          color: #f5f5f5;
+        }
+        .calendar{
+          background-color: #141414; !important;
+        }
+        .calendar-header, .popup-content,.english-text,.document-reference{
+          color:black !important;
+        }
+        footer {
+          background-color: #141414;
+          border-top: 1px var(--dark) solid;
+        }
+        footer a {
+          color: white;
+        }
+        .week{
+          background:#f8f8ff !important;
+        }
+        .blog-tags span, .post-read-more, .post-preview .post-subtitle, .post-preview .post-title,.document-reference, .english-text,
+        .form-section input[type="submit"]{
+          color: #f5f5f5 !important;
+        }
+        .post-preview .post-subtitle:hover, .post-preview .post-title:hover, .latin-text {
+          color: var(--link-col) !important;
+        }
+        .featured-article, #player-container, .audio-player, .form-section {
+          background-color: black !important;
+        }
+        .prev-btn, .next-btn, .featured-title, .post-read-more, .play-button, .time-display, .volume-button, #number-search small, #bible-search small, #text-search small, .category-section, #bible-search label, #text-search label {
+          color: #f5f5f5 !important;
+        }
+        .audio-player .controls span,
+        .audio-player .controls button {
+          color: #f5f5f5 !important;
+        }
+      
+        #search-container, .form-section{
+          background-color:#383838 !important;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)!important;  
+        }
+        .document-item, .quiz-container{
+          background-color: #141414 !important;
+        }
+        #blog-post{
+          border-top: 1px solid black !important;
+        }
+        .document-item hr, .jawaban{
+          background-color: black !important;
+        }
+        .search-container, .vulgate{
+          background-color:black !important;
+        }
+        #toc-container {
+            top: 50px;
+            z-index: 0;
+            width: 250px;
+            border: 1px solid #6e6a6a;
+            border-radius: 3px;
+            background-color: #141414;
+            width: 100%;
+        }        
+        /* Keep .toc-list items the same color */
+        .toc-list li,#toc h2 {
+            color: var(--page-col) !important;
+        }
+table tr:nth-child(even){
+    background-color: #141414 !important;
+}
+
+table tr:nth-child(odd) {
+    background-color: #282828 !important; /* Choose a different color for odd rows */
+}
+    
+            .verse-container,.search-result{
+              background-color: #0f0f0f !important;
+            }
+            .greek{
+              color:#658eb8  !important;
+            }
+            .translit, .jawaban{
+              color: white !important;
+            }
+              .verse-number{ color: black !important}
+    `;
+  }
+
+  // Function to remove dark mode styles (reset for light mode)
+  function removeDarkStyles() {
+    styles.textContent = '';
+  }
+
+  // Function to toggle dark mode
+  function toggleDarkMode() {
+    document.body.style.transition = 'background-color 0.5s, color 0.5s';
+    // Apply transitions to all relevant elements
+    document.querySelectorAll('#toc-container, .calendar, footer, .week, .blog-tags span, .post-read-more, .post-preview .post-subtitle, .post-preview .post-title, .post-preview .post-subtitle:hover, .post-preview .post-title:hover, .form-section input[type="submit"], .featured-article, #player-container, .audio-player, .form-section, .prev-btn, .next-btn, .featured-title, .post-read-more, .play-button, .time-display, .volume-button, #number-search small, #bible-search small, #text-search small, .category-section, #bible-search label, #text-search label, #search-container, .search-container, #blog-post, .document-item hr, .toc-list li').forEach(el => {
+      el.style.transition = 'background-color 0.5s, color 0.5s, border-top-color 0.5s';
+    });
+
+    if (document.body.hasAttribute('data-dark-mode')) {
+      document.body.removeAttribute('data-dark-mode');
+      removeDarkStyles();
+      localStorage.setItem('darkMode', 'false');
+      toggleButton.classList.remove('active'); // Slide up for light mode
+    } else {
+      document.body.setAttribute('data-dark-mode', 'true');
+      applyDarkStyles();
+      localStorage.setItem('darkMode', 'true');
+      toggleButton.classList.add('active'); // Slide down for dark mode
+    }
+  }
+
+  // Check if the current URL is /timeline-kanon-kitabsuci/
+  if (window.location.pathname !== '/timeline-kanon-kitabsuci/') {
+    // Create toggle button only if not on the specified page
+    toggleButton = document.createElement('button');
+    toggleButton.id = 'darkModeToggle';
+      // Find the nav element where you want to append the button
+      let navElement = document.querySelector('.navbar-nav.ml-auto');
+      if(navElement) {
+        navElement.appendChild(toggleButton);
+      } else {
+        console.warn("Could not find the navigation element to append the dark mode toggle.");
+        // Fallback to append to body if nav element not found
+        document.body.appendChild(toggleButton);
+      }
+
+    // Event listener for the toggle button
+    toggleButton.addEventListener('click', toggleDarkMode);
+
+    // Check local storage for dark mode preference
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode === 'true' || (darkMode === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.setAttribute('data-dark-mode', 'true');
+      applyDarkStyles();
+      toggleButton.classList.add('active');  // Set the switch to the 'sun' position for dark mode
+    } else {
+      removeDarkStyles();
+      toggleButton.classList.remove('active'); // Set the switch to the 'moon' position for light mode
+    }
+  }
+});
+</script>
+
+</body>
+</html>

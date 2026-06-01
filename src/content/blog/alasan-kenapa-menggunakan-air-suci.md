@@ -4,6 +4,8 @@ subtitle: "Kita juga memiliki kolam yang diisi dengan air suci untuk berkat kare
 author: "Tim DKC"
 publishedAt: 2025-01-02
 tags: ["Alkitab", "Refleksi", "Sejarah"]
+coverImage: "/assets/img/holy-water.webp"
+thumbnailImage: "/assets/img/holy-water.webp"
 ---
 
 # Mengapa Kita Menggunakan Air Suci di Gereja?

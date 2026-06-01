@@ -59,6 +59,13 @@
   }
 }
 
+/* Ensure all main/article content clears the mobile bottom nav */
+@media (max-width: 767px) {
+  main, article {
+    padding-bottom: 5rem !important;
+  }
+}
+
 /* Blog article prose */
 @layer components {
   .prose-gold {

@@ -108,15 +108,106 @@ function activeClass(href: string): string {
 <!-- ==================== MOBILE TOP HEADER ==================== -->
 <header class="md:hidden sticky top-0 z-50 bg-dkc-surface/90 backdrop-blur-xl border-b border-dkc-border/60">
   <div class="flex items-center justify-between px-4 h-12">
-    <a href="/" class="flex items-center gap-2">
-      <img src="/assets/img/channels4_profile.webp" alt="DKC" class="w-7 h-7 rounded-full border border-dkc-gold/40" />
-      <span class="text-dkc-gold font-serif font-bold text-sm">Damai Kasih <span class="text-dkc-muted font-sans text-[10px] tracking-wider uppercase">Channel</span></span>
+    <!-- Left: Hamburger Button -->
+    <button id="hamburger-btn" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-gold hover:bg-dkc-gold/10 hover:border-dkc-gold/30 transition-all active:scale-95" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <!-- Center: Logo -->
+    <a href="/" class="absolute left-1/2 -translate-x-1/2 flex items-center">
+      <img src="/assets/img/channels4_profile.webp" alt="DKC" class="w-8 h-8 rounded-full border-2 border-dkc-gold/50 shadow-sm shadow-dkc-gold/10" />
     </a>
-    <a href="/search" class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold transition-colors">
+    <!-- Right: Search -->
+    <a href="/search" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </a>
   </div>
 </header>
+
+<!-- ==================== MOBILE HAMBURGER MEGA MENU ==================== -->
+<div id="mega-menu-overlay" class="md:hidden fixed inset-0 z-[60] pointer-events-none" style="opacity: 0; transition: opacity 0.3s ease;">
+  <!-- Backdrop -->
+  <div id="mega-menu-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-md" data-mega-menu-close></div>
+  <!-- Slide-in Panel -->
+  <div id="mega-menu-panel" class="mega-menu-panel absolute top-0 left-0 bottom-0 w-[88vw] max-w-[400px] overflow-y-auto overscroll-contain" style="transform: translateX(-100%); transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);">
+    <!-- Top Bar: Logo + Close -->
+    <div class="sticky top-0 z-10 glass-panel-header px-5 pt-5 pb-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/assets/img/channels4_profile.webp" alt="DKC" class="w-10 h-10 rounded-full border-2 border-dkc-gold/50 shadow-md shadow-dkc-gold/10" />
+        <div>
+          <span class="text-dkc-gold font-serif font-bold text-base leading-tight block">Damai Kasih</span>
+          <span class="text-dkc-muted text-[10px] tracking-wider uppercase leading-tight block">Channel</span>
+        </div>
+      </div>
+      <button id="mega-menu-close-btn" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all active:scale-95" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Home link -->
+    <div class="px-4 pb-2">
+      <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-dkc-gold/10 border border-dkc-gold/15 transition-all active:scale-[0.98]">
+        <span class="text-lg">🏠</span>
+        <span class="text-sm font-semibold text-dkc-gold">Beranda</span>
+      </a>
+    </div>
+
+    <!-- Nav Groups -->
+    <div class="px-4 pb-6 space-y-5">
+      {navGroups.filter(g => g.hasSubmenu).map(group => (
+        <section>
+          <!-- Group Header -->
+          <div class="flex items-center gap-2 px-1 pb-2 pt-1">
+            <span class="text-sm">{group.submenu?.[0]?.icon || "📋"}</span>
+            <h3 class="text-dkc-gold font-serif font-bold text-sm tracking-wide uppercase">{group.label}</h3>
+            <div class="flex-1 h-px bg-gradient-to-r from-dkc-gold/20 to-transparent ml-2"></div>
+          </div>
+          <!-- Group Items -->
+          <div class="space-y-1">
+            {group.submenu?.map(item => (
+              <a
+                href={item.href}
+                class:list={[
+                  "flex items-start gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.98]",
+                  isActive(item.href)
+                    ? "bg-dkc-gold/10 border border-dkc-gold/15"
+                    : "bg-transparent border border-transparent active:bg-dkc-gold/5",
+                ]}
+              >
+                <span class="text-base mt-0.5 shrink-0">{item.icon}</span>
+                <div class="min-w-0">
+                  <span class:list={[
+                    "text-[13px] font-medium block leading-tight",
+                    isActive(item.href) ? "text-dkc-gold" : "text-dkc-text",
+                  ]}>{item.label}</span>
+                  <span class="text-[10.5px] text-dkc-muted block mt-0.5 leading-tight">{item.desc}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <!-- Footer -->
+    <div class="glass-panel-footer px-5 py-5">
+      <div class="flex items-center justify-center gap-5 mb-4">
+        <!-- YouTube -->
+        <a href="https://youtube.com/@DamaiKasihChannel" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-red-500 hover:border-red-500/30 transition-all" aria-label="YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <!-- Instagram -->
+        <a href="https://instagram.com/damaikasihchannel" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-pink-500 hover:border-pink-500/30 transition-all" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <!-- TikTok -->
+        <a href="https://tiktok.com/@damaikasihchannel" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-white hover:border-white/30 transition-all" aria-label="TikTok">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78 2.92 2.92 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+        </a>
+      </div>
+      <p class="text-center text-dkc-muted text-[10px] leading-relaxed">© 2024 Damai Kasih Channel<br />Apologetika, Katekese & Pembelaan Iman</p>
+    </div>
+  </div>
+</div>
 
 <!-- ==================== DESKTOP ==================== -->
 <header class="hidden md:block sticky top-0 z-50">
@@ -171,84 +262,42 @@ function activeClass(href: string): string {
     </a>
   </div>
 </header>
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 safe-bottom">
-  <div class="flex justify-around items-center px-1 pt-2 pb-1" style="padding-bottom: max(env(safe-area-inset-bottom), 4px)">
-    <a href="/" class="mobile-nav-item" data-mobile-tab="beranda">
-      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="text-[10px] leading-none">Beranda</span>
-    </a>
-    <button data-mobile-tab="artikel" class="mobile-nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-      <span class="text-[10px] leading-none">Artikel</span>
-    </button>
-    <button data-mobile-tab="kitabsuci" class="mobile-nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-      <span class="text-[10px] leading-none">Kitab Suci</span>
-    </button>
-    <button data-mobile-tab="katekismus" class="mobile-nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      <span class="text-[10px] leading-none">Katekismus</span>
-    </button>
-    <button data-mobile-tab="lainnya" class="mobile-nav-item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-      <span class="text-[10px] leading-none">Lainnya</span>
-    </button>
-  </div>
-</nav>
-
-<!-- ==================== MOBILE PANELS (hidden by default) ==================== -->
-<div id="mobile-overlay" class="md:hidden fixed inset-0 z-[60] pointer-events-none">
-  <div id="mobile-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" data-mobile-close></div>
-
-  {mobilePrimary.map((group, idx) => (
-    <div
-      id={`mobile-panel-${group.id}`}
-      class="mobile-panel glass-panel absolute bottom-0 left-0 right-0 rounded-t-[20px] max-h-[80vh] overflow-y-auto overflow-x-hidden overscroll-contain"
-      style="transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1); padding-bottom: max(env(safe-area-inset-bottom), 20px)"
-    >
-      {/* Drag handle */}
-      <div class="flex justify-center pt-3 pb-1 sticky top-0 bg-dkc-surface/95 backdrop-blur-sm z-10 rounded-t-[20px]">
-        <div class="w-8 h-1 rounded-full bg-dkc-border/60"></div>
-      </div>
-
-      {/* Header */}
-      <div class="sticky top-7 bg-dkc-surface/95 backdrop-blur-sm z-10 px-5 pb-3 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <span class="text-lg">{group.submenu?.[0]?.icon || "📋"}</span>
-          <h2 class="text-dkc-gold font-serif font-bold text-lg">{group.label}</h2>
-        </div>
-        <button data-mobile-close class="w-8 h-8 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-muted hover:text-dkc-gold hover:border-dkc-gold/30 transition-all shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-
-      {/* Submenu items */}
-      <div class="px-4 space-y-1.5 pb-6">
-        {group.submenu?.map(item => (
-          <a
-            href={item.href}
-            class:list={[
-              "flex items-start gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200",
-              isActive(item.href) ? "bg-dkc-gold/10 border border-dkc-gold/15" : "bg-dkc-card border border-transparent active:bg-dkc-gold/5",
-            ]}
-          >
-            <span class="text-lg mt-0.5 shrink-0">{item.icon}</span>
-            <div class="min-w-0">
-              <span class:list={[
-                "text-sm font-medium block leading-tight",
-                isActive(item.href) ? "text-dkc-gold" : "text-dkc-text",
-              ]}>{item.label}</span>
-              <span class="text-[11px] text-dkc-muted block mt-0.5 leading-tight">{item.desc}</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  ))}
-</div>
 
 <!-- Spacer for mobile bottom nav -->
 <div class="md:hidden h-16"></div>
+
+<!-- ==================== MOBILE BOTTOM NAV ==================== -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60" style="padding-bottom: max(env(safe-area-inset-bottom), 4px); transform: translateZ(0); -webkit-transform: translateZ(0);">
+  <div class="flex justify-around items-center px-1 pt-1.5 pb-1">
+    <!-- Devosi -->
+    <a href="/rosario" data-nav-section="devosi" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath === "/rosario" || currentPath === "/jalan-salib" || currentPath === "/kalender-liturgi" || currentPath === "/renungan" ? "text-dkc-gold" : "text-dkc-muted"]}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+      <span class="text-[10px] leading-none">Devosi</span>
+    </a>
+    <!-- Artikel (newspaper icon) -->
+    <a href="/blog" data-nav-section="artikel" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/blog") || currentPath === "/search" ? "text-dkc-gold" : "text-dkc-muted"]}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+      <span class="text-[10px] leading-none">Artikel</span>
+    </a>
+    <!-- Center: Logo (home) -->
+    <a href="/" class="flex flex-col items-center -mt-4">
+      <div class="relative">
+        <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md"></div>
+        <img src="/assets/img/channels4_profile.webp" alt="Home" class:list={["relative w-11 h-11 rounded-full border-2 shadow-lg shadow-dkc-gold/10 transition-all", currentPath === "/" ? "border-dkc-gold" : "border-dkc-gold/50"]} />
+      </div>
+    </a>
+    <!-- Kitab Suci (bible icon) -->
+    <a href="/kitabsuci" data-nav-section="kitabsuci" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/kitabsuci") || currentPath === "/vulgata" || currentPath === "/interlinear-greek" ? "text-dkc-gold" : "text-dkc-muted"]}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+      <span class="text-[10px] leading-none">Kitab Suci</span>
+    </a>
+    <!-- Dokumen -->
+    <a href="/katekismus" data-nav-section="dokumen" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors", currentPath.startsWith("/katekismus") || currentPath.startsWith("/khk") || currentPath.startsWith("/kvii") || currentPath.startsWith("/summa") || currentPath.startsWith("/diagnosa") || currentPath.startsWith("/kemenag") ? "text-dkc-gold" : "text-dkc-muted"]}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+      <span class="text-[10px] leading-none">Dokumen</span>
+    </a>
+  </div>
+</nav>
 
 <style>
   /* ===== DESKTOP TRIGGER STYLES ===== */
@@ -278,36 +327,38 @@ function activeClass(href: string): string {
     pointer-events: auto !important;
   }
 
-  /* ===== MOBILE UTILITY ===== */
+  /* ===== MOBILE MEGA MENU PANEL ===== */
+  .mega-menu-panel {
+    background: linear-gradient(180deg, rgba(20, 20, 20, 0.98) 0%, rgba(13, 13, 13, 0.99) 100%);
+    border-right: 1px solid rgba(201, 168, 76, 0.12);
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7);
+  }
+
+  .glass-panel-header {
+    background: linear-gradient(180deg, rgba(20, 20, 20, 0.97) 0%, rgba(20, 20, 20, 0.92) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  }
+
+  .glass-panel-footer {
+    background: linear-gradient(180deg, rgba(16, 16, 16, 0.95) 0%, rgba(13, 13, 13, 0.98) 100%);
+    border-top: 1px solid rgba(201, 168, 76, 0.08);
+  }
+
+  #mega-menu-overlay.mega-menu-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  #mega-menu-overlay.mega-menu-open #mega-menu-panel {
+    transform: translateX(0) !important;
+  }
+
+  /* MOBILE UTILITY (kept for reference) */
   .glass-panel {
     background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
     border: 1px solid rgba(201, 168, 76, 0.1);
     box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
-  }
-
-  .mobile-nav-item .m-active {
-    color: var(--color-dkc-gold) !important;
-  }
-
-  /* Active mobile tab */
-  .mobile-tab-active {
-    color: var(--color-dkc-gold) !important;
-  }
-
-  /* Safe bottom for mobile nav — prevents iOS Safari from hiding it */
-  .safe-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* Force GPU layer to prevent Safari address bar from hiding it */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-  }
-  @supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .safe-bottom {
-      padding-bottom: env(safe-area-inset-bottom);
-    }
   }
 </style>
 
@@ -427,68 +478,44 @@ function activeClass(href: string): string {
     megaPanel.addEventListener("mouseleave", hideMega);
   }
 
-  // ===== MOBILE PANELS =====
-  const mobileOverlay = document.getElementById("mobile-overlay");
-  const mobileBackdrop = document.getElementById("mobile-backdrop");
-  let activeMobilePanel = null;
+  // ===== MOBILE HAMBURGER MEGA MENU =====
+  const megaMenuOverlay = document.getElementById("mega-menu-overlay");
+  const hamburgerBtn = document.getElementById("hamburger-btn");
+  const megaMenuCloseBtn = document.getElementById("mega-menu-close-btn");
+  let megaMenuOpen = false;
 
-  function openMobilePanel(id) {
-    if (activeMobilePanel) {
-      activeMobilePanel.style.transform = "translateY(100%)";
-      activeMobilePanel = null;
-    }
-    const panel = document.getElementById("mobile-panel-" + id);
-    if (!panel) return;
-
-    mobileOverlay.classList.remove("pointer-events-none");
-    mobileOverlay.classList.add("pointer-events-auto");
-
-    requestAnimationFrame(() => {
-      mobileBackdrop.classList.add("opacity-100");
-    });
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        panel.style.transform = "translateY(0)";
-      });
-    });
-
+  function openMegaMenu() {
+    if (megaMenuOpen) return;
+    megaMenuOpen = true;
     document.body.style.overflow = "hidden";
-    activeMobilePanel = panel;
-
-    document.querySelectorAll("[data-mobile-tab]").forEach(el => el.classList.remove("mobile-tab-active"));
-    const tab = document.querySelector(`[data-mobile-tab="${id}"]`);
-    if (tab) tab.classList.add("mobile-tab-active");
-  }
-
-  function closeMobilePanel() {
-    if (activeMobilePanel) {
-      activeMobilePanel.style.transform = "translateY(100%)";
-      activeMobilePanel = null;
-    }
-    mobileBackdrop.classList.remove("opacity-100");
-    setTimeout(() => {
-      mobileOverlay.classList.remove("pointer-events-auto");
-      mobileOverlay.classList.add("pointer-events-none");
-    }, 350);
-    document.body.style.overflow = "";
-    document.querySelectorAll("[data-mobile-tab]").forEach(el => el.classList.remove("mobile-tab-active"));
-  }
-
-  // Attach mobile listeners
-  document.querySelectorAll("[data-mobile-tab]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-mobile-tab");
-      if (id) openMobilePanel(id);
+    requestAnimationFrame(() => {
+      megaMenuOverlay.classList.add("mega-menu-open");
     });
-  });
+  }
 
-  document.querySelectorAll("[data-mobile-close]").forEach(el => {
-    el.addEventListener("click", closeMobilePanel);
+  function closeMegaMenu() {
+    if (!megaMenuOpen) return;
+    megaMenuOpen = false;
+    megaMenuOverlay.classList.remove("mega-menu-open");
+    // Wait for animation to finish before restoring scroll
+    setTimeout(() => {
+      if (!megaMenuOpen) document.body.style.overflow = "";
+    }, 380);
+  }
+
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener("click", openMegaMenu);
+  }
+  if (megaMenuCloseBtn) {
+    megaMenuCloseBtn.addEventListener("click", closeMegaMenu);
+  }
+  // Close on backdrop click
+  document.querySelectorAll("[data-mega-menu-close]").forEach(el => {
+    el.addEventListener("click", closeMegaMenu);
   });
 
   // Esc key
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") { hideMega(); closeMobilePanel(); }
+    if (e.key === "Escape") { hideMega(); closeMegaMenu(); }
   });
 </script>

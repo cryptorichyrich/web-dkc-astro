@@ -222,6 +222,36 @@ import Footer from "@/components/Footer.astro";
   document.getElementById('kvii-text-search').addEventListener('keydown', e => { if (e.key === 'Enter') doTextSearch(e.target.value); });
   document.getElementById('kvii-full-doc').addEventListener('click', showFullDoc);
 
+  // Real-time text search as user types (with debounce)
+  let kviiTextTimer = null;
+  document.getElementById('kvii-text-search').addEventListener('input', (e) => {
+    clearTimeout(kviiTextTimer);
+    const q = e.target.value.trim();
+    if (!q) {
+      document.getElementById('kvii-results').innerHTML = '';
+      document.getElementById('kvii-nav').classList.add('hidden');
+      document.getElementById('kvii-range').textContent = '';
+      return;
+    }
+    kviiTextTimer = setTimeout(() => doTextSearch(q), 300);
+  });
+
+  // Real-time number search as user types (with debounce)
+  let kviiNumTimer = null;
+  document.getElementById('kvii-search').addEventListener('input', (e) => {
+    clearTimeout(kviiNumTimer);
+    const q = e.target.value.trim();
+    if (!q) {
+      document.getElementById('kvii-results').innerHTML = '';
+      document.getElementById('kvii-nav').classList.add('hidden');
+      document.getElementById('kvii-range').textContent = '';
+      return;
+    }
+    if (/^\d[\d,\-;\s]*$/.test(q)) {
+      kviiNumTimer = setTimeout(() => doSearch(q), 300);
+    }
+  });
+
   renderDocList();
 
   // Handle URL hash: #Lumen_Gentium/1-20

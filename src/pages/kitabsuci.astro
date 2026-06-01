@@ -253,9 +253,15 @@ import Footer from "@/components/Footer.astro";
     }
     showStep("chapters");
     stepBooks.classList.remove("hidden");
+    readingArea.classList.add("hidden");
+    bottomNav.classList.add("hidden");
+    // Scroll to chapter section
+    setTimeout(() => {
+      stepChapters.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   }
 
-  // Step 3: Chapter -> show verses + load content
+  // Step 3: Chapter -> highlight chapter + show verse grid (NOT text)
   function selectChapter(book: string, chapter: number) {
     currentBook = book;
     currentChapter = chapter;
@@ -263,6 +269,12 @@ import Footer from "@/components/Footer.astro";
     if (!bookData) return;
     const chData = bookData[String(chapter)];
     if (!chData) return;
+
+    // Highlight the clicked chapter
+    chapterGrid.querySelectorAll(".sel-btn").forEach(b => b.classList.remove("active"));
+    for (const btn of Array.from(chapterGrid.children)) {
+      if (btn.textContent === String(chapter)) btn.classList.add("active");
+    }
 
     // Show verse grid
     const verses = Object.keys(chData).map(Number).sort((a,b) => a-b);
@@ -275,12 +287,15 @@ import Footer from "@/components/Footer.astro";
       b.addEventListener("click", () => loadAndScrollTo(book, chapter, v));
       verseGrid.appendChild(b);
     }
-    showStep("verses");
+    // Show verses, keep chapters + books visible, hide reading area
+    stepVerses.classList.remove("hidden");
     stepChapters.classList.remove("hidden");
     stepBooks.classList.remove("hidden");
+    readingArea.classList.add("hidden");
+    bottomNav.classList.add("hidden");
 
-    // Load content immediately
-    loadChapter(book, chapter);
+    // Update hash
+    window.location.hash = `${book}${chapter}`;
   }
 
   // Load chapter content
@@ -308,6 +323,9 @@ import Footer from "@/components/Footer.astro";
     readingContent.innerHTML = html;
     readingArea.classList.remove("hidden");
     bottomNav.classList.remove("hidden");
+    // Keep chapter + verse grids visible as context above the text
+    stepChapters.classList.remove("hidden");
+    stepVerses.classList.remove("hidden");
 
     // URL hash
     window.location.hash = `${book}${chapter}`;
@@ -331,9 +349,9 @@ import Footer from "@/components/Footer.astro";
   }
 
   // Back buttons
-  document.getElementById("back-testament")!.addEventListener("click", () => showStep("testament"));
-  document.getElementById("back-books")!.addEventListener("click", () => { showStep("books"); stepBooks.classList.remove("hidden"); });
-  document.getElementById("back-chapters")!.addEventListener("click", () => { showStep("chapters"); stepBooks.classList.remove("hidden"); stepChapters.classList.remove("hidden"); });
+  document.getElementById("back-testament")!.addEventListener("click", () => { readingArea.classList.add("hidden"); bottomNav.classList.add("hidden"); showStep("testament"); });
+  document.getElementById("back-books")!.addEventListener("click", () => { readingArea.classList.add("hidden"); bottomNav.classList.add("hidden"); showStep("books"); stepBooks.classList.remove("hidden"); });
+  document.getElementById("back-chapters")!.addEventListener("click", () => { readingArea.classList.add("hidden"); bottomNav.classList.add("hidden"); showStep("chapters"); stepBooks.classList.remove("hidden"); stepChapters.classList.remove("hidden"); });
 
   // Prev/Next
   function getAdjacent(delta: number) {
@@ -353,7 +371,10 @@ import Footer from "@/components/Footer.astro";
   }
   function goAdjacent(delta: number) {
     const adj = getAdjacent(delta);
-    if (adj) selectChapter(adj.book, adj.chapter);
+    if (adj) {
+      selectChapter(adj.book, adj.chapter);
+      loadChapter(adj.book, adj.chapter);
+    }
   }
   document.getElementById("prev-ch")!.addEventListener("click", () => goAdjacent(-1));
   document.getElementById("next-ch")!.addEventListener("click", () => goAdjacent(1));

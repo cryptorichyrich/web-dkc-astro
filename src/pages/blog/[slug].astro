@@ -141,24 +141,16 @@ const encodedTitle = encodeURIComponent(post.data.title);
       ) : null;
     })()}
 
-    <!-- Mobile TOC (collapsible, above content) -->
+    <!-- Mobile TOC (expanded, above content) -->
     {tocItems.length > 0 && (
       <div class="lg:hidden mb-6" id="mobile-toc">
-        <button
-          id="mobile-toc-toggle"
-          class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border text-sm text-dkc-muted hover:border-dkc-gold/30 transition-colors"
-          aria-expanded="false"
-          aria-controls="mobile-toc-list"
-        >
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-dkc-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
-            Daftar Isi
-          </span>
-          <svg id="mobile-toc-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </button>
+        <div class="flex items-center gap-2 px-4 py-3 rounded-t-xl bg-dkc-surface border border-dkc-border border-b-0">
+          <svg class="w-4 h-4 text-dkc-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+          <span class="text-sm text-dkc-muted font-medium">Daftar Isi</span>
+        </div>
         <nav
           id="mobile-toc-list"
-          class="hidden mt-2 px-4 py-3 rounded-xl bg-dkc-surface border border-dkc-border"
+          class="px-4 py-3 rounded-b-xl bg-dkc-surface border border-dkc-border"
           aria-label="Daftar Isi"
         >
           <ol class="space-y-1.5 text-sm text-dkc-muted">
@@ -298,31 +290,10 @@ const encodedTitle = encodeURIComponent(post.data.title);
     headingEls.forEach(h => observer.observe(h));
   }
 
-  // === MOBILE TOC TOGGLE ===
-  function initMobileTOC() {
-    const toggle = document.getElementById('mobile-toc-toggle');
-    const list = document.getElementById('mobile-toc-list');
-    const chevron = document.getElementById('mobile-toc-chevron');
-    if (!toggle || !list || !chevron) return;
+  // Initialize everything
+  initScrollSpy();
+  initShareButtons();
 
-    toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      list.classList.toggle('hidden', expanded);
-      chevron.style.transform = expanded ? '' : 'rotate(180deg)';
-    });
-
-    // Close mobile TOC when a link is clicked
-    list.querySelectorAll('[data-toc-link]').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.setAttribute('aria-expanded', 'false');
-        list.classList.add('hidden');
-        chevron.style.transform = '';
-      });
-    });
-  }
-
-  // === SHARE BUTTONS ===
   function initShareButtons() {
     const container = document.getElementById('share-buttons');
     if (!container) return;
@@ -362,9 +333,4 @@ const encodedTitle = encodeURIComponent(post.data.title);
       });
     });
   }
-
-  // Initialize everything
-  initScrollSpy();
-  initMobileTOC();
-  initShareButtons();
 </script>

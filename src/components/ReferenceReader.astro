@@ -767,6 +767,40 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
     textBtn.addEventListener('click', () => searchByText(textInput.value));
     textInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchByText(textInput.value); });
 
+    // Real-time text search as user types (with debounce)
+    let textSearchTimer = null;
+    textInput.addEventListener('input', () => {
+      clearTimeout(textSearchTimer);
+      const q = textInput.value.trim();
+      if (!q) {
+        // Clear results back to placeholder
+        const container = document.getElementById('ref-results');
+        container.innerHTML = '<div class="text-center text-dkc-muted py-12"><span class="text-4xl block mb-3">' + icon + '</span><p>Masukkan nomor paragraf atau teks untuk mulai membaca</p></div>';
+        document.getElementById('ref-nav').classList.add('hidden');
+        document.getElementById('ref-nav').classList.remove('flex');
+        return;
+      }
+      textSearchTimer = setTimeout(() => searchByText(q), 300);
+    });
+
+    // Real-time number search as user types (with debounce)
+    let numSearchTimer = null;
+    numInput.addEventListener('input', () => {
+      clearTimeout(numSearchTimer);
+      const q = numInput.value.trim();
+      if (!q) {
+        const container = document.getElementById('ref-results');
+        container.innerHTML = '<div class="text-center text-dkc-muted py-12"><span class="text-4xl block mb-3">' + icon + '</span><p>Masukkan nomor paragraf atau teks untuk mulai membaca</p></div>';
+        document.getElementById('ref-nav').classList.add('hidden');
+        document.getElementById('ref-nav').classList.remove('flex');
+        return;
+      }
+      // Only auto-search if it looks like a number/range query
+      if (/^\d[\d,\-;\s]*$/.test(q)) {
+        numSearchTimer = setTimeout(() => searchByNumbers(q), 300);
+      }
+    });
+
     // Example buttons
     document.querySelectorAll('.example-btn').forEach(btn => {
       btn.addEventListener('click', () => {

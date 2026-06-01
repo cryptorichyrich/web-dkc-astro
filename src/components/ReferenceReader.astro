@@ -308,8 +308,8 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
   async function loadData() {
     if (allData) return allData;
     const res = await fetch(dataUrl);
-    allData = await res.json();
-    return allData.map(item => ({
+    const raw = await res.json();
+    allData = raw.map(item => ({
       id: String(item.id || item.ID),
       text: item.text || decodeURIComponent(
         (item.TEXT || '').replace(/%20/g, ' ').replace(/%2C/g, ',').replace(/%2E/g, '.')
@@ -318,6 +318,7 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
           .replace(/%28/g, '(').replace(/%29/g, ')').replace(/%C2%A0/g, ' ')
       )
     }));
+    return allData;
   }
 
   // ─── Parse Range Expressions ───────────────────────────────

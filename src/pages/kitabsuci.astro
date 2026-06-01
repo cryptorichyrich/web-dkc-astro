@@ -6,79 +6,100 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Navbar />
-  
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Kitab Suci</h1>
-    <p class="text-dkc-muted mb-8">Kitab Suci Katolik Indonesia — lengkap dengan Deuterokanonika</p>
 
-    <!-- Bible Version Switcher -->
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-      {["KS (TB1)", "PB TB2", "Vulgata", "Greek Interlinear"].map(v => (
-        <button class="px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
-          {v}
-        </button>
-      ))}
+  <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mb-1">Kitab Suci</h1>
+        <p class="text-dkc-muted text-sm">Alkitab Katolik Indonesia — lengkap dengan Deuterokanonika</p>
+      </div>
+      <div id="version-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dkc-border text-xs text-dkc-muted">
+        <span class="w-2 h-2 rounded-full bg-dkc-gold animate-pulse"></span>
+        <span id="version-label">Memuat...</span>
+      </div>
+    </div>
+
+    <!-- Citation Quick Jump -->
+    <div class="glass-card p-3 mb-5 flex items-center gap-2">
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dkc-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          id="citation-input"
+          type="text"
+          placeholder="Langsung ke ayat (cth: yoh 3:16, mzm 23, kej 1)"
+          class="w-full bg-dkc-surface border border-dkc-border rounded-lg pl-9 pr-3 py-2.5 text-dkc-text text-sm focus:outline-none focus:border-dkc-gold/40 transition-colors"
+        />
+      </div>
+      <button id="citation-go" class="bg-dkc-gold text-black font-medium px-4 py-2.5 rounded-lg text-sm shrink-0 hover:bg-dkc-gold/90 transition-colors">
+        Buka
+      </button>
+    </div>
+
+    <!-- Version Tabs -->
+    <div id="version-tabs" class="flex gap-2 mb-5 overflow-x-auto pb-1">
+      <button data-version="ks" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
+        KS (TB1)
+      </button>
+      <button data-version="ks_2" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
+        KS (TB2)
+      </button>
+      <button data-version="vulgate" class="version-tab px-4 py-2 rounded-full text-sm border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors whitespace-nowrap">
+        Vulgata
+      </button>
     </div>
 
     <!-- Book Selector -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex items-center gap-3 mb-4">
-        <select class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1">
-          <option>Kejadian</option>
-          <option>Keluaran</option>
-          <option>Mazmur</option>
-          <option>Injil Matius</option>
-          <option>Injil Yohanes</option>
+    <div class="glass-card p-4 mb-5">
+      <div class="flex items-center gap-2 mb-4">
+        <label class="text-sm text-dkc-muted shrink-0">Kitab:</label>
+        <select id="book-select" class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm flex-1 focus:outline-none focus:border-dkc-gold/40">
+          <option value="">Memuat...</option>
         </select>
-        <input type="text" placeholder="Ayat (cth: yoh3:16)" class="bg-dkc-surface border border-dkc-border rounded-lg px-3 py-2 text-dkc-text text-sm w-40" />
-        <button class="bg-dkc-gold text-black font-medium px-4 py-2 rounded-lg text-sm">Cari</button>
       </div>
-      
-      <!-- Chapter grid -->
-      <div class="grid grid-cols-5 gap-1">
-        {Array.from({length: 50}, (_, i) => (
-          <button class={`w-full py-2 text-xs rounded-lg transition-colors ${i === 3 ? 'bg-dkc-gold/20 text-dkc-gold border border-dkc-gold/40' : 'bg-dkc-surface border border-dkc-border text-dkc-muted hover:border-dkc-gold/30'}`}>
-            {i + 1}
-          </button>
-        ))}
+
+      <!-- Chapter Grid -->
+      <div id="chapter-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-1">
+        <!-- Filled by JS -->
       </div>
     </div>
 
     <!-- Reading Area -->
-    <div class="glass-card p-5 mb-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-dkc-gold font-bold">Matius 3</h2>
+    <div class="glass-card p-5 md:p-6 mb-5">
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h2 id="reading-title" class="text-dkc-gold font-bold text-lg">—</h2>
+          <p id="reading-subtitle" class="text-dkc-muted text-xs mt-0.5"></p>
+        </div>
         <div class="flex gap-2">
-          <button class="px-3 py-1 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30">Sebelumnya</button>
-          <button class="px-3 py-1 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30">Selanjutnya</button>
+          <button id="prev-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+            ← Sebelumnya
+          </button>
+          <button id="next-ch" class="px-3 py-1.5 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+            Selanjutnya →
+          </button>
         </div>
       </div>
-      
-      <!-- Pericope heading -->
-      <h3 class="text-dkc-gold/80 italic mb-3 text-sm">Yohanes Pembaptis</h3>
-      
-      <div class="space-y-3 text-sm leading-relaxed">
-        <p><sup>1</sup>Pada waktu itu tampillah Yohanes Pembaptis di padang gurun Yudea dan memberitakan:</p>
-        <p><sup>2</sup>"Bertobatlah, sebab Kerajaan Sorga sudah dekat!"</p>
-        <p><sup>3</sup>Sesungguhnya dialah yang dimaksudkan nabi Yesaya ketika ia berkata: "Ada suara orang yang berseru-seru di padang gurun: Persiapkanlah jalan untuk Tuhan, luruskanlah jalan bagi-Nya."</p>
-        <p><sup>16</sup>Sesudah dibaptis, Yesus segera keluar dari air dan pada waktu itu juga langit terbuka dan Ia melihat Roh Allah seperti burung merpati turun ke atas-Nya,</p>
-        <p><sup>17</sup>lalu terdengarlah suara dari sorga yang mengatakan: "Inilah Anak-Ku yang Kukasihi, kepada-Nyalah Aku berkenan."</p>
+
+      <!-- Loading state -->
+      <div id="reading-loading" class="text-center py-12 text-dkc-muted">
+        <div class="inline-block w-6 h-6 border-2 border-dkc-gold/30 border-t-dkc-gold rounded-full animate-spin mb-3"></div>
+        <p class="text-sm">Memuat ayat...</p>
+      </div>
+
+      <!-- Verses -->
+      <div id="reading-content" class="space-y-2.5 text-[15px] leading-relaxed hidden">
+        <!-- Filled by JS -->
       </div>
     </div>
 
-    <!-- Tools Bar -->
-    <div class="flex gap-2 justify-center">
-      <button class="flex items-center gap-1 px-3 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30">
-        <span>🔊</span> Audio
+    <!-- Bottom Nav -->
+    <div class="flex justify-center gap-3">
+      <button id="prev-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+        ← Bab Sebelumnya
       </button>
-      <button class="flex items-center gap-1 px-3 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30">
-        <span>⭐</span> Sorot
-      </button>
-      <button class="flex items-center gap-1 px-3 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30">
-        <span>📋</span> Salin
-      </button>
-      <button class="flex items-center gap-1 px-3 py-2 rounded-lg border border-dkc-border text-dkc-muted text-xs hover:border-dkc-gold/30">
-        <span>📤</span> Bagikan
+      <button id="next-ch-bottom" class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-dkc-border text-dkc-muted text-sm hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+        Bab Selanjutnya →
       </button>
     </div>
   </main>
@@ -90,3 +111,364 @@ import Footer from "@/components/Footer.astro";
   <title>Kitab Suci — Damai Kasih Channel</title>
   <meta name="description" content="Kitab Suci Katolik Indonesia lengkap. Baca, cari, dan bagikan ayat Alkitab." />
 </slot>
+
+<style>
+  #reading-content sup {
+    color: rgba(201, 168, 76, 0.7);
+    font-weight: bold;
+    font-size: 0.7rem;
+    margin-right: 0.25rem;
+  }
+  #reading-content .verse-text { color: var(--color-dkc-text); }
+  #reading-content .verse-row {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.5rem;
+    transition: background-color 0.15s;
+  }
+  #reading-content .verse-row:hover { background: rgba(201, 168, 76, 0.05); }
+  #reading-content .verse-row.highlighted {
+    background: rgba(201, 168, 76, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.3);
+  }
+  .chapter-btn-active {
+    background: rgba(201, 168, 76, 0.2);
+    color: var(--color-dkc-gold);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    font-weight: 700;
+  }
+  .chapter-btn {
+    background: var(--color-dkc-surface);
+    border: 1px solid var(--color-dkc-border);
+    color: var(--color-dkc-muted);
+  }
+  .chapter-btn:hover {
+    border-color: rgba(201, 168, 76, 0.3);
+    color: rgba(201, 168, 76, 0.8);
+  }
+  .version-tab-active {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--color-dkc-gold);
+    border-color: rgba(201, 168, 76, 0.4);
+  }
+</style>
+
+<script>
+  // ===== Book name mapping =====
+  const BOOK_NAMES: Record<string, string> = {
+    kej: "Kejadian", kel: "Keluaran", im: "Imamat", bil: "Bilangan", ul: "Ulangan",
+    yos: "Yosua", hak: "Hakim-Hakim", rut: "Rut",
+    "1sam": "1 Samuel", "2sam": "2 Samuel", "1raj": "1 Raja-Raja", "2raj": "2 Raja-Raja",
+    "1taw": "1 Tawarikh", "2taw": "2 Tawarikh", ezr: "Ezra", neh: "Nehemia",
+    tob: "Tobit", ydt: "Yudit", est: "Ester",
+    ayb: "Ayub", mzm: "Mazmur", ams: "Amsal", pkh: "Pengkhotbah", kid: "Kidung Agung",
+    keb: "Kebijaksanaan", sir: "Sirakh",
+    yes: "Yesaya", yer: "Yeremia", rat: "Ratapan", bar: "Barukh", yeh: "Yehezkiel",
+    dan: "Daniel", hos: "Hosea", yl: "Yoel", am: "Amos", ob: "Obaja", yun: "Yunus",
+    mi: "Mikha", nah: "Nahum", hab: "Habakuk", zef: "Zefanya", hag: "Hagai",
+    za: "Zakharia", mal: "Maleakhi",
+    "1mak": "1 Makabe", "2mak": "2 Makabe",
+    mat: "Matius", mrk: "Markus", luk: "Lukas", yoh: "Yohanes",
+    kis: "Kisah Para Rasul",
+    rm: "Roma", "1kor": "1 Korintus", "2kor": "2 Korintus", gal: "Galatia",
+    ef: "Efesus", flp: "Filipi", kol: "Kolose",
+    "1tes": "1 Tesalonika", "2tes": "2 Tesalonika",
+    "1tim": "1 Timotius", "2tim": "2 Timotius", tit: "Titus", flm: "Filemon",
+    ibr: "Ibrani", yak: "Yakobus",
+    "1ptr": "1 Petrus", "2ptr": "2 Petrus",
+    "1yoh": "1 Yohanes", "2yoh": "2 Yohanes", "3yoh": "3 Yohanes",
+    yud: "Yudas", why: "Wahyu"
+  };
+
+  // Book groups for organized display
+  const BOOK_GROUPS = [
+    { label: "Pentateukh", books: ["kej","kel","im","bil","ul"] },
+    { label: "Sejarah", books: ["yos","hak","rut","1sam","2sam","1raj","2raj","1taw","2taw","ezr","neh"] },
+    { label: "Deuterokanonika (Sejarah)", books: ["tob","ydt","est"] },
+    { label: "Puisi & Hikmat", books: ["ayb","mzm","ams","pkh","kid"] },
+    { label: "Deuterokanonika (Hikmat)", books: ["keb","sir"] },
+    { label: "Nabi Besar", books: ["yes","yer","rat","bar","yeh","dan"] },
+    { label: "Nabi Kecil", books: ["hos","yl","am","ob","yun","mi","nah","hab","zef","hag","za","mal"] },
+    { label: "Deuterokanonika (Nabi)", books: ["1mak","2mak"] },
+    { label: "Injil", books: ["mat","mrk","luk","yoh"] },
+    { label: "Rasuli", books: ["kis"] },
+    { label: "Surat Paulus", books: ["rm","1kor","2kor","gal","ef","flp","kol","1tes","2tes","1tim","2tim","tit","flm"] },
+    { label: "Surat Lainnya", books: ["ibr","yak","1ptr","2ptr","1yoh","2yoh","3yoh","yud"] },
+    { label: "Apokaliptik", books: ["why"] },
+  ];
+
+  const VERSIONS: Record<string, string> = {
+    ks: "ks.json",
+    ks_2: "ks_2.json",
+    vulgate: "vulgate_bible.json",
+  };
+
+  // ===== State =====
+  let currentVersion = "ks";
+  let bibleData: any = null;
+  let currentBook = "mat";
+  let currentChapter = 1;
+  let highlightVerses: number[] = [];
+
+  // ===== DOM refs =====
+  const bookSelect = document.getElementById("book-select") as HTMLSelectElement;
+  const chapterGrid = document.getElementById("chapter-grid")!;
+  const readingTitle = document.getElementById("reading-title")!;
+  const readingSubtitle = document.getElementById("reading-subtitle")!;
+  const readingLoading = document.getElementById("reading-loading")!;
+  const readingContent = document.getElementById("reading-content")!;
+  const versionTabs = document.querySelectorAll(".version-tab");
+  const citationInput = document.getElementById("citation-input") as HTMLInputElement;
+  const citationGo = document.getElementById("citation-go")!;
+  const versionLabel = document.getElementById("version-label")!;
+
+  // ===== Load Bible JSON =====
+  async function loadBible(version: string) {
+    if (bibleData && currentVersion === version) return;
+    readingLoading.classList.remove("hidden");
+    readingContent.classList.add("hidden");
+
+    const url = `/assets/data/${VERSIONS[version]}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Failed to load ${url}`);
+    bibleData = await resp.json();
+    currentVersion = version;
+    versionLabel.textContent = version.toUpperCase();
+    populateBookSelect();
+  }
+
+  // ===== Populate book dropdown =====
+  function populateBookSelect() {
+    bookSelect.innerHTML = "";
+    for (const group of BOOK_GROUPS) {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = group.label;
+      for (const abbr of group.books) {
+        if (!bibleData[abbr]) continue;
+        const opt = document.createElement("option");
+        opt.value = abbr;
+        opt.textContent = BOOK_NAMES[abbr] || abbr;
+        optgroup.appendChild(opt);
+      }
+      if (optgroup.children.length > 0) bookSelect.appendChild(optgroup);
+    }
+    bookSelect.value = currentBook;
+  }
+
+  // ===== Render chapter grid =====
+  function renderChapterGrid() {
+    const book = bibleData[currentBook];
+    if (!book) return;
+    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
+
+    chapterGrid.innerHTML = "";
+    for (const ch of chapters) {
+      const btn = document.createElement("button");
+      btn.className = `w-full py-1.5 text-xs rounded-lg transition-colors cursor-pointer ${
+        ch === currentChapter ? "chapter-btn-active" : "chapter-btn"
+      }`;
+      btn.textContent = String(ch);
+      btn.addEventListener("click", () => navigateTo(currentBook, ch));
+      chapterGrid.appendChild(btn);
+    }
+  }
+
+  // ===== Render verses =====
+  function renderVerses() {
+    const book = bibleData[currentBook];
+    if (!book) return;
+    const chapter = book[String(currentChapter)];
+    if (!chapter) return;
+
+    const bookName = BOOK_NAMES[currentBook] || currentBook;
+    readingTitle.textContent = `${bookName} ${currentChapter}`;
+    readingSubtitle.textContent = `${Object.keys(book).length} bab • Kitab Suci Katolik`;
+
+    const verses = Object.keys(chapter).map(Number).sort((a, b) => a - b);
+    let html = "";
+    for (const vs of verses) {
+      const text = chapter[String(vs)];
+      const isHighlighted = highlightVerses.includes(vs);
+      html += `<div class="verse-row${isHighlighted ? " highlighted" : ""}" data-verse="${vs}">
+        <sup>${vs}</sup><span class="verse-text">${text}</span>
+      </div>`;
+    }
+    readingContent.innerHTML = html;
+    readingLoading.classList.add("hidden");
+    readingContent.classList.remove("hidden");
+  }
+
+  // ===== Navigate =====
+  async function navigateTo(book: string, chapter: number, verses?: number[]) {
+    currentBook = book;
+    currentChapter = chapter;
+    highlightVerses = verses || [];
+
+    bookSelect.value = book;
+    renderChapterGrid();
+    renderVerses();
+
+    // Update URL hash
+    const hash = verses?.length
+      ? `${book}${chapter}:${verses.join(",")}`
+      : `${book}${chapter}`;
+    window.location.hash = hash;
+
+    // Scroll to top of reading area
+    readingTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ===== Parse citation =====
+  function parseCitation(input: string): { book: string; chapter: number; verses?: number[] } | null {
+    const normalized = input.trim().toLowerCase().replace(/\s+/g, " ");
+    // Try patterns: "yoh 3:16", "yoh3:16", "mzm 23", "kej 1:1-3"
+    const match = normalized.match(/^(\d?\w+)\s*(\d+)\s*(?::\s*([0-9,\-]+))?$/);
+    if (!match) return null;
+
+    const bookAbbr = match[1];
+    const chapter = parseInt(match[2]);
+    const verseStr = match[3];
+
+    // Find matching book key
+    let bookKey: string | null = null;
+    for (const key of Object.keys(bibleData)) {
+      const name = (BOOK_NAMES[key] || "").toLowerCase();
+      if (key === bookAbbr || name.startsWith(bookAbbr) || name.replace(/[^a-z]/g, "").startsWith(bookAbbr.replace(/[^a-z]/g, ""))) {
+        bookKey = key;
+        break;
+      }
+    }
+    if (!bookKey) return null;
+
+    let verses: number[] | undefined;
+    if (verseStr) {
+      verses = [];
+      for (const part of verseStr.split(",")) {
+        if (part.includes("-")) {
+          const [a, b] = part.split("-").map(Number);
+          for (let i = a; i <= b; i++) verses.push(i);
+        } else {
+          verses.push(parseInt(part));
+        }
+      }
+    }
+
+    return { book: bookKey, chapter, verses };
+  }
+
+  // ===== Next/Prev chapter =====
+  function getAdjacentChapter(delta: number) {
+    const book = bibleData[currentBook];
+    if (!book) return null;
+    const chapters = Object.keys(book).map(Number).sort((a, b) => a - b);
+    const idx = chapters.indexOf(currentChapter);
+    const newIdx = idx + delta;
+    if (newIdx >= 0 && newIdx < chapters.length) {
+      return { book: currentBook, chapter: chapters[newIdx] };
+    }
+    // Try adjacent book
+    const allBooks = Object.keys(bibleData);
+    const bookIdx = allBooks.indexOf(currentBook);
+    const nextBookIdx = bookIdx + delta;
+    if (nextBookIdx >= 0 && nextBookIdx < allBooks.length) {
+      const nextBook = allBooks[nextBookIdx];
+      const nextChapters = Object.keys(bibleData[nextBook]).map(Number).sort((a, b) => a - b);
+      return {
+        book: nextBook,
+        chapter: delta > 0 ? nextChapters[0] : nextChapters[nextChapters.length - 1]
+      };
+    }
+    return null;
+  }
+
+  // ===== Event listeners =====
+  bookSelect.addEventListener("change", () => {
+    navigateTo(bookSelect.value, 1);
+  });
+
+  citationGo.addEventListener("click", () => {
+    const result = parseCitation(citationInput.value);
+    if (result) navigateTo(result.book, result.chapter, result.verses);
+  });
+
+  citationInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") citationGo.click();
+  });
+
+  versionTabs.forEach(tab => {
+    tab.addEventListener("click", async () => {
+      const ver = tab.getAttribute("data-version");
+      if (!ver) return;
+      versionTabs.forEach(t => t.classList.remove("version-tab-active"));
+      tab.classList.add("version-tab-active");
+      await loadBible(ver);
+      navigateTo(currentBook, currentChapter);
+    });
+  });
+
+  // Prev/Next buttons
+  document.getElementById("prev-ch")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(-1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("next-ch")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("prev-ch-bottom")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(-1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+  document.getElementById("next-ch-bottom")!.addEventListener("click", () => {
+    const adj = getAdjacentChapter(1);
+    if (adj) navigateTo(adj.book, adj.chapter);
+  });
+
+  // Keyboard nav
+  document.addEventListener("keydown", (e) => {
+    if (document.activeElement === citationInput) return;
+    if (e.key === "ArrowLeft") document.getElementById("prev-ch")!.click();
+    if (e.key === "ArrowRight") document.getElementById("next-ch")!.click();
+  });
+
+  // ===== Init =====
+  async function init() {
+    // Check URL hash
+    const hash = window.location.hash.slice(1);
+    let initBook = "mat";
+    let initChapter = 1;
+    let initVerses: number[] = [];
+
+    if (hash) {
+      const parsed = hash.match(/^(\d?\w+?)(\d+)(?::([0-9,\-]+))?$/);
+      if (parsed) {
+        initBook = parsed[1];
+        initChapter = parseInt(parsed[2]);
+        if (parsed[3]) {
+          for (const p of parsed[3].split(",")) {
+            if (p.includes("-")) {
+              const [a, b] = p.split("-").map(Number);
+              for (let i = a; i <= b; i++) initVerses.push(i);
+            } else initVerses.push(parseInt(p));
+          }
+        }
+      }
+    }
+
+    // Set active version tab
+    versionTabs.forEach(t => {
+      if (t.getAttribute("data-version") === currentVersion) t.classList.add("version-tab-active");
+    });
+
+    await loadBible(currentVersion);
+
+    // Validate book/chapter exist
+    if (bibleData[initBook] && bibleData[initBook][String(initChapter)]) {
+      navigateTo(initBook, initChapter, initVerses);
+    } else {
+      navigateTo("mat", 1);
+    }
+  }
+
+  init();
+</script>

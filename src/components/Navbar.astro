@@ -528,6 +528,35 @@ function activeClass(href: string): string {
     border-top: 1px solid rgba(201, 168, 76, 0.08);
   }
 
+  /* ===== LIGHT MODE OVERRIDES ===== */
+  :global(html.light) .mega-menu-panel {
+    background: linear-gradient(180deg, rgba(247, 245, 240, 0.98) 0%, rgba(240, 238, 232, 0.99) 100%);
+    border-right-color: rgba(201, 168, 76, 0.15);
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.08);
+  }
+  :global(html.light) .glass-panel-header {
+    background: linear-gradient(180deg, rgba(247, 245, 240, 0.97) 0%, rgba(247, 245, 240, 0.92) 100%);
+    border-bottom-color: rgba(201, 168, 76, 0.12);
+  }
+  :global(html.light) .glass-panel-footer {
+    background: linear-gradient(180deg, rgba(247, 245, 240, 0.95) 0%, rgba(240, 238, 232, 0.98) 100%);
+    border-top-color: rgba(201, 168, 76, 0.12);
+  }
+  :global(html.light) .glass-panel {
+    background: linear-gradient(180deg, #f7f5f0 0%, #f0eee8 100%);
+    border-color: rgba(201, 168, 76, 0.15);
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.06);
+  }
+  :global(html.light) .bnav-panel-glass {
+    background: linear-gradient(180deg, rgba(247, 245, 240, 0.98) 0%, rgba(240, 238, 232, 0.99) 100%);
+    border-top-color: rgba(201, 168, 76, 0.15);
+    box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.06);
+  }
+  :global(html.light) .bnav-panel-header {
+    background: linear-gradient(180deg, rgba(247, 245, 240, 0.97) 0%, rgba(247, 245, 240, 0.92) 100%);
+    border-bottom-color: rgba(201, 168, 76, 0.12);
+  }
+
   #mega-menu-overlay.mega-menu-open {
     opacity: 1 !important;
     pointer-events: auto !important;

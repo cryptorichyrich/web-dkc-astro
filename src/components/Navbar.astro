@@ -18,7 +18,7 @@ function isActive(href: string): boolean {
 <!-- Desktop: top navbar -->
 <nav class="hidden md:flex items-center justify-between px-6 py-3 bg-dkc-surface/95 backdrop-blur border-b border-dkc-border safe-top sticky top-0 z-50">
   <a href="/" class="flex items-center gap-3">
-    <img src="/assets/img/avatar.webp" alt="DKC" class="w-10 h-10 rounded-full border border-dkc-gold/30" />
+    <img src="/assets/img/avatar-icon.webp" alt="DKC" class="w-10 h-10 rounded-full border border-dkc-gold/30" />
     <span class="text-dkc-gold font-serif font-bold text-lg">Damai Kasih Channel</span>
   </a>
   <div class="flex items-center gap-6">
@@ -60,11 +60,4 @@ function isActive(href: string): boolean {
 <!-- Spacer for mobile bottom nav -->
 <div class="md:hidden h-16"></div>
 
-<script is:inline>
-  // FOUC prevention
-  document.body.style.opacity = '0';
-  requestAnimationFrame(() => {
-    document.body.style.transition = 'opacity 0.15s ease';
-    document.body.style.opacity = '1';
-  });
-</script>
+

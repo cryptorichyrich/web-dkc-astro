@@ -1,18 +1,19 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts
-    .filter(post => post.slug)
-    .map(post => ({ params: { slug: post.slug }, props: { post } }));
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post }
+  }));
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
 <BaseLayout>
@@ -67,7 +68,7 @@ const { Content } = await post.render();
   <title>{post.data.title} — Damai Kasih Channel</title>
   <meta name="description" content={post.data.subtitle || post.data.title} />
   {post.data.tags.map(tag => <meta name="keywords" content={tag} />)}
-  <link rel="canonical" href={new URL(`/blog/${post.slug}`, Astro.site).href} />
+  <link rel="canonical" href={new URL(`/blog/${post.id}`, Astro.site).href} />
   
   <!-- JSON-LD for Article -->
   <script type="application/ld+json" set:html={JSON.stringify({

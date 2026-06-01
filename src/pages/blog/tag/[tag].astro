@@ -27,7 +27,7 @@ const posts = allPosts
 
     <div class="grid gap-3">
       {posts.map(post => (
-        <a href={`/blog/${post.slug}`} class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
+        <a href={`/blog/${post.id}`} class="glass-card p-4 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
           <div class="flex gap-3">
             {post.data.thumbnailImage && (
               <img src={post.data.thumbnailImage} alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />

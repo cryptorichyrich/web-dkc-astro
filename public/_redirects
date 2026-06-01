@@ -1,21 +1,7 @@
-# Legacy Jekyll URL redirects (301)
-/:year/:month/:day/:slug/  /blog/:slug/  301
+# Legacy Jekyll blog URLs (YYYY/MM/DD/slug → /blog/slug)
+# Note: CF Pages serves /blog/slug/ as /blog/slug/index.html automatically
+# No trailing-slash redirects needed — Astro builds with directory format
 
-# Direct page redirects
-/kitabsuci/  /kitabsuci  301
-/katekismus/  /katekismus  301
-/renungan/  /renungan  301
-/rosario/  /rosario  301
-/kalender-liturgi/  /kalender-liturgi  301
-/khk/  /khk  301
-/kvii/  /kvii  301
-/summa/  /summa  301
-/suksesi-kepausan/  /suksesi-kepausan  301
-/jalan-salib/  /jalan-salib  301
-/diagnosa/ajaran-bidat/  /diagnosa/ajaran-bidat  301
-/diagnosa/sedevacantisme/  /diagnosa/sedevacantisme  301
-/flix/  /flix  301
-/tentang/  /tentang  301
-/search/  /search  301
-/tags/  /tags  301
-/lainnya/  /lainnya  301
+# Old Jekyll blog post permalinks
+# These are handled by CF Pages _redirects (plain text format)
+# /YYYY/MM/DD/slug/ → /blog/slug/

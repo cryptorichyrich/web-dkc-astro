@@ -3,7 +3,7 @@ title: "Kitab Suci dan Tradisi suci"
 subtitle: "Kata Yunani terpenting dalam Perjanjian Baru untuk tradisi adalah paradosis. Kata ini digunakan empat kali sehubungan dengan tradisi Kristen"
 author: "Thomas Aquinas BPN (Tim DKC)"
 publishedAt: 2025-01-30
-tags: ["Sejarah", "Protestantisme", "Protestant", "Reformasi", "Tradisi", "Alkitab", "Kitabsuci"]
+tags: ["Sejarah", "Protestantisme", "Protestant", "Reformasi", "Tradisi", "Alkitab", "Kitab Suci"]
 coverImage: "/assets/img/sacred-tradition-dan-bible.webp"
 thumbnailImage: "/assets/img/sacred-tradition-dan-bible.webp"
 ---

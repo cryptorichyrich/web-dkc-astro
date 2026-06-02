@@ -6,15 +6,36 @@ import Footer from "@/components/Footer.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  const tagSet = new Set<string>();
-  posts.forEach(p => p.data.tags?.forEach(t => tagSet.add(t)));
-  return Array.from(tagSet).map(tag => ({ params: { tag }, props: { tag } }));
+  // Normalize tags: group by lowercase, use the most common casing as canonical
+  const tagMap = new Map<string, { canonical: string; count: number }>();
+  posts.forEach(p => p.data.tags?.forEach(t => {
+    const key = t.toLowerCase();
+    const existing = tagMap.get(key);
+    if (!existing || t[0] === t[0].toUpperCase()) {
+      tagMap.set(key, { canonical: t, count: (existing?.count || 0) + 1 });
+    }
+  }));
+  // Generate page for each canonical tag
+  const paths = Array.from(tagMap.values()).map(({ canonical }) => ({
+    params: { tag: canonical }, props: { tag: canonical }
+  }));
+  // Also generate lowercase redirect pages for case-insensitive access
+  tagMap.forEach(({ canonical }, lowerKey) => {
+    if (lowerKey !== canonical.toLowerCase()) {
+      // Already covered by canonical
+    }
+    // Add lowercase version if different from canonical
+    if (lowerKey !== canonical) {
+      paths.push({ params: { tag: lowerKey }, props: { tag: canonical } });
+    }
+  });
+  return paths;
 }
 
 const { tag } = Astro.props;
 const allPosts = await getCollection("blog");
 const posts = allPosts
-  .filter(p => p.data.tags?.includes(tag) && p.data.publishedAt <= new Date())
+  .filter(p => p.data.tags?.some(t => t.toLowerCase() === tag.toLowerCase()) && p.data.publishedAt <= new Date())
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 ---
 

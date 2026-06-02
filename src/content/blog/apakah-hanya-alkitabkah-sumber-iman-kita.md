@@ -3,7 +3,7 @@ title: "HANYA ALKITAB-KAH SUMBER IMAN KITA?"
 subtitle: "Yesus mengecam orang-orang Yahudi yang mau menyelidiki Kitab Suci untuk mendapatkan kehidupan, tetapi nyatanya mereka tidak mampu percaya kepada Yesus, yang adalah ″Jalan, Kebenaran dan Kehidupan.″"
 author: "Mgr. Pidyarto, O.Carm"
 publishedAt: 2025-01-01
-tags: ["Katolik", "katekese", "Sejarah"]
+tags: ["Katolik", "Katekese", "Sejarah"]
 featured: true
 coverImage: "/assets/img/QueenofallSaints.webp"
 thumbnailImage: "/assets/img/QueenofallSaints.webp"

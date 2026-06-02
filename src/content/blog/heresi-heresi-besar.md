@@ -3,7 +3,7 @@ title: "Heresi-Heresi Besar Yang Kontroversial"
 subtitle: "“Karena akan datang waktunya, orang tidak dapat menerima ajaran sehat, tetapi mereka akan mengumpulkan guru-guru menurut keinginannya untuk memuaskan keinginan telinganya. Mereka akan memalingkan telinganya dari kebenaran dan membukanya bagi dongeng” (2 Tim. 4&#58;3–4)."
 author: "Tim DKC"
 publishedAt: 2025-01-01
-tags: ["Bidat", "Dogma", "Katolik", "sejarah"]
+tags: ["Bidat", "Dogma", "Katolik", "Sejarah"]
 coverImage: "/assets/img/great-heresy.webp"
 thumbnailImage: "/assets/img/great-heresy.webp"
 ---

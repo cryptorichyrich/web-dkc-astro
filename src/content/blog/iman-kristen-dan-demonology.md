@@ -3,7 +3,7 @@ title: "Iman Kristen dan Demonology"
 subtitle: "Konsili Trente, yang merangkum doktrin Santo Paulus, menyatakan bahwa manusia berdosa “berada di bawah kuasa iblis dan maut” (100). Dengan menyelamatkan kita, Allah telah “mengeluarkan kita dari kuasa kegelapan dan menciptakan tempat bagi kita di dalam kerajaan Putra yang Ia kasihi, dan di dalam Dia, kita memperoleh kembali kebebasan kita, pengampunan atas dosa-dosa kita” (101). Melakukan dosa setelah Pembaptisan sekali lagi berarti “menyerahkan diri kepada kuasa iblis” (102). Ini sebenarnya adalah kepercayaan awal dan universal Gereja."
 author: "Agustinus Biotamalo Lumbantoruan (Tim-DKC)"
 publishedAt: 2025-01-20
-tags: ["Gereja", "Katolik", "Kitabsuci", "Demonology"]
+tags: ["Gereja", "Katolik", "Kitab Suci", "Demonology"]
 coverImage: "/assets/img/kristen-dan-demonology.webp"
 thumbnailImage: "/assets/img/kristen-dan-demonology.webp"
 ---

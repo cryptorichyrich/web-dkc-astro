@@ -235,6 +235,9 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
             </div>
           </div>
           <a href="/kalender-liturgi" class="block text-center text-xs text-dkc-gold hover:underline mt-3 pt-2 border-t border-dkc-border/30">📅 Kalender Lengkap →</a>
+          <div class="text-center mt-1">
+            <a id="liturgi-renungan-link" href="#" target="_blank" class="hidden text-xs text-dkc-gold hover:underline">📿 Baca Renungan Hari Ini →</a>
+          </div>
         </div>
 
 
@@ -560,13 +563,94 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
     'Merah':'bg-red-500','Merah Muda':'bg-rose-300','Hitam':'bg-gray-700','Emas':'bg-yellow-400',
   };
 
+  // --- Bacaan-to-links parser (shared with kalender-liturgi page) ---
+  function processVerseRange(book, chapter, verseRange) {
+    var crossMatch = verseRange.match(/^(\d+[a-z]?)-(\d+):(\d+[a-z]?)$/i);
+    if (crossMatch) {
+      return { parts: [book+chapter+':'+crossMatch[1]+'-999', book+crossMatch[2]+':1-'+crossMatch[3]], newChapter: crossMatch[2] };
+    }
+    var newChMatch = verseRange.match(/^(\d+):(\S+)$/i);
+    if (newChMatch) {
+      var newCh = newChMatch[1], vs = newChMatch[2];
+      var innerCross = vs.match(/^(\d+[a-z]?)-(\d+):(\d+[a-z]?)$/i);
+      if (innerCross) {
+        return { parts: [book+newCh+':'+innerCross[1]+'-999', book+innerCross[2]+':1-'+innerCross[3]], newChapter: innerCross[2] };
+      }
+      return { parts: [book+newCh+':'+vs], newChapter: newCh };
+    }
+    return { parts: [book+chapter+':'+verseRange], newChapter: null };
+  }
+
+  function parseBacaanToLinks(bacaan) {
+    if (!bacaan) return '';
+    var parts = bacaan.split(';');
+    var linked = [];
+    var lastBook = null;
+    for (var i = 0; i < parts.length; i++) {
+      var trimmed = parts[i].trim();
+      if (!trimmed || trimmed === '.') continue;
+      var match = trimmed.match(/^([a-z]+\.?)\s*(\d+):(\S+)/i);
+      if (match) {
+        var book = match[1].replace('.', '').toLowerCase();
+        var chapter = match[2];
+        var verses = match[3];
+        lastBook = book;
+        var verseRanges = verses.split(',').map(function(v){return v.trim();});
+        var queryParts = [];
+        var currentCh = chapter;
+        for (var j = 0; j < verseRanges.length; j++) {
+          var result = processVerseRange(book, currentCh, verseRanges[j]);
+          queryParts = queryParts.concat(result.parts);
+          if (result.newChapter) currentCh = result.newChapter;
+        }
+        linked.push('<a href="/kitabsuci/pbtb2/?q='+encodeURIComponent(queryParts.join(';'))+'" class="text-dkc-gold hover:underline" target="_blank">'+trimmed+'</a>');
+      } else {
+        var contMatch = trimmed.match(/^(\d+):(\S+)/i);
+        if (contMatch && lastBook) {
+          var chapter2 = contMatch[1], verses2 = contMatch[2];
+          var verseRanges2 = verses2.split(',').map(function(v){return v.trim();});
+          var queryParts2 = [];
+          var currentCh2 = chapter2;
+          for (var k = 0; k < verseRanges2.length; k++) {
+            var result2 = processVerseRange(lastBook, currentCh2, verseRanges2[k]);
+            queryParts2 = queryParts2.concat(result2.parts);
+            if (result2.newChapter) currentCh2 = result2.newChapter;
+          }
+          linked.push('<a href="/kitabsuci/pbtb2/?q='+encodeURIComponent(queryParts2.join(';'))+'" class="text-dkc-gold hover:underline" target="_blank">'+trimmed+'</a>');
+        } else {
+          linked.push(trimmed);
+        }
+      }
+    }
+    return linked.join('; ');
+  }
+
+  // --- Renungan lookup ---
+  var renunganIndex = [];
+  async function loadRenunganIndex() {
+    try {
+      var res = await fetch('/assets/data/renungan-index.json');
+      if (res.ok) renunganIndex = await res.json();
+    } catch(e) { console.warn('Renungan index:', e); }
+  }
+  loadRenunganIndex();
+
+  function findTodayRenungan() {
+    var now = new Date();
+    var key = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    for (var i = 0; i < renunganIndex.length; i++) {
+      if (renunganIndex[i].date === key) return renunganIndex[i];
+    }
+    return null;
+  }
+
   async function loadLiturgiWidget() {
-    const now = new Date();
-    const key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    var now = new Date();
+    var key = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
 
     // Date header
     document.getElementById("liturgi-date").textContent =
-      `${DAYS_ID[now.getDay()]}, ${now.getDate()} ${MONTHS_ID[now.getMonth()]} ${now.getFullYear()}`;
+      DAYS_ID[now.getDay()]+', '+now.getDate()+' '+MONTHS_ID[now.getMonth()]+' '+now.getFullYear();
 
     // Try loading from JSON
     try {
@@ -584,18 +668,29 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
         // Bacaan
         if (info.bacaan) {
           document.getElementById('liturgi-bacaan-wrap').classList.remove('hidden');
-          document.getElementById('liturgi-bacaan').textContent = info.bacaan;
+          document.getElementById('liturgi-bacaan').innerHTML = parseBacaanToLinks(info.bacaan);
         }
         // BcO
         if (info.bco) {
           document.getElementById('liturgi-bco-wrap').classList.remove('hidden');
-          document.getElementById('liturgi-bco').textContent = info.bco;
+          document.getElementById('liturgi-bco').innerHTML = parseBacaanToLinks(info.bco);
         }
         // Warna liturgi
         const warna = info.warna || 'Hijau';
         document.getElementById('liturgi-color-text').textContent = 'Warna Liturgi ' + warna;
         const dot = document.getElementById('liturgi-color-dot');
         dot.className = 'w-2.5 h-2.5 rounded-full inline-block ' + (WARNA_DOT[warna] || 'bg-dkc-muted');
+
+        // Renungan link
+        const renungan = findTodayRenungan();
+        const renunganEl = document.getElementById('liturgi-renungan-link');
+        if (renungan) {
+          renunganEl.href = renungan.url;
+          renunganEl.classList.remove('hidden');
+        } else if (renunganEl) {
+          renunganEl.classList.add('hidden');
+        }
+
         return;
       }
     } catch(e) { console.warn('Liturgical data unavailable:', e); }

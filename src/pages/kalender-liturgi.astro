@@ -5,23 +5,51 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <slot name="head">
+    <title>Kalender Liturgi 2026 — Damai Kasih Channel</title>
+    <meta name="description" content="Kalender liturgi Katolik 2026 lengkap — bacaan harian, warna liturgi, perayaan orang kudus, dan BcO." />
+    <meta name="keywords" content="kalender liturgi Katolik 2026, kalender liturgi hari ini, bacaan liturgi Katolik, warna liturgi, pesta orang kudus" />
+  </slot>
+
   <Navbar />
+  
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <div class="text-center mb-8">
+    <div class="text-center mb-6">
       <span class="text-4xl">📅</span>
-      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Kalender Liturgi</h1>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Kalender Liturgi 2026</h1>
       <p class="text-dkc-muted text-sm mt-1">Kalender liturgi Gereja Katolik Ritus Romawi</p>
     </div>
 
     <!-- Month navigation -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-4">
       <button id="cal-prev" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">←</button>
       <h2 id="cal-month-title" class="text-lg font-bold text-dkc-gold"></h2>
       <button id="cal-next" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">→</button>
     </div>
 
-    <!-- Today info -->
-    <div id="cal-today" class="glass-card p-4 mb-6 text-center">
+    <!-- Detail panel — shows selected date info -->
+    <div id="cal-detail" class="glass-card p-4 mb-4 hidden">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <h3 id="cal-detail-date" class="text-dkc-gold font-semibold text-lg"></h3>
+          <p id="cal-detail-perayaan" class="text-dkc-text text-sm mt-1"></p>
+        </div>
+        <button id="cal-detail-close" class="text-dkc-muted hover:text-dkc-gold text-lg leading-none">&times;</button>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div id="cal-detail-bacaan" class="hidden">
+          <span class="text-dkc-muted">Bacaan</span>
+          <p id="cal-detail-bacaan-text" class="text-dkc-text mt-0.5"></p>
+        </div>
+        <div id="cal-detail-bco" class="hidden">
+          <span class="text-dkc-muted">BcO</span>
+          <p id="cal-detail-bco-text" class="text-dkc-text mt-0.5"></p>
+        </div>
+        <div id="cal-detail-warna">
+          <span class="text-dkc-muted">Warna Liturgi</span>
+          <p id="cal-detail-warna-text" class="text-dkc-text mt-0.5 font-medium"></p>
+        </div>
+      </div>
     </div>
 
     <!-- Calendar grid -->
@@ -30,8 +58,7 @@ import Footer from "@/components/Footer.astro";
         <div class="py-2">Min</div><div class="py-2">Sen</div><div class="py-2">Sel</div>
         <div class="py-2">Rab</div><div class="py-2">Kam</div><div class="py-2">Jum</div><div class="py-2">Sab</div>
       </div>
-      <div id="cal-grid" class="grid grid-cols-7">
-      </div>
+      <div id="cal-grid" class="grid grid-cols-7"></div>
     </div>
 
     <!-- Legend -->
@@ -42,21 +69,34 @@ import Footer from "@/components/Footer.astro";
       <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-600 inline-block"></span> Merah</span>
       <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-300 inline-block"></span> Merah Muda</span>
       <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span> Emas</span>
-    </div>
-
-    <!-- Liturgical season info -->
-    <div id="cal-season-info" class="glass-card p-4 mt-6">
+      <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-800 inline-block"></span> Hitam</span>
     </div>
   </main>
   <Footer />
 </BaseLayout>
 
-<script>
+<script is:inline>
+  // --- liturgical data loader ---
   const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
-  let viewYear, viewMonth;
+  let liturgicalData = {};
+  let viewYear = 2026, viewMonth = 5; // default June
 
+  async function loadData() {
+    try {
+      const res = await fetch('/assets/data/liturgical-2026.json');
+      if (res.ok) liturgicalData = await res.json();
+      else console.warn('Liturgical data not available, using computed seasons');
+    } catch(e) { console.warn('Error loading liturgical data:', e); }
+  }
+
+  function getLiturgicalInfo(date) {
+    const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    return liturgicalData[key] || null;
+  }
+
+  // --- computed season fallback ---
   function computeEaster(y) {
     const a=y%19, b=Math.floor(y/100), c=y%100;
     const d=Math.floor(b/4), e=b%4, f=Math.floor((b+8)/25);
@@ -68,169 +108,132 @@ import Footer from "@/components/Footer.astro";
     return new Date(y, month-1, day);
   }
 
-  function getDayInfo(date) {
-    const y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
-    const dow = date.getDay();
-    const easter = computeEaster(y);
-    const ashWed = new Date(easter); ashWed.setDate(easter.getDate()-46);
-    const pentecost = new Date(easter); pentecost.setDate(easter.getDate()+49);
-    const corpusChristi = new Date(easter); corpusChristi.setDate(easter.getDate()+60);
-    const christmas = new Date(y, 11, 25);
-    const adventSun1 = new Date(christmas); adventSun1.setDate(christmas.getDate()-(christmas.getDay()===0?28:21+christmas.getDay()));
-
-    const doy = Math.floor((date - new Date(y,0,1)) / 86400000);
-
-    // Major feasts (month-1 based)
-    const feasts = {
-      '1-1': {name:'Maria Bunda Allah',color:'white',rank:'solemnity'},
-      '0-6': {name:'Epifani',color:'white',rank:'solemnity'},
-      '2-19': {name:'St. Yosef',color:'white',rank:'solemnity'},
-      '2-25': {name:'Pemberitaan Tuhan',color:'white',rank:'solemnity'},
-      '5-24': {name:'Kelahiran Yohanes Pembaptis',color:'white',rank:'solemnity'},
-      '5-29': {name:'St. Petrus & Paulus',color:'red',rank:'solemnity'},
-      '7-15': {name:'Maria Diangkat ke Surga',color:'white',rank:'solemnity'},
-      '8-14': {name:'Pesta Salib Suci',color:'red',rank:'feast'},
-      '10-1': {name:'Semua Orang Kudus',color:'white',rank:'solemnity'},
-      '10-2': {name:'Arwah Semua Orang Beriman',color:'white',rank:'solemnity'},
-      '11-8': {name:'Maria Dikandung Tanpa Noda',color:'white',rank:'solemnity'},
-      '11-25': {name:'Natal',color:'white',rank:'solemnity'},
-    };
-
-    const key = `${m}-${d}`;
-    if (feasts[key]) return feasts[key];
-
-    // Easter-based feasts
-    const diff = Math.floor((date - easter) / 86400000);
-    if (diff === 0) return {name:'Paskah',color:'white',rank:'solemnity'};
-    if (diff === -7) return {name:'Minggu Palmarum',color:'red',rank:'solemnity'};
-    if (diff === -3) return {name:'Kamis Putih',color:'white',rank:'solemnity'};
-    if (diff === -2) return {name:'Jumat Agung',color:'red',rank:'solemnity'};
-    if (diff === -1) return {name:'Sabtu Suci',color:'white',rank:'solemnity'};
-    if (diff === 39) return {name:'Kenaikan Tuhan',color:'white',rank:'solemnity'};
-    if (diff === 49) return {name:'Pentakosta',color:'red',rank:'solemnity'};
-    if (diff === 56) return {name:'Trinitas',color:'white',rank:'solemnity'};
-    if (diff === 60) return {name:'Corpus Christi',color:'white',rank:'solemnity'};
-
-    // Ash Wednesday
-    const ashDiff = Math.floor((date - ashWed) / 86400000);
-
-    // Seasons
-    if (date >= ashWed && date < easter) {
-      // Lent
-      if (dow === 0) return {name:'Minggu Prapaskah',color:'purple',rank:'sunday'};
-      return {name:'Prapaskah',color:'purple',rank:'feria'};
-    }
-    if (date >= easter && date < pentecost) {
-      if (dow === 0) return {name:'Minggu Paskah',color:'white',rank:'sunday'};
-      return {name:'Masa Paskah',color:'white',rank:'feria'};
-    }
-    if (date >= adventSun1 && date < new Date(y,11,25)) {
-      if (dow === 0) return {name:'Minggu Adven',color:'purple',rank:'sunday'};
-      return {name:'Masa Adven',color:'purple',rank:'feria'};
-    }
-    if ((m === 11 && d >= 25) || (m === 0 && d <= 6)) {
-      return {name:'Masa Natal',color:'white',rank:'feria'};
-    }
-
-    // Ordinary time
-    if (dow === 0) return {name:'Minggu Biasa',color:'green',rank:'sunday'};
-    return {name:'Waktu Biasa',color:'green',rank:'feria'};
+  function getSeasonFallback(date) {
+    const y=date.getFullYear();
+    const easter=computeEaster(y);
+    const ashWed=new Date(easter); ashWed.setDate(easter.getDate()-46);
+    const pentecost=new Date(easter); pentecost.setDate(easter.getDate()+49);
+    const christmas=new Date(y,11,25);
+    const adventSun1=new Date(christmas); adventSun1.setDate(christmas.getDate()-(christmas.getDay()===0?28:21+christmas.getDay()));
+    if (date>=ashWed&&date<easter) return {name:'Prapaskah',color:'purple'};
+    if (date>=easter&&date<pentecost) return {name:'Masa Paskah',color:'white'};
+    if (date>=adventSun1&&date<new Date(y,11,25)) return {name:'Adven',color:'purple'};
+    if ((date.getMonth()===11&&date.getDate()>=25)||(date.getMonth()===0&&date.getDate()<=6)) return {name:'Masa Natal',color:'white'};
+    return {name:'Waktu Biasa',color:'green'};
   }
 
-  function getSeason(date) {
-    const y = date.getFullYear();
-    const easter = computeEaster(y);
-    const ashWed = new Date(easter); ashWed.setDate(easter.getDate()-46);
-    const pentecost = new Date(easter); pentecost.setDate(easter.getDate()+49);
-    const christmas = new Date(y, 11, 25);
-    const adventSun1 = new Date(christmas); adventSun1.setDate(christmas.getDate()-(christmas.getDay()===0?28:21+christmas.getDay()));
-
-    if (date >= ashWed && date < easter) return {name:'Prapaskah',color:'Ungu',icon:'🙏'};
-    if (date >= easter && date < new Date(easter.getTime()+50*864e5)) return {name:'Masa Paskah',color:'Putih',icon:'🕊️'};
-    if (date >= adventSun1 && date < christmas) return {name:'Adven',color:'Ungu',icon:'🕯️'};
-    if ((date.getMonth()===11 && date.getDate()>=25)||(date.getMonth()===0 && date.getDate()<=6)) return {name:'Natal',color:'Putih',icon:'⭐'};
-    return {name:'Waktu Biasa',color:'Hijau',icon:'🌿'};
+  // --- detail panel ---
+  function showDetail(date) {
+    const info = getLiturgicalInfo(date);
+    const fallback = getSeasonFallback(date);
+    const sel = document.getElementById('cal-detail');
+    sel.classList.remove('hidden');
+    document.getElementById('cal-detail-date').textContent = 
+      `${DAYS_ID[date.getDay()]}, ${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
+    
+    const perayaan = info ? info.perayaan : fallback.name;
+    document.getElementById('cal-detail-perayaan').textContent = '✝️ ' + perayaan;
+    
+    const bacaanDiv = document.getElementById('cal-detail-bacaan');
+    const bacaanText = document.getElementById('cal-detail-bacaan-text');
+    if (info && info.bacaan) {
+      bacaanDiv.classList.remove('hidden');
+      bacaanText.textContent = info.bacaan;
+    } else {
+      bacaanDiv.classList.add('hidden');
+    }
+    
+    const bcoDiv = document.getElementById('cal-detail-bco');
+    const bcoText = document.getElementById('cal-detail-bco-text');
+    if (info && info.bco) {
+      bcoDiv.classList.remove('hidden');
+      bcoText.textContent = info.bco;
+    } else {
+      bcoDiv.classList.add('hidden');
+    }
+    
+    const warna = info ? info.warna : (fallback.color==='white'?'Putih':fallback.color==='purple'?'Ungu':fallback.color==='red'?'Merah':'Hijau');
+    document.getElementById('cal-detail-warna-text').textContent = warna;
+    
+    sel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  document.getElementById('cal-detail-close').addEventListener('click', () => {
+    document.getElementById('cal-detail').classList.add('hidden');
+  });
+
+  // --- render ---
+  const colorMap = {
+    'Putih':'border-white/40 bg-white/5', 'Hijau':'border-green-600/40 bg-green-900/10',
+    'Ungu':'border-purple-600/40 bg-purple-900/10', 'Merah':'border-red-600/40 bg-red-900/10',
+    'Hitam':'border-gray-600/40 bg-gray-900/10',
+  };
+  const dotColorMap = {
+    'Putih':'bg-white/60', 'Hijau':'bg-green-600/60', 'Ungu':'bg-purple-600/60',
+    'Merah':'bg-red-600/60', 'Hitam':'bg-gray-600/60',
+  };
 
   function renderCalendar() {
-    const title = document.getElementById("cal-month-title");
+    const title = document.getElementById('cal-month-title');
     title.textContent = `${MONTHS_ID[viewMonth]} ${viewYear}`;
-
     const firstDay = new Date(viewYear, viewMonth, 1);
     const lastDay = new Date(viewYear, viewMonth + 1, 0);
     const startDow = firstDay.getDay();
     const daysInMonth = lastDay.getDate();
-
     const today = new Date();
-    const isCurrentMonth = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
+    const isCurrentMonth = today.getFullYear()===viewYear && today.getMonth()===viewMonth;
 
-    const grid = document.getElementById("cal-grid");
+    const grid = document.getElementById('cal-grid');
     let html = '';
+    for (let i=0; i<startDow; i++) html += '<div class="p-1 min-h-[52px] md:min-h-[68px]"></div>';
 
-    // Empty cells before first day
-    for (let i = 0; i < startDow; i++) {
-      html += '<div class="p-1 min-h-[48px] md:min-h-[64px]"></div>';
-    }
-
-    const colorMap = {
-      white: 'border-white/40 bg-white/5',
-      green: 'border-green-600/40 bg-green-900/10',
-      purple: 'border-purple-600/40 bg-purple-900/10',
-      red: 'border-red-600/40 bg-red-900/10',
-    };
-
-    for (let d = 1; d <= daysInMonth; d++) {
+    for (let d=1; d<=daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
-      const info = getDayInfo(date);
-      const isToday = isCurrentMonth && d === today.getDate();
-      const borderClass = colorMap[info.color] || 'border-dkc-border';
+      const info = getLiturgicalInfo(date);
+      const season = getSeasonFallback(date);
+      const nama = info ? info.perayaan : season.name;
+      const warna = info ? info.warna : (season.color==='white'?'Putih':season.color==='purple'?'Ungu':season.color==='red'?'Merah':'Hijau');
+      const baseWarna = warna.split('/')[0].split(' ')[0]; // handle "Ungu pagi Putih Vigili"
+      const borderClass = colorMap[baseWarna] || 'border-dkc-border';
+      const dotClass = dotColorMap[baseWarna] || 'bg-dkc-muted/40';
+      const isToday = isCurrentMonth && d===today.getDate();
+      const dateKey = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 
-      html += `<div class="p-1 min-h-[48px] md:min-h-[64px] border-t border-dkc-border/30 ${isToday ? 'ring-2 ring-dkc-gold/60' : ''}">
-        <div class="text-xs font-semibold ${isToday ? 'text-dkc-gold' : 'text-dkc-text'}">${d}</div>
-        <div class="text-[9px] md:text-[10px] leading-tight text-dkc-muted mt-0.5 truncate">${info.name}</div>
-        <div class="w-2 h-2 rounded-full mt-1 ${info.color === 'white' ? 'bg-white/60' : info.color === 'green' ? 'bg-green-600/60' : info.color === 'purple' ? 'bg-purple-600/60' : info.color === 'red' ? 'bg-red-600/60' : 'bg-dkc-muted/40'}"></div>
+      html += `<div class="cal-day p-1 min-h-[52px] md:min-h-[68px] border-t border-dkc-border/30 cursor-pointer hover:bg-dkc-surface/30 transition-colors ${isToday?'ring-2 ring-dkc-gold/70':''}" data-date="${dateKey}">
+        <div class="text-xs font-semibold ${isToday?'text-dkc-gold':'text-dkc-text'}">${d}</div>
+        <div class="text-[8px] md:text-[10px] leading-tight text-dkc-muted mt-0.5 line-clamp-2">${nama}</div>
+        <div class="w-2 h-2 rounded-full mt-1 ${dotClass}"></div>
       </div>`;
     }
-
     grid.innerHTML = html;
 
-    // Today info
-    const season = getSeason(today);
-    document.getElementById("cal-today").innerHTML = `
-      <p class="text-dkc-gold font-semibold">${DAYS_ID[today.getDay()]}, ${today.getDate()} ${MONTHS_ID[today.getMonth()]} ${today.getFullYear()}</p>
-      <p class="text-dkc-text text-sm mt-1">${season.icon} ${season.name}</p>
-      <p class="text-dkc-muted text-xs mt-1">Warna liturgi: ${season.color}</p>
-    `;
-
-    // Season info
-    const easter = computeEaster(viewYear);
-    const ashWed = new Date(easter); ashWed.setDate(easter.getDate()-46);
-    document.getElementById("cal-season-info").innerHTML = `
-      <h3 class="text-dkc-gold font-semibold text-sm mb-2">📅 Tahun Liturgi ${viewYear}</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-dkc-text">
-        <div>🕯️ Adven: ${adventSun1.toLocaleDateString('id-ID')}</div>
-        <div>⭐ Natal: 25 Desember</div>
-        <div>🙏 Rabu Abu: ${ashWed.toLocaleDateString('id-ID')}</div>
-        <div>🕊️ Paskah: ${easter.toLocaleDateString('id-ID')}</div>
-        <div>🔴 Pentakosta: ${new Date(easter.getTime()+49*864e5).toLocaleDateString('id-ID')}</div>
-        <div>🌿 Waktu Biasa: sisa tahun</div>
-      </div>
-    `;
+    // Click handlers
+    grid.querySelectorAll('.cal-day').forEach(el => {
+      el.addEventListener('click', () => {
+        const dk = el.dataset.date;
+        if (dk) {
+          const [y,m,d] = dk.split('-').map(Number);
+          showDetail(new Date(y, m-1, d));
+        }
+      });
+    });
   }
 
-  document.getElementById("cal-prev").addEventListener("click", () => {
-    viewMonth--;
-    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-    renderCalendar();
+  // --- nav ---
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} renderCalendar();
   });
-  document.getElementById("cal-next").addEventListener("click", () => {
-    viewMonth++;
-    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-    renderCalendar();
+  document.getElementById('cal-next').addEventListener('click', () => {
+    viewMonth++; if(viewMonth>11){viewMonth=0;viewYear++;} renderCalendar();
   });
 
+  // --- init ---
   const now = new Date();
   viewYear = now.getFullYear();
   viewMonth = now.getMonth();
-  renderCalendar();
+  loadData().then(() => {
+    renderCalendar();
+    // Auto-show today
+    setTimeout(() => showDetail(now), 100);
+  });
 </script>

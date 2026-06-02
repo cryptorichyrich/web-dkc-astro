@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Diagnosa Ajaran Bidat dalam Perspektif Katolik — Damai Kasih Channel</title>
+    <meta name="description" content="Pelajari cara mengenali ajaran yang menyimpang dari iman Katolik berdasarkan Kitab Suci, Tradisi Suci, Magisterium, dan Katekismus Gereja Katolik." />
+  </Fragment>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -60,27 +64,6 @@ import Footer from "@/components/Footer.astro";
 
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Diagnosa Ajaran Bidat dalam Perspektif Katolik — Damai Kasih Channel</title>
-  <meta name="description" content="Pelajari cara mengenali ajaran yang menyimpang dari iman Katolik berdasarkan Kitab Suci, Tradisi Suci, Magisterium, dan Katekismus Gereja Katolik." />
-  <meta name="keywords" content="ajaran bidat, bidat dalam Gereja Katolik, diagnosa ajaran sesat, apologetika Katolik, ajaran Gereja Katolik" />
-  <link rel="preload" href="/assets/data/diagnosa-quiz.json" as="fetch" crossorigin />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Diagnosa Ajaran Bidat",
-    "url": "https://web-dkc-astro.pages.dev/diagnosa/ajaran-bidat/",
-    "description": "Alat untuk mengenali ajaran yang menyimpang dari iman Katolik.",
-    "applicationCategory": "EducationalApplication",
-    "operatingSystem": "Web Browser",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
-    "inLanguage": "id-ID"
-  }
-  </script>
-</slot>
-
 <style is:global>
   .heresy-card { background: var(--color-dkc-surface); border: 1px solid #ef5350; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
   .heresy-card-header { background: linear-gradient(135deg, #c0392b, #962d22); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }

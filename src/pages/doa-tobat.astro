@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Doa Tobat — Damai Kasih Channel</title>
+    <meta name="description" content="Doa Tobat Katolik untuk memohon ampun atas dosa dan mempersiapkan hati dalam pertobatan serta Sakramen Pengakuan Dosa." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
@@ -65,8 +69,8 @@ import Footer from "@/components/Footer.astro";
   <Footer />
 </BaseLayout>
 
-<title>Doa Tobat — Damai Kasih Channel</title>
-<meta name="description" content="Doa Tobat Katolik untuk memohon ampun atas dosa dan mempersiapkan hati dalam pertobatan serta Sakramen Pengakuan Dosa." />
+
+
 
 <script>
   const btnShare = document.getElementById("btn-share");

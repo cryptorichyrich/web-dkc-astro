@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Doa Rosario Interaktif — Damai Kasih Channel</title>
+    <meta name="description" content="Doa Rosario interaktif dengan panduan langkah demi langkah. Peristiwa Gembira, Sedih, Mulia, Terang." />
+  </Fragment>
   <Navbar />
   
   <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
@@ -68,12 +72,6 @@ import Footer from "@/components/Footer.astro";
 
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Doa Rosario Interaktif — Damai Kasih Channel</title>
-  <meta name="description" content="Doa Rosario interaktif dengan panduan langkah demi langkah. Peristiwa Gembira, Sedih, Mulia, Terang." />
-</slot>
-
 <script>
   // --- Data Loading & State ---
   const MYSTERY_ICONS = { gembira: '🌟', terang: '☀️', sedih: '💔', mulia: '👑' };

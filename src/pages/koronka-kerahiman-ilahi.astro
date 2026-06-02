@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Koronka Kerahiman Ilahi — Damai Kasih Channel</title>
+    <meta name="description" content="Koronka Kerahiman Ilahi, doa devosi Katolik kepada Kerahiman Yesus, termasuk makna Jam Kerahiman dan cara mendoakannya." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
@@ -167,8 +171,8 @@ import Footer from "@/components/Footer.astro";
   <Footer />
 </BaseLayout>
 
-<title>Koronka Kerahiman Ilahi — Damai Kasih Channel</title>
-<meta name="description" content="Koronka Kerahiman Ilahi, doa devosi Katolik kepada Kerahiman Yesus, termasuk makna Jam Kerahiman dan cara mendoakannya." />
+
+
 
 <script>
   const btnShare = document.getElementById("btn-share");

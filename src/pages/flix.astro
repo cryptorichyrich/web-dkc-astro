@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Flix — Video Katolik — Damai Kasih Channel</title>
+  <meta name="description" content="Galeri video Katolik — apologetika, katekese, dan renungan." />
+  </Fragment>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -37,7 +41,3 @@ import Footer from "@/components/Footer.astro";
   <Footer />
 </BaseLayout>
 
-<slot name="head">
-  <title>Flix — Video Katolik — Damai Kasih Channel</title>
-  <meta name="description" content="Galeri video Katolik — apologetika, katekese, dan renungan." />
-</slot>

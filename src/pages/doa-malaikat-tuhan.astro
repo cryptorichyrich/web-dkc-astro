@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Doa Malaikat Tuhan (Angelus) — Damai Kasih Channel</title>
+    <meta name="description" content="Doa Malaikat Tuhan atau Angelus, doa tradisi Katolik yang didaraskan pagi, siang, dan sore untuk mengenang Inkarnasi Kristus." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
@@ -120,8 +124,8 @@ import Footer from "@/components/Footer.astro";
   <Footer />
 </BaseLayout>
 
-<title>Doa Malaikat Tuhan (Angelus) — Damai Kasih Channel</title>
-<meta name="description" content="Doa Malaikat Tuhan atau Angelus, doa tradisi Katolik yang didaraskan pagi, siang, dan sore untuk mengenang Inkarnasi Kristus." />
+
+
 
 <script>
   const btnShare = document.getElementById("btn-share");

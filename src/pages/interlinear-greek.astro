@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Greek Interlinear NT — Damai Kasih Channel</title>
+    <meta name="description" content="Read the Greek New Testament with interlinear English translation and transliteration. Novum Testamentum Graece." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-5xl mx-auto px-4 pt-6 pb-24">
@@ -151,12 +155,6 @@ import Footer from "@/components/Footer.astro";
 
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Greek Interlinear NT — Damai Kasih Channel</title>
-  <meta name="description" content="Read the Greek New Testament with interlinear English translation and transliteration. Novum Testamentum Graece." />
-</slot>
-
 <style is:global>
   /* Book grid buttons */
   #book-grid .book-btn {

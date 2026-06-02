@@ -41,6 +41,9 @@ const pageTitle = `Question ${questionNumber}. ${title} — Summa Theologiae`;
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>{pageTitle}</title>
+  </Fragment>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -145,7 +148,7 @@ const pageTitle = `Question ${questionNumber}. ${title} — Summa Theologiae`;
 </BaseLayout>
 
 <Fragment slot="head">
-  <title>{pageTitle}</title>
+  
   <meta name="description" content={`Summa Theologiae — ${partTitle}, Question ${questionNumber}: ${title}`} />
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",

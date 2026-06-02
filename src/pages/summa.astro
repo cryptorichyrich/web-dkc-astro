@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Summa Theologiae — Damai Kasih Channel</title>
+    <meta name="description" content="Summa Theologiae oleh Santo Thomas Aquinas — teks lengkap 611 pertanyaan dalam 5 bagian. Baca, cari, dan pelajari." />
+  </Fragment>
   <Navbar />
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
     <div class="text-center mb-8">
@@ -146,8 +150,3 @@ import Footer from "@/components/Footer.astro";
   </main>
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Summa Theologiae — Damai Kasih Channel</title>
-  <meta name="description" content="Summa Theologiae oleh Santo Thomas Aquinas — teks lengkap 611 pertanyaan dalam 5 bagian. Baca, cari, dan pelajari." />
-</slot>

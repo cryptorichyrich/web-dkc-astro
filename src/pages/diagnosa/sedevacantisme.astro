@@ -5,27 +5,13 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
-  <Navbar />
-  
-  <slot name="head">
+  <Fragment slot="head">
     <title>Diagnosa Sedevacantisme — Damai Kasih Channel</title>
     <meta name="description" content="Uji pandangan sedevacantisme berdasarkan ajaran Gereja Katolik tentang otoritas Paus, Konsili Vatikan II, dan kontinuitas ajaran Gereja." />
-    <meta name="keywords" content="sedevacantisme, tahta kosong, Paus, Konsili Vatikan II, ajaran Katolik, otoritas papal, infalibilitas" />
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Diagnosa Sedevacantisme",
-      "url": "https://web-dkc-astro.pages.dev/diagnosa/sedevacantisme/",
-      "description": "Alat untuk menguji pandangan sedevacantisme berdasarkan ajaran Gereja Katolik.",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Web Browser",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
-      "inLanguage": "id-ID"
-    }
-    </script>
-  </slot>
-
+  </Fragment>
+  <Navbar />
+  
+  
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
     <div class="glass-card p-6 md:p-8" id="quiz-container">
       <h1 class="text-center text-2xl md:text-3xl font-bold text-dkc-gold mb-4">DIAGNOSA SEDEVACANTISME</h1>

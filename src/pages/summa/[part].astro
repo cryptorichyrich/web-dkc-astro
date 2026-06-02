@@ -36,6 +36,9 @@ const partDescriptions: Record<string, string> = {
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>{pageTitle}</title>
+  </Fragment>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -90,6 +93,6 @@ const partDescriptions: Record<string, string> = {
 </BaseLayout>
 
 <Fragment slot="head">
-  <title>{pageTitle}</title>
+  
   <meta name="description" content={`${partTitle} dari Summa Theologiae Santo Thomas Aquinas — ${partQuestions.length} pertanyaan.`} />
 </Fragment>

@@ -5,6 +5,10 @@ import Footer from "@/components/Footer.astro";
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Doa Ratu Surga (Regina Caeli) — Damai Kasih Channel</title>
+    <meta name="description" content="Doa Ratu Surga atau Regina Caeli, doa Maria dalam masa Paskah yang menggantikan Doa Malaikat Tuhan menurut tradisi Katolik." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-2xl mx-auto px-4 pt-8 pb-24">
@@ -86,8 +90,8 @@ import Footer from "@/components/Footer.astro";
   <Footer />
 </BaseLayout>
 
-<title>Doa Ratu Surga (Regina Caeli) — Damai Kasih Channel</title>
-<meta name="description" content="Doa Ratu Surga atau Regina Caeli, doa Maria dalam masa Paskah yang menggantikan Doa Malaikat Tuhan menurut tradisi Katolik." />
+
+
 
 <script>
   const btnShare = document.getElementById("btn-share");

@@ -6,8 +6,8 @@ import Footer from "@/components/Footer.astro";
 
 <BaseLayout>
   <Fragment slot="head">
-    <title>Kitab Suci — Damai Kasih Channel</title>
-    <meta name="description" content="Kitab Suci Katolik Indonesia lengkap. Baca, cari, dan bagikan ayat Alkitab." />
+    <title>Kitab Suci Katolik — Perjanjian Baru TB2 — Damai Kasih Channel</title>
+    <meta name="description" content="Kitab Suci Katolik dengan Perjanjian Baru TB2. Baca, cari, dan bagikan ayat Alkitab terjemahan baru." />
   </Fragment>
   <Navbar />
 
@@ -512,7 +512,7 @@ import Footer from "@/components/Footer.astro";
   async function init() {
     readingLoading.classList.remove("hidden");
     try {
-      const resp = await fetch("/assets/data/ks.json");
+      const resp = await fetch("/assets/data/ks_tb2.json");
       if (!resp.ok) throw new Error("Gagal memuat data Alkitab");
       bibleData = await resp.json();
     } catch (e) {

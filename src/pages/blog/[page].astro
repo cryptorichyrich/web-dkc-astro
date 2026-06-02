@@ -34,6 +34,10 @@ for (let i = 1; i <= totalPages; i++) {
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Artikel — Damai Kasih Channel</title>
+    <meta name="description" content="Kumpulan artikel apologetika Katolik." />
+  </Fragment>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -118,9 +122,4 @@ for (let i = 1; i <= totalPages; i++) {
   </main>
 
   <Footer />
-
-  <slot name="head">
-    <title>Artikel — Damai Kasih Channel</title>
-    <meta name="description" content="Kumpulan artikel apologetika Katolik." />
-  </slot>
 </BaseLayout>

@@ -19,6 +19,10 @@ const centuries = [...centuryMap.keys()];
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Suksesi Kepausan — Daftar 267 Paus Gereja Katolik — Damai Kasih Channel</title>
+  <meta name="description" content="Daftar lengkap 267 Paus Gereja Katolik dari Santo Petrus hingga Paus Leo XIV. Termasuk foto, masa jabatan, dan tempat kelahiran." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
@@ -144,12 +148,6 @@ const centuries = [...centuryMap.keys()];
 
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Suksesi Kepausan — Daftar 267 Paus Gereja Katolik — Damai Kasih Channel</title>
-  <meta name="description" content="Daftar lengkap 267 Paus Gereja Katolik dari Santo Petrus hingga Paus Leo XIV. Termasuk foto, masa jabatan, dan tempat kelahiran." />
-</slot>
-
 <style>
   /* Smooth image fallback */
   .glass-card img {

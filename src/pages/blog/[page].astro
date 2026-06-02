@@ -26,50 +26,77 @@ const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="section-title text-3xl">Artikel</h1>
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="section-title mb-0">Artikel Terbaru</h1>
+      {totalPages > 1 && (
+        <span class="text-dkc-muted text-sm">Halaman {pageNum} dari {totalPages}</span>
+      )}
+    </div>
     
     {posts.length === 0 ? (
       <p class="text-dkc-muted">Belum ada artikel.</p>
     ) : (
-      <div class="grid gap-4">
-        {posts.map(post => (
-          <a href={`/blog/${post.id}`} class="glass-card p-5 block transition-all active:scale-[0.98] hover:border-dkc-gold/30">
-            <div class="flex gap-4">
-              {(() => {
-                const thumb = post.data.thumbnailImage || post.data.coverImage || post.data.heroImage;
-                return thumb ? (
-                  <img src={thumb} alt="" class="w-20 h-20 rounded-lg object-cover shrink-0" loading="lazy" onerror="this.style.display='none'" />
-                ) : null;
-              })()}
-              <div class="min-w-0">
-                <span class="text-xs text-dkc-gold font-medium">{post.data.category || 'Umum'}</span>
-                <h2 class="text-white font-semibold mt-1 line-clamp-2">{post.data.title}</h2>
-                {post.data.subtitle && <p class="text-dkc-muted text-sm mt-1 line-clamp-1">{post.data.subtitle}</p>}
-                <div class="flex items-center gap-3 mt-2 text-xs text-dkc-muted">
-                  <span>{post.data.publishedAt.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                  <span>·</span>
+      <div class="grid gap-4 md:grid-cols-2">
+        {posts.map(post => {
+          const img = post.data.coverImage || post.data.thumbnailImage || post.data.heroImage;
+          const date = post.data.publishedAt
+            ? new Date(post.data.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+            : '';
+          return (
+            <a href={`/blog/${post.id}`} class="glass-card overflow-hidden group transition-all hover:border-dkc-gold/40">
+              {img && (
+                <div class="aspect-video bg-dkc-card overflow-hidden">
+                  <img
+                    src={img}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onerror="this.parentElement.style.display='none'"
+                  />
+                </div>
+              )}
+              <div class="p-4">
+                <h2 class="text-dkc-text font-semibold text-sm leading-snug line-clamp-2 group-hover:text-dkc-gold transition-colors">
+                  {post.data.title}
+                </h2>
+                <div class="flex items-center gap-2 mt-2 text-xs text-dkc-muted">
                   <span>{post.data.author}</span>
+                  {date && <><span>·</span><time>{date}</time></>}
                 </div>
                 {post.data.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-1.5 mt-2">
-                    {post.data.tags.map(tag => (
-                      <a href={`/blog/tag/${tag}`} class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-card border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-                        #{tag}
-                      </a>
+                  <div class="flex flex-wrap gap-1 mt-2">
+                    {post.data.tags.slice(0, 3).map(tag => (
+                      <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-surface border border-dkc-border text-dkc-muted">
+                        {tag}
+                      </span>
                     ))}
                   </div>
                 )}
               </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
     )}
 
     {totalPages > 1 && (
       <nav class="flex justify-center items-center gap-4 mt-8">
-        {pageNum > 1 && <a href={`/blog/${pageNum - 1}`} class="text-dkc-gold hover:underline">← Sebelumnya</a>}
-        <span class="text-dkc-muted text-sm">Halaman {pageNum} dari {totalPages}</span>
+        {pageNum > 1 && <a href={pageNum === 2 ? '/blog/1' : `/blog/${pageNum - 1}`} class="text-dkc-gold hover:underline">← Sebelumnya</a>}
+        <div class="flex items-center gap-1.5">
+          {Array.from({length: totalPages}, (_, i) => (
+            <a
+              href={i === 0 ? '/blog/1' : `/blog/${i + 1}`}
+              class:list={[
+                "w-8 h-8 rounded-lg text-sm flex items-center justify-center transition-colors",
+                i + 1 === pageNum
+                  ? "bg-dkc-gold text-dkc-surface font-semibold"
+                  : "text-dkc-muted hover:text-dkc-gold hover:bg-dkc-gold/10"
+              ]}
+            >
+              {i + 1}
+            </a>
+          ))}
+        </div>
         {pageNum < totalPages && <a href={`/blog/${pageNum + 1}`} class="text-dkc-gold hover:underline">Selanjutnya →</a>}
       </nav>
     )}

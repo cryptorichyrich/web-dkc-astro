@@ -308,34 +308,23 @@ const encodedTitle = encodeURIComponent(post.data.title);
     headingEls.forEach(h => observer.observe(h));
   }
 
-  // === TTS: Text-to-Speech — Android Chrome hardened ===
+  // === TTS: Text-to-Speech — Simple cancel-before-chunk pattern ===
   //
-  // Android Chrome bug: speechSynthesis silently stops after ~15s.
-  // onend/onerror never fire. No event at all. Just silence.
-  //
-  // SOLUTION: "Watchdog + Pause/Resume" hybrid approach:
-  // 1. Split article into ~100-char chunks (each ~5s of speech)
-  // 2. Pause/resume every 3s keeps the engine alive
-  // 3. Watchdog timer: if no chunk completed in 12s → force-cancel + re-speak current chunk
-  // 4. Never trust onend alone — always have a safety net
+  // Proven pattern from ReferenceReader (works on Android Chrome):
+  // 1. cancel() before EVERY chunk — kills any stuck utterance
+  // 2. 180-char chunks — well under Android's ~15s silent-kill threshold
+  // 3. 10s pause/resume keepalive — prevents engine from going idle
+  // 4. Simple onend chain — no watchdog, no retry loops, no complexity
   //
   let ttsPlaying = false;
-  let ttsStopping = false;
   let currentHighlight: HTMLElement | null = null;
   let ttsChunks: string[] = [];
   let ttsChunkIndex = 0;
   let ttsTotalChunks = 0;
   let ttsChunkMap: { el: HTMLElement }[] = [];
-
-  // Timers
   let ttsKeepAlive: ReturnType<typeof setInterval> | null = null;
-  let ttsWatchdog: ReturnType<typeof setTimeout> | null = null;
-  let ttsCurrentUtterance: SpeechSynthesisUtterance | null = null;
-  let ttsRetryCount = 0;
-  const TTS_MAX_RETRIES = 5;
-  const TTS_CHUNK_MAX = 100;       // ~5s per chunk
-  const TTS_KEEPALIVE_MS = 3000;   // pause/resume every 3s
-  const TTS_WATCHDOG_MS = 12000;   // force-restart if stuck for 12s
+
+  const TTS_CHUNK_MAX = 180;
 
   function clearHighlight() {
     if (currentHighlight) {
@@ -378,67 +367,35 @@ const encodedTitle = encodeURIComponent(post.data.title);
     const el = document.getElementById('tts-progress');
     if (el && ttsTotalChunks > 0) {
       const pct = Math.round((ttsChunkIndex / ttsTotalChunks) * 100);
-      el.textContent = `${Math.min(pct, 100)}%`;
+      el.textContent = pct >= 100 ? '✓' : `${Math.min(pct, 100)}%`;
     }
   }
 
-  // === TIMER MANAGEMENT ===
-
+  // === KEEPALIVE: pause/resume every 10s keeps Android Chrome alive ===
   function startKeepAlive() {
     stopKeepAlive();
     ttsKeepAlive = setInterval(() => {
-      if (!ttsPlaying || ttsStopping) return;
+      if (!ttsPlaying) return;
       try {
         if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
           window.speechSynthesis.pause();
           setTimeout(() => {
-            if (ttsPlaying && !ttsStopping && window.speechSynthesis.paused) {
+            if (ttsPlaying && window.speechSynthesis.paused) {
               window.speechSynthesis.resume();
             }
-          }, 80);
+          }, 100);
         }
       } catch (_) {}
-    }, TTS_KEEPALIVE_MS);
+    }, 10000);
   }
 
   function stopKeepAlive() {
     if (ttsKeepAlive) { clearInterval(ttsKeepAlive); ttsKeepAlive = null; }
   }
 
-  function startWatchdog() {
-    stopWatchdog();
-    ttsWatchdog = setTimeout(() => {
-      // If we get here, the utterance is stuck — Android Chrome killed it silently
-      if (!ttsPlaying || ttsStopping) return;
-      console.warn('[TTS] Watchdog triggered — force restarting chunk', ttsChunkIndex);
-      // Force cancel the stuck utterance
-      stopKeepAlive();
-      ttsStopping = true;
-      window.speechSynthesis.cancel();
-      ttsStopping = false;
-      ttsCurrentUtterance = null;
-      // Retry same chunk (don't increment ttsChunkIndex)
-      ttsRetryCount++;
-      if (ttsRetryCount <= TTS_MAX_RETRIES) {
-        setTimeout(() => speakChunk(), 200);
-      } else {
-        // Give up on this chunk after too many retries, skip it
-        ttsRetryCount = 0;
-        ttsChunkIndex++;
-        updateProgress();
-        setTimeout(() => speakChunk(), 200);
-      }
-    }, TTS_WATCHDOG_MS);
-  }
-
-  function stopWatchdog() {
-    if (ttsWatchdog) { clearTimeout(ttsWatchdog); ttsWatchdog = null; }
-  }
-
-  // === CORE: speak one chunk ===
-
+  // === CORE: speak one chunk — cancel() before each, simple onend chain ===
   function speakChunk() {
-    if (!ttsPlaying || ttsStopping) return;
+    if (!ttsPlaying) return;
 
     // All done?
     if (ttsChunkIndex >= ttsChunks.length) {
@@ -459,70 +416,37 @@ const encodedTitle = encodeURIComponent(post.data.title);
 
     updateProgress();
 
+    // KEY FIX: cancel() before every chunk kills any stuck utterance
+    window.speechSynthesis.cancel();
+
     // Create utterance
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = 'id-ID';
     utt.rate = 0.95;
     utt.pitch = 1;
     utt.volume = 1;
-    ttsCurrentUtterance = utt;
 
     const voice = getIndonesianVoice();
     if (voice) utt.voice = voice;
 
-    let chunkDone = false;
-
-    function finishChunk(advance: boolean) {
-      if (chunkDone) return; // prevent double-fire
-      chunkDone = true;
-      stopKeepAlive();
-      stopWatchdog();
-      ttsCurrentUtterance = null;
-      if (advance) {
-        ttsRetryCount = 0;
-        ttsChunkIndex++;
-        updateProgress();
-      }
-      // Small gap between chunks
-      setTimeout(() => speakChunk(), 60);
-    }
-
-    utt.onstart = () => {
-      startKeepAlive();
-      startWatchdog();
-    };
-
     utt.onend = () => {
-      finishChunk(true);
+      ttsChunkIndex++;
+      updateProgress();
+      // Small gap between chunks
+      setTimeout(() => speakChunk(), 80);
     };
 
-    utt.onerror = (event) => {
-      if (ttsStopping) return; // we initiated cancel, ignore
-      if (event.error === 'canceled' || event.error === 'interrupted') {
-        // Chrome killed it — retry same chunk
-        stopKeepAlive();
-        stopWatchdog();
-        ttsCurrentUtterance = null;
-        ttsRetryCount++;
-        if (ttsRetryCount <= TTS_MAX_RETRIES) {
-          setTimeout(() => speakChunk(), 200);
-        } else {
-          ttsRetryCount = 0;
-          ttsChunkIndex++;
-          updateProgress();
-          setTimeout(() => speakChunk(), 200);
-        }
-        return;
-      }
-      // Other errors — skip chunk
-      finishChunk(true);
+    utt.onerror = () => {
+      // Skip this chunk, move on
+      ttsChunkIndex++;
+      updateProgress();
+      setTimeout(() => speakChunk(), 80);
     };
 
     window.speechSynthesis.speak(utt);
   }
 
   // === INIT ===
-
   function initTTS() {
     const btn = document.getElementById('tts-btn');
     const iconPlay = document.getElementById('tts-icon-play');
@@ -544,12 +468,9 @@ const encodedTitle = encodeURIComponent(post.data.title);
     const body = document.getElementById('article-body');
     if (!body) return;
 
-    // Full reset
-    ttsStopping = true;
+    // Full cancel first
     window.speechSynthesis.cancel();
-    ttsStopping = false;
     ttsPlaying = true;
-    ttsRetryCount = 0;
 
     // UI
     const iconPlay = document.getElementById('tts-icon-play');
@@ -581,22 +502,18 @@ const encodedTitle = encodeURIComponent(post.data.title);
 
     ttsChunkIndex = 0;
     updateProgress();
+    startKeepAlive();
     speakChunk();
   }
 
   function stopTTS() {
-    ttsStopping = true;
     stopKeepAlive();
-    stopWatchdog();
     window.speechSynthesis.cancel();
     ttsPlaying = false;
-    ttsStopping = false;
-    ttsCurrentUtterance = null;
     ttsChunks = [];
     ttsChunkIndex = 0;
     ttsTotalChunks = 0;
     ttsChunkMap = [];
-    ttsRetryCount = 0;
     clearHighlight();
 
     const iconPlay = document.getElementById('tts-icon-play');

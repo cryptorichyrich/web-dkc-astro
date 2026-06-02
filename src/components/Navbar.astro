@@ -111,6 +111,8 @@ function activeClass(href: string): string {
 
 <!-- ==================== MOBILE TOP HEADER ==================== -->
 <header class="md:hidden sticky top-0 z-50 bg-dkc-surface/90 backdrop-blur-xl border-b border-dkc-border/60">
+  <!-- Reading progress bar -->
+  <div id="reading-progress-bar" class="h-[2px] bg-dkc-gold/0 transition-none" style="width:0%"></div>
   <div class="flex items-center gap-2 px-4 h-12">
     <!-- Left: Hamburger Button -->
     <button id="hamburger-btn" class="w-9 h-9 rounded-full bg-dkc-card border border-dkc-border flex items-center justify-center text-dkc-gold hover:bg-dkc-gold/10 hover:border-dkc-gold/30 transition-all active:scale-95" aria-label="Menu">
@@ -219,6 +221,8 @@ function activeClass(href: string): string {
 <!-- ==================== DESKTOP ==================== -->
 <header class="hidden md:block sticky top-0 z-50">
   <div class="bg-dkc-surface/90 backdrop-blur-xl border-b border-dkc-border/60 relative">
+    <!-- Reading progress bar -->
+    <div class="reading-progress-bar h-[2px] bg-dkc-gold/0 transition-none absolute top-0 left-0" style="width:0%;z-index:1"></div>
     <div class="max-w-6xl mx-auto flex items-center justify-center px-6 h-14">
       <!-- Nav items centered -->
       <div class="flex items-center" id="desktop-nav-links">
@@ -1004,4 +1008,25 @@ function activeClass(href: string): string {
   if (bnavCloseBtn) {
     bnavCloseBtn.addEventListener("click", closeBnavMenu);
   }
+
+  // ===== READING PROGRESS BAR =====
+  // Shows scroll progress on article pages
+  (function() {
+    var bars = document.querySelectorAll('#reading-progress-bar, .reading-progress-bar');
+    if (!bars.length) return;
+    
+    function updateProgress() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+      bars.forEach(function(bar) {
+        bar.style.width = pct + '%';
+        bar.style.backgroundColor = pct > 0 ? 'var(--dkc-gold, #c9a84c)' : 'transparent';
+      });
+    }
+    
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress();
+  })();
 </script>

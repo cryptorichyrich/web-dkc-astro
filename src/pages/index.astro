@@ -40,6 +40,10 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
 ---
 
 <BaseLayout>
+  <Fragment slot="head">
+    <title>Damai Kasih channel — Belajar Iman Katolik</title>
+    <meta name="description" content="Sumber belajar iman Katolik Indonesia. Kitab Suci, Katekismus, Doa, Apologetika." />
+  </Fragment>
   <Navbar />
 
   <main class="max-w-6xl mx-auto px-4 pb-24">
@@ -387,11 +391,6 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
 
   <Footer />
 </BaseLayout>
-
-<slot name="head">
-  <title>Damai Kasih channel — Belajar Iman Katolik</title>
-  <meta name="description" content="Sumber belajar iman Katolik Indonesia. Kitab Suci, Katekismus, Doa, Apologetika." />
-</slot>
 
 <script>
   // === DOA BERDASARKAN WAKTU (GMT+7 / WIB) ===

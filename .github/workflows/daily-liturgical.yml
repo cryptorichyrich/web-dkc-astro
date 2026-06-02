@@ -1,0 +1,45 @@
+name: Daily Liturgical Calendar Update
+
+on:
+  schedule:
+    # Run at 17:00 UTC = 00:00 GMT+7 (midnight Indonesia)
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update Liturgical Data
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Update liturgical calendar data
+        id: update
+        run: |
+          python scripts/update-liturgical-daily.py 2>&1 | tee update.log
+          if grep -q "CHANGED=true" update.log; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit & Push if changed
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/assets/data/liturgical-*.json
+          git commit -m "chore: update liturgical calendar data $(date +'%Y-%m-%d')"
+          git push

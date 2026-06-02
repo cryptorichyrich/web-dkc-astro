@@ -1,0 +1,44 @@
+name: Scrape Renungan Harian Mirifica
+
+on:
+  schedule:
+    # Run at 17:30 UTC = 00:30 GMT+7
+    - cron: '30 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    name: Scrape & Commit Renungan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-save axios cheerio turndown date-fns
+
+      - name: Run scrape script
+        run: node scripts/scrape-renungan-mirifica.cjs
+
+      - name: Commit & Push if new renungan
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          NEW_FILES=$(git ls-files --others --exclude-standard src/content/blog/)
+          if [ -z "$NEW_FILES" ]; then
+            echo "Gak ada renungan baru, skip commit."
+          else
+            echo "Renungan baru:"
+            echo "$NEW_FILES"
+            git add src/content/blog/
+            git commit -m "content: add renungan harian $(date +'%Y-%m-%d')"
+            git push
+          fi

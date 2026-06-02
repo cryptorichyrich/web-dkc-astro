@@ -2,48 +2,90 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
+import { popes } from "@/data/popes";
+
+const currentPope = popes[popes.length - 1];
+const previousPopes = popes.slice(0, -1).reverse();
+const recentPopes = previousPopes.slice(0, 9);
+const olderPopes = previousPopes.slice(9);
 ---
 
 <BaseLayout>
   <Navbar />
   
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Suksesi Kepausan</h1>
-    <p class="text-dkc-muted mb-8">Daftar Paus dari Santo Petrus hingga sekarang</p>
+    <h1 class="section-title text-3xl">Suksesi Kepausan</h1>
+    <p class="text-dkc-muted mb-8">Daftar {popes.length} Paus Gereja Katolik dari Santo Petrus hingga sekarang</p>
 
-    <div class="glass-card p-4 mb-6">
-      <div class="flex items-center gap-4 mb-4">
-        <img src="/assets/img/channels4_profile.webp" alt="" class="w-16 h-16 rounded-full border-2 border-dkc-gold/40" />
+    <!-- Intro: Apa itu Suksesi Kepausan -->
+    <div class="glass-card p-5 mb-6">
+      <h2 class="text-dkc-gold font-semibold mb-3">Apa itu Suksesi Kepausan?</h2>
+      <p class="text-dkc-text text-sm leading-relaxed">
+        Suksesi kepausan adalah rantai penerus Santo Petrus yang diangkat menjadi Paus sepanjang sejarah Gereja Katolik.
+        Gereja meyakini bahwa Santo Petrus menerima mandat langsung dari Kristus
+        (<em class="text-dkc-gold">"Engkau adalah Petrus dan di atas batu karang ini Aku akan mendirikan Gereja-Ku"</em> — Mat 16:18-19)
+        dan bahwa kesinambungan jabatan ini dijamin oleh Roh Kudus.
+      </p>
+    </div>
+
+    <!-- Current Pope Card -->
+    <div class="glass-card p-5 mb-8 border-dkc-gold/30">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-dkc-gold/10 border-2 border-dkc-gold/40 flex items-center justify-center text-dkc-gold text-2xl font-bold shrink-0">
+          Ⲡ
+        </div>
         <div>
-          <span class="text-xs font-medium bg-dkc-gold/20 text-dkc-gold px-2 py-1 rounded-full text-[10px]">Paus ke-266</span>
-          <h2 class="text-xl text-dkc-gold font-bold mt-1">Paus Fransiskus</h2>
-          <p class="text-dkc-muted text-xs">2013 – sekarang</p>
+          <span class="text-[10px] font-medium bg-dkc-gold/20 text-dkc-gold px-2 py-0.5 rounded-full uppercase tracking-wider">Paus ke-{currentPope[0]}</span>
+          <h2 class="text-xl text-dkc-gold font-bold mt-1">Paus {currentPope[1]}</h2>
+          <p class="text-dkc-muted text-xs mt-0.5">{currentPope[2]}</p>
         </div>
       </div>
+      <p class="text-dkc-text text-sm mt-4 leading-relaxed">
+        Dalam ajaran Katolik, Paus merupakan penerus Santo Petrus yang melayani sebagai pengganti Kristus di bumi
+        (<em>Vikaris Kristus</em>), gembala umum Gereja, dan tonggak kesatuan iman umat beriman.
+      </p>
     </div>
 
-    <div class="space-y-2">
-      {[
-        {num: 265, name: "Benediktus XVI", years: "2005–2013"},
-        {num: 264, name: "St. Yohanes Paulus II", years: "1978–2005"},
-        {num: 263, name: "Yohanes Paulus I", years: "1978"},
-        {num: 262, name: "St. Paulus VI", years: "1963–1978"},
-        {num: 261, name: "St. Yohanes XXIII", years: "1958–1963"},
-        {num: 260, name: "Pius XII", years: "1939–1958"},
-      ].map(p => (
-        <a href="#" class="glass-card p-3 flex items-center gap-3 transition-all active:scale-[.98] hover:border-dkc-gold/30">
-          <span class="w-8 h-8 rounded-full bg-dkc-surface border border-dkc-border flex items-center justify-center text-dkc-gold text-xs font-bold shrink-0">{p.num}</span>
-          <h3 class="text-white font-medium text-sm flex-1">{p.name}</h3>
-          <span class="text-dkc-muted text-xs">{p.years}</span>
-        </a>
+    <!-- Recent Popes (expanded cards) -->
+    <h2 class="text-dkc-gold font-semibold text-sm uppercase tracking-wider mb-3">Paus-Paus Terkini</h2>
+    <div class="space-y-2 mb-8">
+      {recentPopes.map(([num, name, years]) => (
+        <div class="glass-card p-3 flex items-center gap-3">
+          <span class="w-9 h-9 rounded-full bg-dkc-surface border border-dkc-border flex items-center justify-center text-dkc-gold text-xs font-bold shrink-0">
+            {num}
+          </span>
+          <span class="text-dkc-text font-medium text-sm flex-1">{name}</span>
+          <span class="text-dkc-muted text-xs shrink-0">{years}</span>
+        </div>
       ))}
     </div>
+
+    <!-- Full List: Collapsible -->
+    <details class="group">
+      <summary class="glass-card p-4 flex items-center justify-between cursor-pointer hover:border-dkc-gold/30 transition-colors list-none">
+        <span class="text-dkc-gold font-semibold text-sm">Daftar Lengkap {popes.length} Paus</span>
+        <svg class="w-4 h-4 text-dkc-muted group-open:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </summary>
+      <div class="space-y-1 mt-2 max-h-[70vh] overflow-y-auto pr-1">
+        {olderPopes.map(([num, name, years]) => (
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dkc-card/50 transition-colors">
+            <span class="w-7 h-7 rounded-full bg-dkc-surface/50 border border-dkc-border/50 flex items-center justify-center text-dkc-gold/70 text-[10px] font-bold shrink-0">
+              {num}
+            </span>
+            <span class="text-dkc-text text-sm flex-1">{name}</span>
+            <span class="text-dkc-muted text-xs shrink-0">{years}</span>
+          </div>
+        ))}
+      </div>
+    </details>
   </main>
 
   <Footer />
-</BaseLayout>
 
-<slot name="head">
-  <title>Suksesi Kepausan — Damai Kasih Channel</title>
-  <meta name="description" content="Daftar Paus Gereja Katolik dari St. Petrus hingga Paus Fransiskus." />
-</slot>
+  <slot name="head">
+    <title>Suksesi Kepausan — Damai Kasih Channel</title>
+    <meta name="description" content="Daftar lengkap 267 Paus Gereja Katolik dari Santo Petrus hingga Paus Leo XIV. Suksesi kepausan dan makna teologis." />
+  </slot>
+</BaseLayout>

@@ -308,23 +308,19 @@ const encodedTitle = encodeURIComponent(post.data.title);
     headingEls.forEach(h => observer.observe(h));
   }
 
-  // === TTS: Text-to-Speech — Simple cancel-before-chunk pattern ===
+  // === TTS: Exact port of ReferenceReader's proven pattern ===
   //
-  // Proven pattern from ReferenceReader (works on Android Chrome):
-  // 1. cancel() before EVERY chunk — kills any stuck utterance
-  // 2. 180-char chunks — well under Android's ~15s silent-kill threshold
-  // 3. 10s pause/resume keepalive — prevents engine from going idle
-  // 4. Simple onend chain — no watchdog, no retry loops, no complexity
+  // ReferenceReader works on Android Chrome. This is a 1:1 port.
+  // Key: pause()/resume() SYNCHRONOUSLY (no setTimeout gap).
+  // cancel() before every chunk. Simple recursive onend chain.
   //
-  let ttsPlaying = false;
-  let currentHighlight: HTMLElement | null = null;
-  let ttsChunks: string[] = [];
-  let ttsChunkIndex = 0;
-  let ttsTotalChunks = 0;
-  let ttsChunkMap: { el: HTMLElement }[] = [];
-  let ttsKeepAlive: ReturnType<typeof setInterval> | null = null;
-
-  const TTS_CHUNK_MAX = 180;
+  var ttsPlaying = false;
+  var currentHighlight = null;
+  var ttsAllChunks = [];
+  var ttsIndex = 0;
+  var ttsTotal = 0;
+  var ttsChunkMap = [];
+  var ttsResumeTimer = null;
 
   function clearHighlight() {
     if (currentHighlight) {
@@ -333,26 +329,25 @@ const encodedTitle = encodeURIComponent(post.data.title);
     }
   }
 
-  function getIndonesianVoice(): SpeechSynthesisVoice | null {
-    const voices = window.speechSynthesis.getVoices();
-    return voices.find(v => v.lang === 'id-ID')
-      || voices.find(v => v.lang.startsWith('id'))
-      || null;
+  function getIndonesianVoice() {
+    var voices = window.speechSynthesis.getVoices();
+    return voices.find(function(v) { return v.lang.startsWith('id'); }) || null;
   }
 
-  function splitTextIntoChunks(text: string, maxLen = TTS_CHUNK_MAX): string[] {
-    const chunks: string[] = [];
-    let remaining = text;
+  function splitTextIntoChunks(text, maxLen) {
+    maxLen = maxLen || 180;
+    var chunks = [];
+    var remaining = text;
     while (remaining.length > 0) {
       remaining = remaining.trimStart();
       if (!remaining) break;
       if (remaining.length <= maxLen) { chunks.push(remaining); break; }
-      let splitAt = -1;
-      for (let i = maxLen; i >= Math.floor(maxLen * 0.3); i--) {
-        if ('.!?;:,'.includes(remaining[i])) { splitAt = i + 1; break; }
+      var splitAt = -1;
+      for (var i = maxLen; i >= maxLen * 0.4; i--) {
+        if ('.!?;,'.indexOf(remaining[i]) !== -1) { splitAt = i + 1; break; }
       }
       if (splitAt === -1) {
-        for (let i = maxLen; i >= Math.floor(maxLen * 0.3); i--) {
+        for (var i = maxLen; i >= maxLen * 0.4; i--) {
           if (remaining[i] === ' ') { splitAt = i + 1; break; }
         }
       }
@@ -363,50 +358,26 @@ const encodedTitle = encodeURIComponent(post.data.title);
     return chunks;
   }
 
-  function updateProgress() {
-    const el = document.getElementById('tts-progress');
-    if (el && ttsTotalChunks > 0) {
-      const pct = Math.round((ttsChunkIndex / ttsTotalChunks) * 100);
-      el.textContent = pct >= 100 ? '✓' : `${Math.min(pct, 100)}%`;
+  function updateTTSProgress() {
+    var el = document.getElementById('tts-progress');
+    if (el && ttsTotal > 0) {
+      var pct = Math.round((ttsIndex / ttsTotal) * 100);
+      el.textContent = pct >= 100 ? '✓' : Math.min(pct, 100) + '%';
     }
   }
 
-  // === KEEPALIVE: pause/resume every 10s keeps Android Chrome alive ===
-  function startKeepAlive() {
-    stopKeepAlive();
-    ttsKeepAlive = setInterval(() => {
-      if (!ttsPlaying) return;
-      try {
-        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-          window.speechSynthesis.pause();
-          setTimeout(() => {
-            if (ttsPlaying && window.speechSynthesis.paused) {
-              window.speechSynthesis.resume();
-            }
-          }, 100);
-        }
-      } catch (_) {}
-    }, 10000);
-  }
-
-  function stopKeepAlive() {
-    if (ttsKeepAlive) { clearInterval(ttsKeepAlive); ttsKeepAlive = null; }
-  }
-
-  // === CORE: speak one chunk — cancel() before each, simple onend chain ===
-  function speakChunk() {
-    if (!ttsPlaying) return;
-
-    // All done?
-    if (ttsChunkIndex >= ttsChunks.length) {
+  // === CORE: Exact speakChunks from ReferenceReader ===
+  function speakChunks(chunks, index) {
+    if (!ttsPlaying || index >= chunks.length) {
       stopTTS();
       return;
     }
 
-    const text = ttsChunks[ttsChunkIndex];
-    const info = ttsChunkMap[ttsChunkIndex];
+    ttsIndex = index;
+    updateTTSProgress();
 
     // Highlight current paragraph
+    var info = ttsChunkMap[index];
     if (info && info.el && info.el !== currentHighlight) {
       clearHighlight();
       info.el.classList.add('tts-highlight');
@@ -414,112 +385,110 @@ const encodedTitle = encodeURIComponent(post.data.title);
       info.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    updateProgress();
-
-    // KEY FIX: cancel() before every chunk kills any stuck utterance
+    // KEY: cancel() before every chunk
     window.speechSynthesis.cancel();
 
-    // Create utterance
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = 'id-ID';
-    utt.rate = 0.95;
-    utt.pitch = 1;
-    utt.volume = 1;
+    var utterance = new SpeechSynthesisUtterance(chunks[index]);
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    var voice = getIndonesianVoice();
+    if (voice) utterance.voice = voice;
 
-    const voice = getIndonesianVoice();
-    if (voice) utt.voice = voice;
-
-    utt.onend = () => {
-      ttsChunkIndex++;
-      updateProgress();
-      // Small gap between chunks
-      setTimeout(() => speakChunk(), 80);
+    // Keepalive: pause/resume SYNCHRONOUSLY every 10s — exact ReferenceReader pattern
+    utterance.onstart = function() {
+      if (ttsResumeTimer) clearInterval(ttsResumeTimer);
+      ttsResumeTimer = setInterval(function() {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      }, 10000);
     };
 
-    utt.onerror = () => {
-      // Skip this chunk, move on
-      ttsChunkIndex++;
-      updateProgress();
-      setTimeout(() => speakChunk(), 80);
+    utterance.onend = function() {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      speakChunks(chunks, index + 1);
     };
 
-    window.speechSynthesis.speak(utt);
+    utterance.onerror = function() {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      speakChunks(chunks, index + 1);
+    };
+
+    window.speechSynthesis.speak(utterance);
   }
 
   // === INIT ===
   function initTTS() {
-    const btn = document.getElementById('tts-btn');
-    const iconPlay = document.getElementById('tts-icon-play');
-    const iconStop = document.getElementById('tts-icon-stop');
+    var btn = document.getElementById('tts-btn');
+    var iconPlay = document.getElementById('tts-icon-play');
+    var iconStop = document.getElementById('tts-icon-stop');
     if (!btn || !iconPlay || !iconStop) return;
 
-    // Warm up voices (Android loads async)
     window.speechSynthesis.getVoices();
     if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+      speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
     }
 
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function() {
       if (ttsPlaying) { stopTTS(); } else { startTTS(); }
     });
   }
 
   function startTTS() {
-    const body = document.getElementById('article-body');
+    var body = document.getElementById('article-body');
     if (!body) return;
 
-    // Full cancel first
     window.speechSynthesis.cancel();
     ttsPlaying = true;
 
-    // UI
-    const iconPlay = document.getElementById('tts-icon-play');
-    const iconStop = document.getElementById('tts-icon-stop');
-    const btn = document.getElementById('tts-btn');
-    const progress = document.getElementById('tts-progress');
+    var iconPlay = document.getElementById('tts-icon-play');
+    var iconStop = document.getElementById('tts-icon-stop');
+    var btn = document.getElementById('tts-btn');
+    var progress = document.getElementById('tts-progress');
     if (iconPlay) iconPlay.classList.add('hidden');
     if (iconStop) iconStop.classList.remove('hidden');
     if (btn) { btn.classList.add('text-dkc-gold', 'border-dkc-gold/30'); }
     if (progress) progress.classList.remove('hidden');
 
     // Build chunks
-    const elements = body.querySelectorAll('p, li, h2, h3, h4, blockquote, td, th');
-    ttsChunks = [];
+    var elements = body.querySelectorAll('p, li, h2, h3, h4, blockquote, td, th');
+    ttsAllChunks = [];
     ttsChunkMap = [];
 
-    elements.forEach(el => {
-      const text = (el.textContent || '').trim();
+    elements.forEach(function(el) {
+      var text = (el.textContent || '').trim();
       if (!text) return;
-      const subChunks = splitTextIntoChunks(text);
-      subChunks.forEach(() => {
-        ttsChunkMap.push({ el: el as HTMLElement });
-      });
-      ttsChunks.push(...subChunks);
+      var subChunks = splitTextIntoChunks(text);
+      for (var i = 0; i < subChunks.length; i++) {
+        ttsChunkMap.push({ el: el });
+      }
+      ttsAllChunks = ttsAllChunks.concat(subChunks);
     });
 
-    ttsTotalChunks = ttsChunks.length;
-    if (!ttsTotalChunks) { stopTTS(); return; }
+    ttsTotal = ttsAllChunks.length;
+    if (!ttsTotal) { stopTTS(); return; }
 
-    ttsChunkIndex = 0;
-    updateProgress();
-    startKeepAlive();
-    speakChunk();
+    ttsIndex = 0;
+    updateTTSProgress();
+    speakChunks(ttsAllChunks, 0);
   }
 
   function stopTTS() {
-    stopKeepAlive();
+    if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
     window.speechSynthesis.cancel();
     ttsPlaying = false;
-    ttsChunks = [];
-    ttsChunkIndex = 0;
-    ttsTotalChunks = 0;
+    ttsAllChunks = [];
+    ttsIndex = 0;
+    ttsTotal = 0;
     ttsChunkMap = [];
     clearHighlight();
 
-    const iconPlay = document.getElementById('tts-icon-play');
-    const iconStop = document.getElementById('tts-icon-stop');
-    const btn = document.getElementById('tts-btn');
-    const progress = document.getElementById('tts-progress');
+    var iconPlay = document.getElementById('tts-icon-play');
+    var iconStop = document.getElementById('tts-icon-stop');
+    var btn = document.getElementById('tts-btn');
+    var progress = document.getElementById('tts-progress');
     if (iconPlay) iconPlay.classList.remove('hidden');
     if (iconStop) iconStop.classList.add('hidden');
     if (btn) { btn.classList.remove('text-dkc-gold', 'border-dkc-gold/30'); }

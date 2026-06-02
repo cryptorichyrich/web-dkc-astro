@@ -1010,18 +1010,27 @@ function activeClass(href: string): string {
   }
 
   // ===== READING PROGRESS BAR =====
-  // Shows scroll progress on article pages
+  // Shows scroll progress — scoped to article body (before "Artikel Terkait")
   (function() {
     var bars = document.querySelectorAll('#reading-progress-bar, .reading-progress-bar');
     if (!bars.length) return;
     
     function updateProgress() {
-      var scrollTop = window.scrollY || document.documentElement.scrollTop;
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      var pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+      var articleBody = document.getElementById('article-body');
+      if (!articleBody) return;
+      
+      var rect = articleBody.getBoundingClientRect();
+      var articleTop = rect.top + window.scrollY;
+      var articleHeight = rect.height;
+      
+      if (articleHeight <= 0) return;
+      
+      var scrolled = window.scrollY - articleTop + window.innerHeight * 0.3;
+      var pct = Math.min(Math.max((scrolled / articleHeight) * 100, 0), 100);
+      
       bars.forEach(function(bar) {
         bar.style.width = pct + '%';
-        bar.style.backgroundColor = pct > 0 ? 'var(--dkc-gold, #c9a84c)' : 'transparent';
+        bar.style.backgroundColor = pct > 0 ? '#c9a84c' : 'transparent';
       });
     }
     

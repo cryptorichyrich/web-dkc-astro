@@ -50,6 +50,15 @@ const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
                   <span>·</span>
                   <span>{post.data.author}</span>
                 </div>
+                {post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-2">
+                    {post.data.tags.map(tag => (
+                      <a href={`/blog/tag/${tag}`} class="text-[10px] px-1.5 py-0.5 rounded-full bg-dkc-card border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
+                        #{tag}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </a>
@@ -67,9 +76,9 @@ const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
   </main>
 
   <Footer />
-</BaseLayout>
 
-<slot name="head">
-  <title>Artikel — Damai Kasih Channel</title>
-  <meta name="description" content="Kumpulan artikel apologetika Katolik." />
-</slot>
+  <slot name="head">
+    <title>Artikel — Damai Kasih Channel</title>
+    <meta name="description" content="Kumpulan artikel apologetika Katolik." />
+  </slot>
+</BaseLayout>

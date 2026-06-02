@@ -1,5 +1,5 @@
 ---
-title: "Menggugat Sang Penafsir Tunggal Membongkar Kesesatan Ahistoris Pembaca Alkitab "Polosan""
+title: 'Menggugat Sang Penafsir Tunggal Membongkar Kesesatan Ahistoris Pembaca Alkitab "Polosan"'
 subtitle: "Membongkar klaim eksklusivisme tafsir literalisme biblis yang mengabaikan dua milenium tradisi iman Kristen"
 author: "Tim DKC"
 publishedAt: '2026-06-02'
@@ -9,7 +9,6 @@ thumbnailImage: "/assets/img/menggugat-sang-penafsir-tunggal.webp"
 toc: true
 ---
 
-## Menggugat Sang Penafsir Tunggal Membongkar Kesesatan Ahistoris Pembaca Alkitab "Polosan"
 Sungguh sebuah pemandangan yang menghibur di era digital ini. Kita disuguhi sebuah fenomena memukau di mana seseorang, dengan penuh kerendahan hati palsu mengaku "bukan siapa-siapa dan tidak punya gelar perguruan tinggi," namun pada detik berikutnya dengan gagah berani membatalkan dua milenium konsensus iman Kristen di seluruh dunia. Dilihat dari kacamata sejarah dan peribadatan, ini adalah pertunjukan klasik dari apa yang disebut sebagai **'eksklusivisme tafsir'** , sebuah **rabun sejarah** di mana seseorang merasa mendapat pencerahan eksklusif yang diklaim terlewatkan oleh miliaran umat lainnya. Melalui sebuah video berdurasi sepuluh menit, sang pembicara dari saluran "Fakta Israel" menobatkan dirinya sebagai otoritas tertinggi penafsiran **Kitab Suci** , melampaui **para rasul** , **Bapa Gereja** , dan seluruh tradisi Kekristenan.
 
 Tesisnya sungguh revolusioner—dalam artian yang paling memprihatinkan. Ia mengklaim bahwa istilah **"Jumat Agung"** tidak berdasar, bahwa **Paskah** murni hanya merujuk pada hari kematian **Yesus** , dan bahwa kebangkitan-Nya semata-mata harus dilabeli **"Hari Buah Sulung,"** murni berpatokan pada pembacaan kaku atas **Kitab Imamat pasal 23** . Mari kita bedah klaim-klaim heroik ini dengan pisau bedah akal budi, sejarah, dan ajaran Gereja yang sesungguhnya. Di sinilah kita melihat perlunya melibatkan berbagai disiplin ilmu—mulai dari sejarah kuno, temuan peninggalan ritus masa lampau, hingga kajian perilaku manusia—untuk membongkar betapa rapuhnya bangunan argumen yang ia dirikan.

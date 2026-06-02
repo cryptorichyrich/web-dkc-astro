@@ -595,25 +595,86 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
     window.scrollTo({ top: document.getElementById('ref-results').offsetTop - 100, behavior: 'smooth' });
   }
 
-  // ─── TTS (Text-to-Speech) ─────────────────────────────────
-  function speakSingleParagraph(id) {
-    const item = document.querySelector(`.ref-item[data-id="${id}"]`);
-    if (!item) return;
-    const plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
-    speakText(`Paragraf ${id}. ${plainText}`);
+  // ─── TTS (Text-to-Speech) with Android Chrome fix ──────────
+  // Android Chrome silently kills utterances after ~15s.
+  // Fix: split into ~180-char chunks + pause/resume timer hack.
+  var ttsResumeTimer = null;
+
+  function getIndonesianVoice() {
+    var voices = window.speechSynthesis.getVoices();
+    return voices.find(function(v) { return v.lang.startsWith('id'); }) || null;
   }
 
-  function speakText(text) {
+  function splitTextIntoChunks(text, maxLen) {
+    maxLen = maxLen || 180;
+    var chunks = [];
+    var remaining = text;
+    while (remaining.length > 0) {
+      if (remaining.length <= maxLen) { chunks.push(remaining); break; }
+      var splitAt = -1;
+      for (var i = maxLen; i >= maxLen * 0.4; i--) {
+        if ('.!?;,'.indexOf(remaining[i]) !== -1) { splitAt = i + 1; break; }
+      }
+      if (splitAt === -1) {
+        for (var i = maxLen; i >= maxLen * 0.4; i--) {
+          if (remaining[i] === ' ') { splitAt = i + 1; break; }
+        }
+      }
+      if (splitAt === -1) splitAt = maxLen;
+      chunks.push(remaining.slice(0, splitAt));
+      remaining = remaining.slice(splitAt);
+    }
+    return chunks;
+  }
+
+  function speakChunks(chunks, index) {
+    if (!isSpeaking || index >= chunks.length) {
+      stopSpeaking();
+      return;
+    }
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    var utterance = new SpeechSynthesisUtterance(chunks[index]);
     utterance.lang = 'id-ID';
     utterance.rate = 0.9;
     utterance.pitch = 1;
-    // Try to find an Indonesian voice
-    const voices = window.speechSynthesis.getVoices();
-    const idVoice = voices.find(v => v.lang.startsWith('id'));
-    if (idVoice) utterance.voice = idVoice;
+    var voice = getIndonesianVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onstart = function() {
+      if (ttsResumeTimer) clearInterval(ttsResumeTimer);
+      ttsResumeTimer = setInterval(function() {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      }, 10000);
+    };
+    utterance.onend = function() {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      speakChunks(chunks, index + 1);
+    };
+    utterance.onerror = function() {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      speakChunks(chunks, index + 1);
+    };
     window.speechSynthesis.speak(utterance);
+  }
+
+  function speakSingleParagraph(id) {
+    var item = document.querySelector('.ref-item[data-id="' + id + '"]');
+    if (!item) return;
+    var plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
+    var chunks = splitTextIntoChunks('Paragraf ' + id + '. ' + plainText);
+    stopSpeaking();
+    isSpeaking = true;
+    updateTtsUI();
+    speakChunks(chunks, 0);
+  }
+
+  function speakText(text) {
+    var chunks = splitTextIntoChunks(text);
+    stopSpeaking();
+    isSpeaking = true;
+    speakChunks(chunks, 0);
   }
 
   function speakAllParagraphs() {
@@ -621,44 +682,28 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
       stopSpeaking();
       return;
     }
-    const items = document.querySelectorAll('.ref-item');
+    var items = document.querySelectorAll('.ref-item');
     if (!items.length) return;
-    ttsQueue = Array.from(items).map(item => {
-      const plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
-      return `Paragraf ${item.dataset.id}. ${plainText}`;
+    // Flatten all paragraphs into chunked array
+    var allChunks = [];
+    var itemStarts = []; // track which item each chunk belongs to
+    Array.from(items).forEach(function(item, idx) {
+      var plainText = item.dataset.plain || getTextContent(item.querySelector('.ref-text')?.innerHTML || '');
+      var text = 'Paragraf ' + item.dataset.id + '. ' + plainText;
+      var subChunks = splitTextIntoChunks(text);
+      subChunks.forEach(function(c) {
+        allChunks.push(c);
+        itemStarts.push(idx);
+      });
     });
     ttsIndex = 0;
     isSpeaking = true;
     updateTtsUI();
-    speakNextInQueue();
-  }
-
-  function speakNextInQueue() {
-    if (!isSpeaking || ttsIndex >= ttsQueue.length) {
-      stopSpeaking();
-      return;
-    }
-    const text = ttsQueue[ttsIndex];
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'id-ID';
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    const voices = window.speechSynthesis.getVoices();
-    const idVoice = voices.find(v => v.lang.startsWith('id'));
-    if (idVoice) utterance.voice = idVoice;
-    utterance.onend = () => {
-      ttsIndex++;
-      speakNextInQueue();
-    };
-    utterance.onerror = () => {
-      ttsIndex++;
-      speakNextInQueue();
-    };
-    window.speechSynthesis.speak(utterance);
+    speakChunks(allChunks, 0);
   }
 
   function stopSpeaking() {
+    if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
     window.speechSynthesis.cancel();
     isSpeaking = false;
     ttsQueue = [];
@@ -819,6 +864,9 @@ const canonicalUrl = `https://dkc-astro.pages.dev${Astro.url?.pathname || ''}`;
 
     // Preload data
     loadData();
+
+    // Warm up voices for TTS (Android loads async)
+    window.speechSynthesis.getVoices();
   }
 
   // Initialize when DOM is ready

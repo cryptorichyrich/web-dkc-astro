@@ -181,6 +181,42 @@ import Footer from "@/components/Footer.astro";
   let highlightedVerses: Set<number> = new Set();
   let ttsTimer: any = null;
   let ttsSeconds = 0;
+  let ttsChunks: string[] = [];
+  let ttsChunkIdx = 0;
+  let ttsResumeTimer: any = null;
+
+  function ttsSplitChunks(text: string, maxLen = 180): string[] {
+    const chunks: string[] = [];
+    let rem = text;
+    while (rem.length > 0) {
+      if (rem.length <= maxLen) { chunks.push(rem); break; }
+      let sp = -1;
+      for (let i = maxLen; i >= maxLen * 0.4; i--) { if (".!?;,".includes(rem[i])) { sp = i + 1; break; } }
+      if (sp === -1) { for (let i = maxLen; i >= maxLen * 0.4; i--) { if (rem[i] === " ") { sp = i + 1; break; } } }
+      if (sp === -1) sp = maxLen;
+      chunks.push(rem.slice(0, sp)); rem = rem.slice(sp);
+    }
+    return chunks;
+  }
+
+  function ttsSpeakNext() {
+    if (ttsChunkIdx >= ttsChunks.length) { ttsStop(); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(ttsChunks[ttsChunkIdx]);
+    u.lang = "id-ID"; u.rate = 0.9;
+    const idV = speechSynthesis.getVoices().find(v => v.lang.startsWith("id"));
+    if (idV) u.voice = idV;
+    u.onstart = () => { if (ttsResumeTimer) clearInterval(ttsResumeTimer); ttsResumeTimer = setInterval(() => { if (speechSynthesis.speaking && !speechSynthesis.paused) { speechSynthesis.pause(); speechSynthesis.resume(); } }, 10000); };
+    u.onend = () => { if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; } ttsChunkIdx++; ttsSpeakNext(); };
+    u.onerror = () => { if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; } ttsChunkIdx++; ttsSpeakNext(); };
+    speechSynthesis.speak(u);
+  }
+
+  function ttsStop() {
+    if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+    speechSynthesis.cancel(); ttsChunks = []; ttsChunkIdx = 0;
+    ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); ttsTimerEl.classList.add("hidden"); clearInterval(ttsTimer);
+  }
 
   // DOM
   const stepTestament = document.getElementById("step-testament")!;
@@ -403,26 +439,24 @@ import Footer from "@/components/Footer.astro";
   });
   citationInput.addEventListener("keydown", (e) => { if (e.key === "Enter") document.getElementById("citation-go")!.click(); });
 
-  // TTS
+  // TTS (chunked for Android Chrome)
   const ttsBtn = document.getElementById("tts-btn")!;
   const ttsStopBtn = document.getElementById("tts-stop-btn")!;
   const ttsTimerEl = document.getElementById("tts-timer")!;
+  // Warm up voices
+  speechSynthesis.getVoices();
   ttsBtn.addEventListener("click", () => {
     if (!("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
     const text = Array.from(readingContent.querySelectorAll(".verse-text")).map(el => el.textContent).join(" ");
     if (!text) return;
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "id-ID"; u.rate = 0.9;
-    const idV = speechSynthesis.getVoices().find(v => v.lang.startsWith("id"));
-    if (idV) u.voice = idV;
+    ttsChunks = ttsSplitChunks(text);
+    ttsChunkIdx = 0;
     ttsBtn.classList.add("hidden"); ttsStopBtn.classList.remove("hidden"); ttsTimerEl.classList.remove("hidden");
     ttsSeconds = 0;
     ttsTimer = setInterval(() => { ttsSeconds++; const m = String(Math.floor(ttsSeconds/60)).padStart(2,"0"); const s = String(ttsSeconds%60).padStart(2,"0"); ttsTimerEl.textContent = `${m}:${s}`; }, 1000);
-    u.onend = () => { ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); ttsTimerEl.classList.add("hidden"); clearInterval(ttsTimer); };
-    speechSynthesis.speak(u);
+    ttsSpeakNext();
   });
-  ttsStopBtn.addEventListener("click", () => { speechSynthesis.cancel(); ttsBtn.classList.remove("hidden"); ttsStopBtn.classList.add("hidden"); ttsTimerEl.classList.add("hidden"); clearInterval(ttsTimer); });
+  ttsStopBtn.addEventListener("click", () => { ttsStop(); });
 
   // Highlight verses on click
   readingContent.addEventListener("click", (e) => {

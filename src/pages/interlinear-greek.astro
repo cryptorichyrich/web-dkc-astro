@@ -327,7 +327,9 @@ import Footer from "@/components/Footer.astro";
   let displayMode: "interlinear" | "greek" | "english" = "interlinear";
   let baseFontSize = 16;
   let ttsPlaying = false;
-  let ttsUtterance: SpeechSynthesisUtterance | null = null;
+  let greekChunks: string[] = [];
+  let greekChunkIdx = 0;
+  let greekResumeTmr: any = null;
 
   // ===== DOM refs =====
   const $id = (id: string) => document.getElementById(id)!;
@@ -569,14 +571,37 @@ import Footer from "@/components/Footer.astro";
     return null;
   }
 
-  // ===== TTS =====
-  function toggleTTS() {
-    if (ttsPlaying) {
-      speechSynthesis.cancel();
-      ttsPlaying = false;
-      $id("tts-label").textContent = "Read Aloud";
-      return;
+  // ===== TTS (chunked for Android Chrome) =====
+  speechSynthesis.getVoices();
+  function greekSplit(text: string, maxLen = 180): string[] {
+    const ch: string[] = []; let rem = text;
+    while (rem.length > 0) {
+      if (rem.length <= maxLen) { ch.push(rem); break; }
+      let sp = -1;
+      for (let i = maxLen; i >= maxLen * 0.4; i--) { if (".!?;,".includes(rem[i])) { sp = i + 1; break; } }
+      if (sp === -1) { for (let i = maxLen; i >= maxLen * 0.4; i--) { if (rem[i] === " ") { sp = i + 1; break; } } }
+      if (sp === -1) sp = maxLen;
+      ch.push(rem.slice(0, sp)); rem = rem.slice(sp);
     }
+    return ch;
+  }
+  function greekSpeakNext() {
+    if (greekChunkIdx >= greekChunks.length) { greekTtsStop(); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(greekChunks[greekChunkIdx]);
+    u.lang = "en-US"; u.rate = 0.9;
+    u.onstart = () => { if (greekResumeTmr) clearInterval(greekResumeTmr); greekResumeTmr = setInterval(() => { if (speechSynthesis.speaking && !speechSynthesis.paused) { speechSynthesis.pause(); speechSynthesis.resume(); } }, 10000); };
+    u.onend = () => { if (greekResumeTmr) { clearInterval(greekResumeTmr); greekResumeTmr = null; } greekChunkIdx++; greekSpeakNext(); };
+    u.onerror = () => { if (greekResumeTmr) { clearInterval(greekResumeTmr); greekResumeTmr = null; } greekChunkIdx++; greekSpeakNext(); };
+    speechSynthesis.speak(u);
+  }
+  function greekTtsStop() {
+    if (greekResumeTmr) { clearInterval(greekResumeTmr); greekResumeTmr = null; }
+    speechSynthesis.cancel(); greekChunks = []; greekChunkIdx = 0;
+    ttsPlaying = false; $id("tts-label").textContent = "Read Aloud";
+  }
+  function toggleTTS() {
+    if (ttsPlaying) { greekTtsStop(); return; }
 
     const book = getBookData(currentBook);
     if (!book) return;
@@ -585,26 +610,14 @@ import Footer from "@/components/Footer.astro";
 
     const verses = chapterData.verses || [];
     let text = "";
-    for (const v of verses) {
-      text += `Verse ${v.verse}. ${(v.english || []).join(" ")}. `;
-    }
+    for (const v of verses) { text += `Verse ${v.verse}. ${(v.english || []).join(" ")}. `; }
+    if (!text) return;
 
-    ttsUtterance = new SpeechSynthesisUtterance(text);
-    ttsUtterance.lang = "en-US";
-    ttsUtterance.rate = 0.9;
-
-    ttsUtterance.onend = () => {
-      ttsPlaying = false;
-      $id("tts-label").textContent = "Read Aloud";
-    };
-    ttsUtterance.onerror = () => {
-      ttsPlaying = false;
-      $id("tts-label").textContent = "Read Aloud";
-    };
-
-    speechSynthesis.speak(ttsUtterance);
+    greekChunks = greekSplit(text);
+    greekChunkIdx = 0;
     ttsPlaying = true;
     $id("tts-label").textContent = "Stop";
+    greekSpeakNext();
   }
 
   // ===== Font size =====

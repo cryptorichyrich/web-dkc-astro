@@ -307,10 +307,16 @@ const encodedTitle = encodeURIComponent(post.data.title);
     headingEls.forEach(h => observer.observe(h));
   }
 
-  // === TTS: Text-to-Speech for article content with yellow highlighting ===
-  let ttsUtterance: SpeechSynthesisUtterance | null = null;
+  // === TTS: Text-to-Speech with chunked playback (Android Chrome fix) ===
+  // Android Chrome silently kills utterances after ~15s.
+  // Fix: split into ~180-char chunks + pause/resume timer hack.
   let ttsPlaying = false;
   let currentHighlight: HTMLElement | null = null;
+  let ttsChunks: string[] = [];
+  let ttsChunkIndex = 0;
+  let ttsResumeTimer: ReturnType<typeof setInterval> | null = null;
+  // Map: chunk index → { el, startChar, endChar }
+  let ttsChunkMap: { el: HTMLElement; startChar: number; endChar: number }[] = [];
 
   function clearHighlight() {
     if (currentHighlight) {
@@ -319,11 +325,46 @@ const encodedTitle = encodeURIComponent(post.data.title);
     }
   }
 
+  function getIndonesianVoice(): SpeechSynthesisVoice | null {
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(v => v.lang.startsWith('id')) || null;
+  }
+
+  // Split text into chunks of ~maxLen chars at sentence/phrase boundaries
+  function splitTextIntoChunks(text: string, maxLen = 180): string[] {
+    const chunks: string[] = [];
+    let remaining = text;
+    while (remaining.length > 0) {
+      if (remaining.length <= maxLen) {
+        chunks.push(remaining);
+        break;
+      }
+      // Find best split point: last period, comma, semicolon, or space within maxLen
+      let splitAt = -1;
+      for (let i = maxLen; i >= maxLen * 0.4; i--) {
+        if ('.!?;,'.includes(remaining[i])) { splitAt = i + 1; break; }
+      }
+      if (splitAt === -1) {
+        // Fall back to last space
+        for (let i = maxLen; i >= maxLen * 0.4; i--) {
+          if (remaining[i] === ' ') { splitAt = i + 1; break; }
+        }
+      }
+      if (splitAt === -1) splitAt = maxLen;
+      chunks.push(remaining.slice(0, splitAt));
+      remaining = remaining.slice(splitAt);
+    }
+    return chunks;
+  }
+
   function initTTS() {
     const btn = document.getElementById('tts-btn');
     const iconPlay = document.getElementById('tts-icon-play');
     const iconStop = document.getElementById('tts-icon-stop');
     if (!btn || !iconPlay || !iconStop) return;
+
+    // Warm up voices (Android loads async)
+    window.speechSynthesis.getVoices();
 
     btn.addEventListener('click', () => {
       if (ttsPlaying) {
@@ -347,66 +388,88 @@ const encodedTitle = encodeURIComponent(post.data.title);
     if (iconStop) iconStop.classList.remove('hidden');
     if (btn) { btn.classList.add('text-dkc-gold', 'border-dkc-gold/30'); }
 
-    // Build utterance from paragraphs, splitting into chunks for highlighting
-    const text = body.textContent || '';
-    if (!text.trim()) { stopTTS(); return; }
+    // Build chunks from paragraphs, tracking which element each chunk belongs to
+    const elements = body.querySelectorAll('p, li, h2, h3, h4, blockquote, td, th');
+    ttsChunks = [];
+    ttsChunkMap = [];
 
-    // Cap at 10000 chars
-    const ttsText = text.length > 10000 ? text.slice(0, 10000) + '...' : text;
-
-    ttsUtterance = new SpeechSynthesisUtterance(ttsText);
-    ttsUtterance.lang = 'id-ID';
-    ttsUtterance.rate = 0.95;
-
-    // Try to find Indonesian voice
-    const voices = window.speechSynthesis.getVoices();
-    for (let i = 0; i < voices.length; i++) {
-      if (voices[i].lang.indexOf('id') === 0) {
-        ttsUtterance.voice = voices[i];
-        break;
+    elements.forEach(el => {
+      const text = (el.textContent || '').trim();
+      if (!text) return;
+      const startChar = ttsChunks.reduce((sum, c) => sum + c.length, 0);
+      const subChunks = splitTextIntoChunks(text);
+      subChunks.forEach(chunk => {
+        ttsChunks.push(chunk);
+        ttsChunkMap.push({ el: el as HTMLElement, startChar: 0, endChar: 0 });
+      });
+      // All sub-chunks of this element point to same el
+      for (let i = ttsChunkMap.length - subChunks.length; i < ttsChunkMap.length; i++) {
+        ttsChunkMap[i].el = el as HTMLElement;
       }
+    });
+
+    if (!ttsChunks.length) { stopTTS(); return; }
+
+    ttsChunkIndex = 0;
+    speakNextChunk();
+  }
+
+  function speakNextChunk() {
+    if (!ttsPlaying || ttsChunkIndex >= ttsChunks.length) {
+      stopTTS();
+      return;
     }
 
-    // Highlight words during speech using onboundary
-    ttsUtterance.onboundary = (event: SpeechSynthesisEvent) => {
-      if (event.name !== 'word') return;
-      const charIndex = event.charIndex;
-      const charLength = event.charLength || 1;
+    const text = ttsChunks[ttsChunkIndex];
+    const info = ttsChunkMap[ttsChunkIndex];
 
-      // Find which paragraph contains this character offset
-      const paragraphs = body.querySelectorAll('p, li, h2, h3, h4, blockquote, td, th');
-      let runningLen = 0;
+    // Highlight current element
+    if (info && info.el) {
+      clearHighlight();
+      info.el.classList.add('tts-highlight');
+      currentHighlight = info.el;
+      info.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-      for (let i = 0; i < paragraphs.length; i++) {
-        const pText = paragraphs[i].textContent || '';
-        if (charIndex >= runningLen && charIndex < runningLen + pText.length) {
-          // Found the paragraph
-          clearHighlight();
-          paragraphs[i].classList.add('tts-highlight');
-          currentHighlight = paragraphs[i] as HTMLElement;
-          // Scroll into view
-          currentHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          break;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 0.95;
+    const voice = getIndonesianVoice();
+    if (voice) utterance.voice = voice;
+
+    // Android Chrome resume-timer hack: pause/resume every 10s
+    utterance.onstart = () => {
+      if (ttsResumeTimer) clearInterval(ttsResumeTimer);
+      ttsResumeTimer = setInterval(() => {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
         }
-        runningLen += pText.length + 1; // +1 for the space between elements
-      }
+      }, 10000);
     };
 
-    ttsUtterance.onend = () => {
-      clearHighlight();
-      stopTTS();
+    utterance.onend = () => {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      ttsChunkIndex++;
+      speakNextChunk();
     };
-    ttsUtterance.onerror = () => {
-      clearHighlight();
-      stopTTS();
+    utterance.onerror = () => {
+      if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
+      ttsChunkIndex++;
+      speakNextChunk();
     };
 
-    window.speechSynthesis.speak(ttsUtterance);
+    window.speechSynthesis.speak(utterance);
   }
 
   function stopTTS() {
+    if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
     window.speechSynthesis.cancel();
     ttsPlaying = false;
+    ttsChunks = [];
+    ttsChunkIndex = 0;
+    ttsChunkMap = [];
     clearHighlight();
     const iconPlay = document.getElementById('tts-icon-play');
     const iconStop = document.getElementById('tts-icon-stop');

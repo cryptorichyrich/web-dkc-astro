@@ -7,37 +7,498 @@ import Footer from "@/components/Footer.astro";
 <BaseLayout>
   <Navbar />
   
-  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
-    <h1 class="text-3xl font-bold text-dkc-gold mb-2">Diagnosa Sedevacantisme</h1>
-    <p class="text-dkc-muted mb-8">Uji klaim sedevacantisme berdasarkan ajaran Gereja Katolik</p>
+  <slot name="head">
+    <title>Diagnosa Sedevacantisme — Damai Kasih Channel</title>
+    <meta name="description" content="Uji pandangan sedevacantisme berdasarkan ajaran Gereja Katolik tentang otoritas Paus, Konsili Vatikan II, dan kontinuitas ajaran Gereja." />
+    <meta name="keywords" content="sedevacantisme, tahta kosong, Paus, Konsili Vatikan II, ajaran Katolik, otoritas papal, infalibilitas" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Diagnosa Sedevacantisme",
+      "url": "https://web-dkc-astro.pages.dev/diagnosa/sedevacantisme/",
+      "description": "Alat untuk menguji pandangan sedevacantisme berdasarkan ajaran Gereja Katolik.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
+      "inLanguage": "id-ID"
+    }
+    </script>
+  </slot>
 
-    <div class="glass-card p-5 mb-6">
-      <div class="space-y-3 mb-6">
-        {[
-          {q: "Apakah Konsili Vatikan II sah?", options: ["Ya", "Tidak", "Sebagian"]},
-          {q: "Apakah Paus Fransiskus Paus yang sah?", options: ["Ya", "Tidak", "Ragu"]},
-          {q: "Apakah Misa Novus Ordo sah?", options: ["Ya", "Tidak"]},
-        ].map((item, i) => (
-          <div>
-            <p class="text-white font-medium text-sm mb-2">{i+1}. {item.q}</p>
-            <div class="flex gap-2">
-              {item.options.map(opt => (
-                <button class="px-4 py-2 rounded-full text-xs border border-dkc-border text-dkc-muted hover:border-dkc-gold/30 hover:text-dkc-gold transition-colors">
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
+    <div class="glass-card p-6 md:p-8" id="quiz-container">
+      <h1 class="text-center text-2xl md:text-3xl font-bold text-dkc-gold mb-4">DIAGNOSA SEDEVACANTISME</h1>
+      <h4 class="text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman Katolik anda.</h4>
+      
+      <div class="relative h-8 bg-dkc-surface rounded-full mb-6 overflow-hidden border border-dkc-border">
+        <div id="progress-bar" class="h-full rounded-full transition-all duration-300 ease-in-out" style="width: 0%; background: linear-gradient(90deg, #c9a84c, #a88630);"></div>
+        <div id="progress-text" class="absolute top-1/2 -translate-y-1/2 text-sm font-bold transition-all duration-300" style="left: 4px; color: #000;">0%</div>
       </div>
-      <button class="w-full bg-dkc-gold text-black font-medium py-3 rounded-lg text-sm">Diagnosa</button>
+      
+      <div id="question-text" class="text-center text-dkc-text text-base md:text-lg leading-relaxed mb-8 min-h-[80px] flex items-center justify-center"></div>
+      
+      <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+        <button id="btn-Iya" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #2d7d46, #1a5c2e); color: white;">Iya [1]</button>
+        <button id="btn-Tidak" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #c0392b, #962d22); color: white;">Tidak [2]</button>
+      </div>
     </div>
   </main>
 
-  <Footer />
-</BaseLayout>
+  <!-- SEO content section -->
+  <section class="max-w-4xl mx-auto px-4 pb-16">
+    <div class="glass-card p-6 md:p-8 space-y-6 text-dkc-text text-sm md:text-base leading-relaxed">
+      <h2 class="text-xl font-bold text-dkc-gold">Apa Itu Sedevacantisme?</h2>
+      <p>Sedevacantisme (dari bahasa Latin <em>sede vacante</em> — "tahta kosong") adalah pandangan yang menyatakan bahwa Tahta Kepausan telah kosong sejak wafatnya Paus Pius XII pada tahun 1958, atau pada titik tertentu setelahnya. Para penganutnya menolak legitimasi para Paus pasca-Konsili Vatikan II, termasuk Paus Fransiskus saat ini.</p>
 
-<slot name="head">
-  <title>Diagnosa Sedevacantisme — Damai Kasih Channel</title>
-  <meta name="description" content="Uji klaim sedevacantisme berdasarkan ajaran Gereja Katolik." />
-</slot>
+      <h2 class="text-xl font-bold text-dkc-gold">Mengapa Pandangan Ini Bertentangan dengan Iman Katolik?</h2>
+      <p>Gereja Katolik mengajarkan bahwa Kristus mendirikan Gereja-Nya di atas Petrus dan para penerusnya (Matius 16:18). Janji Kristus bahwa "alam maut tidak akan menguasainya" adalah jaminan bahwa Gereja — termasuk jabatan Petrus — tidak akan gagal. Menolak legitimasi Paus yang dipilih secara sah merupakan tindakan skismatik yang memisahkan diri dari persekutuan penuh dengan Gereja.</p>
+
+      <h2 class="text-xl font-bold text-dkc-gold">Tiga Pilar Utama Ajaran Katolik</h2>
+      <p>Gereja Katolik menggunakan tiga sumber untuk menilai kebenaran: <strong>Kitab Suci</strong>, <strong>Tradisi Suci</strong>, dan <strong>Magisterium</strong> (otoritas mengajar Gereja yang dipimpin oleh Paus). <a href="/katekismus" class="text-dkc-gold underline">Katekismus Gereja Katolik (KGK 891)</a> menegaskan bahwa Paus, ketika berbicara <em>ex cathedra</em>, menikmati infalibilitas (ketidakbersalahan) dalam hal iman dan moral.</p>
+
+      <h2 class="text-xl font-bold text-dkc-gold">Halaman Terkait</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li><a href="/katekismus" class="text-dkc-gold underline">Katekismus Gereja Katolik</a></li>
+        <li><a href="/kv2" class="text-dkc-gold underline">Dokumen Konsili Vatikan II</a></li>
+        <li><a href="/suksesi-kepausan" class="text-dkc-gold underline">Suksesi Kepausan</a></li>
+        <li><a href="/diagnosa/ajaran-bidat" class="text-dkc-gold underline">Diagnosa Ajaran Bidat</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <Footer />
+
+  <style is:global>
+    .heresy-card { background: var(--color-dkc-surface); border: 1px solid #ef5350; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
+    .heresy-card-header { background: linear-gradient(135deg, #c0392b, #962d22); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .heresy-card-header h3 { color: white; font-weight: 700; font-size: 1rem; margin: 0; }
+    .century-badge { background: white; color: #c0392b; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .heresy-card-body { padding: 1rem; color: var(--color-dkc-text); font-size: 0.875rem; line-height: 1.6; }
+    .answer-card { background: var(--color-dkc-surface); border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
+    .answer-card.correct { border: 1px solid #4caf50; }
+    .answer-card.wrong { border: 1px solid #ef5350; }
+    .answer-card-header { padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: white; }
+    .answer-card.correct .answer-card-header { background: linear-gradient(135deg, #388e3c, #1b5e20); }
+    .answer-card.wrong .answer-card-header { background: linear-gradient(135deg, #c0392b, #962d22); }
+    .answer-card-header .badge { background: white; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .answer-card.correct .answer-card-header .badge { color: #388e3c; }
+    .answer-card.wrong .answer-card-header .badge { color: #c0392b; }
+    .answer-card-body { padding: 1rem; color: var(--color-dkc-text); line-height: 1.6; }
+    .answer-card-body h5 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .user-answer, .correct-answer { background: var(--color-dkc-card); padding: 0.75rem; border-radius: 0.5rem; }
+    .answer-label { font-size: 0.75rem; font-weight: 600; color: var(--color-dkc-muted); margin-bottom: 0.25rem; }
+    .answer-value { font-size: 1rem; font-weight: 700; }
+    .explanation { background: var(--color-dkc-card); border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--color-dkc-muted); border-left: 3px solid var(--color-dkc-gold); }
+    .explanation strong { color: var(--color-dkc-gold); display: block; margin-bottom: 0.25rem; }
+    .alert-box { padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1.25rem; text-align: center; }
+    .alert-box.success { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; }
+    .alert-box.info { background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; }
+    .alert-box.warning { background: linear-gradient(135deg, #e65100, #ef6c00); color: white; }
+    .alert-box.danger { background: linear-gradient(135deg, #b71c1c, #c62828); color: white; }
+    .alert-box h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .alert-box p { font-size: 0.95rem; margin: 0; }
+    .score-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .reading-list { background: var(--color-dkc-surface); border: 1px solid var(--color-dkc-gold); border-radius: 0.75rem; overflow: hidden; margin-bottom: 1.25rem; }
+    .reading-list-header { background: linear-gradient(135deg, #c9a84c, #a88630); padding: 0.75rem 1rem; color: #000; font-weight: 700; }
+    .reading-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--color-dkc-border); color: var(--color-dkc-text); text-decoration: none; transition: background 0.2s; }
+    .reading-list a:last-child { border-bottom: none; }
+    .reading-list a:hover { background: var(--color-dkc-gold); background: rgba(201,168,76,0.1); color: var(--color-dkc-gold); }
+    .retry-btn { width: 100%; padding: 1rem; border-radius: 0.75rem; font-size: 1.1rem; font-weight: 700; background: linear-gradient(135deg, #c9a84c, #a88630); color: #000; border: none; cursor: pointer; transition: all 0.2s; }
+    .retry-btn:hover { filter: brightness(1.1); transform: scale(1.01); }
+    .results-container a { color: #c9a84c; text-decoration: underline; }
+    .results-container a:hover { opacity: 0.8; }
+  </style>
+
+<script is:inline>
+  const sedevacantismQuestions = [
+ {
+  "heresy": "Sedevacantisme",
+  "century": "Abad 20",
+  "detail": "Sedevacantisme adalah pandangan yang menyatakan bahwa tahta kepausan kosong (sede vacante) karena para Paus pasca-Konsili Vatikan II dianggap tidak sah atau telah jatuh ke dalam ajaran sesat.",
+  "variations": [
+    {
+      "text": "Apakah Anda percaya bahwa Konsili Vatikan II (KV II) adalah konsili ekumenis yang sah dan mengikat?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Konsili Vatikan II adalah konsili ekumenis yang sah dan mengikat, dipimpin oleh Paus Yohanes XXIII dan Paus Paulus VI. Gereja Katolik mengajarkan bahwa konsili ekumenis yang dipimpin oleh Paus memiliki otoritas magisterium yang tidak dapat salah dalam hal iman dan moral (KGK 891)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa para Paus pasca-KV II (mulai dari Yohanes XXIII hingga Fransiskus) adalah Paus yang sah secara kanonik?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Para Paus pasca-Konsili Vatikan II adalah Paus yang sah secara kanonik, dipilih sesuai dengan hukum kanonik Gereja. Gereja mengajarkan bahwa Paus yang dipilih secara sah memiliki otoritas penuh sebagai penerus Santo Petrus (KGK 882)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Misa Novus Ordo (Misa Baru) yang diresmikan setelah KV II adalah bentuk Ekaristi yang sah dan valid?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Misa Novus Ordo adalah bentuk Ekaristi yang sah dan valid, diresmikan oleh Paus Paulus VI sesuai dengan reformasi liturgi Konsili Vatikan II. Gereja mengajarkan bahwa Misa yang dirayakan sesuai dengan ritus yang disetujui Gereja adalah valid (KGK 1378)."
+    },
+    {
+      "text": "Apakah Anda meyakini bahwa Paus, ketika berbicara 'ex cathedra' mengenai iman atau moral, tidak dapat salah (infalibel)?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Ketidakbersalahan papal (infalibilitas) adalah dogma Gereja Katolik yang ditetapkan dalam Konsili Vatikan I. Ketika Paus berbicara ex cathedra tentang iman atau moral, dia dilindungi dari kesalahan oleh Roh Kudus (KGK 891)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa para Uskup yang ditunjuk oleh para Paus pasca-KV II memiliki suksesi apostolik yang valid?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Para Uskup yang ditunjuk oleh Paus yang sah memiliki suksesi apostolik yang valid melalui tahbisan yang sah. Suksesi apostolik adalah rantai tak terputus dari para Rasul hingga uskup-uskup saat ini (KGK 861)."
+    },
+    {
+      "text": "Apakah Anda berpandangan bahwa ajaran-ajaran Konsili Vatikan II, seperti kebebasan beragama (Dignitatis Humanae) atau ekumenisme (Unitatis Redintegratio), bertentangan dengan ajaran Katolik tradisional?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Ajaran-ajaran Konsili Vatikan II tidak bertentangan dengan ajaran Katolik tradisional, melainkan merupakan perkembangan organik dari Tradisi Suci. Gereja mengajarkan bahwa tidak ada kontradiksi antara ajaran tradisional dan Konsili Vatikan II (KGK 84)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa reformasi liturgi pasca-KV II (termasuk penggunaan bahasa vernakular) merusak integritas Misa?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Reformasi liturgi pasca-Konsili Vatikan II tidak merusak integritas Misa, melainkan membuatnya lebih dapat diakses oleh umat. Gereja memiliki otoritas untuk mengatur liturgi sesuai dengan kebutuhan pastoral (KGK 1125)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Gereja Katolik pasca-KV II telah jatuh ke dalam kemurtadan atau ajaran sesat besar-besaran?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja Katolik tidak dapat jatuh ke dalam kemurtadan karena dijamin oleh janji Kristus bahwa gerbang neraka tidak akan menguasainya. Roh Kudus memimpin Gereja dalam kebenaran (Matius 16:18, KGK 816)."
+    },
+    {
+      "text": "Apakah Anda menghindari Misa atau Sakramen yang diberikan oleh imam atau uskup yang mengakui otoritas Paus pasca-KV II?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Misa dan Sakramen yang diberikan oleh imam atau uskup yang sah dalam persekutuan dengan Paus adalah valid dan harus diterima oleh umat Katolik. Menghindarinya tanpa alasan yang sah adalah dosa (KGK 2181)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa seorang Paus dapat kehilangan jabatannya secara otomatis jika dia jatuh ke dalam ajaran sesat (heresy)?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja mengajarkan bahwa Paus dilindungi dari kesalahan dalam hal iman dan moral oleh Roh Kudus. Tidak ada otoritas di bumi yang dapat menghakimi atau memakzulkan Paus (KGK 891, Hukum Kanonik 1404)."
+    },
+    {
+      "text": "Apakah Anda berpendapat bahwa Kode Hukum Kanonik 1983 (Kode Hukum Baru) tidak mengikat karena dikeluarkan oleh Paus yang tidak sah?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Kode Hukum Kanonik 1983 adalah hukum yang sah dan mengikat, dikeluarkan oleh Paus Yohanes Paulus II yang merupakan Paus yang sah. Semua umat Katolik wajib menaatinya (Hukum Kanonik 1983, Kanon 1)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa tidak ada Paus yang sah sejak wafatnya Paus Pius XII pada tahun 1958?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Semua Paus sejak Paus Yohanes XXIII hingga Paus Fransiskus adalah Paus yang sah, dipilih sesuai dengan hukum kanonik dan diakui oleh Gereja universal. Suksesi apostolik tetap berlanjut (KGK 862)."
+    },
+    {
+      "text": "Apakah Anda meyakini bahwa ordo Sakramen Tahbisan yang direvisi pasca-KV II (ordo baru) tidak valid?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Ordo Sakramen Tahbisan yang direvisi pasca-Konsili Vatikan II adalah valid, mengandung semua elemen esensial untuk validitas sakramen. Gereja memiliki otoritas untuk merevisi ritus sakramen tanpa merusak validitasnya (KGK 1573)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Paus Fransiskus adalah Paus yang sah?",
+      "correctAnswer": "Iya",
+      "correctExplanation": "Paus Fransiskus adalah Paus yang sah, dipilih secara kanonik oleh Konsistori Kardinal dan diakui oleh Gereja universal sebagai penerus Santo Petrus yang ke-266 (KGK 882)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa ajaran Konsili Vatikan II tentang kolegialitas (kolegialitas Uskup) merusak otoritas primat Paus?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Ajaran tentang kolegialitas tidak merusak primat Paus, melainkan menegaskan bahwa para uskup bekerja sama dengan Paus dalam memimpin Gereja universal. Primat Paus tetap utuh dan tidak terbagi (KGK 883)."
+    },
+    {
+      "text": "Apakah Anda merasa terpaksa untuk tidak menerima ajaran tertentu dari para Paus pasca-KV II karena dianggap bertentangan dengan Tradisi?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Umat Katolik wajib menerima semua ajaran resmi para Paus yang sah, karena mereka dilindungi oleh Roh Kudus dalam mengajarkan iman dan moral. Tidak ada kontradiksi sejati antara ajaran papal dan Tradisi (KGK 892)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Liturgi Lama (Misa Latin Tradisional) harus menjadi satu-satunya bentuk Misa yang diperbolehkan di Gereja Katolik?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja mengakui berbagai ritus liturgi yang sah, termasuk Misa Novus Ordo dan Misa Latin Tradisional. Kedua bentuk adalah ekspresi yang sah dari lex orandi Gereja (KGK 1200)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Sakramen Pengakuan Dosa yang diberikan oleh imam yang ditahbiskan setelah KV II tidak valid?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Sakramen Pengakuan Dosa yang diberikan oleh imam yang ditahbiskan secara sah adalah valid, terlepas dari kapan mereka ditahbiskan. Validitas sakramen tidak tergantung pada periode sejarah tahbisan (KGK 1461)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Gereja Katolik saat ini (pasca-KV II) adalah 'Gereja tandingan' atau 'Gereja palsu'?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja Katolik saat ini adalah Gereja yang sama yang didirikan oleh Kristus, dengan kontinuitas yang tidak terputus dari para Rasul. Tidak ada 'Gereja tandingan' - hanya satu Gereja Katolik yang sejati (KGK 816)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Paus Benediktus XVI tidak sah dalam mengundurkan diri dan/atau masih menjadi Paus yang sah?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Paus Benediktus XVI mengundurkan diri secara sah sesuai dengan Hukum Kanonik (Kanon 332 §2). Pengunduran dirinya valid dan Paus Fransiskus adalah penerusnya yang sah (Hukum Kanonik 332)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Dokumen-dokumen Konsili Vatikan II, meskipun bukan dogma, mengandung kesalahan fatal yang merusak iman?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Dokumen-dokumen Konsili Vatikan II tidak mengandung kesalahan fatal yang merusak iman. Konsili ekumenis dilindungi oleh Roh Kudus dari kesalahan dalam hal iman dan moral (KGK 891)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Gereja tidak dapat secara sah mengubah ritus Sakramen (misalnya, mengubah tata cara Sakramen Imamat atau Perkawinan)?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja memiliki otoritas untuk mengubah ritus sakramen selama substansi sakramen tetap utuh. Gereja telah melakukan reformasi liturgi sepanjang sejarah tanpa merusak validitas sakramen (KGK 1125)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Paus Paulus VI (1963-1978) adalah Paus yang tidak sah?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Paus Paulus VI adalah Paus yang sah, dipilih secara kanonik dan diakui oleh Gereja universal. Dia memimpin Gereja dengan otoritas apostolik yang sah (KGK 882)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa para imam yang ditahbiskan dengan ritus tahbisan baru (setelah 1968) tidak valid atau tidak memiliki kuasa imamat yang sah?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Para imam yang ditahbiskan dengan ritus tahbisan baru adalah valid dan memiliki kuasa imamat yang sah. Ritus baru mengandung semua elemen esensial untuk validitas sakramen imamat (KGK 1573)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Gereja tidak dapat mengajarkan atau mengizinkan praktik-praktik yang sebelumnya dilarang (misalnya, beberapa aspek ekumenisme atau kebebasan beragama)?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja dapat mengembangkan pemahamannya tentang ajaran moral dan pastoral sesuai dengan bimbingan Roh Kudus, tanpa mengubah kebenaran fundamental iman. Ini adalah perkembangan organik doktrin (KGK 94)."
+    },
+    {
+      "text": "Apakah Anda merasa bahwa Anda tidak dapat bersekutu sepenuhnya dengan para imam dan Uskup di keuskupan lokal Anda karena mereka menerima KV II?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Umat Katolik wajib bersekutu dengan para imam dan uskup yang sah dalam persekutuan dengan Paus. Menolak persekutuan dengan hierarki yang sah adalah tindakan skismatik (KGK 2089)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Gereja Katolik secara de jure (menurut hukum) tidak ada lagi sebagai entitas yang terlihat di bumi?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Gereja Katolik tetap ada sebagai entitas yang terlihat di bumi dengan hierarki yang sah. Kristus menjamin bahwa Gereja-Nya akan bertahan sampai akhir zaman (Matius 28:20, KGK 816)."
+    },
+    {
+      "text": "Apakah Anda meyakini bahwa Paus Yohanes Paulus II (1978-2005) adalah Paus yang tidak sah?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Paus Yohanes Paulus II adalah Paus yang sah, dipilih secara kanonik dan diakui oleh Gereja universal. Dia telah dinyatakan santo oleh Gereja (KGK 882)."
+    },
+    {
+      "text": "Apakah Anda percaya bahwa Hukum Kanonik baru (1983) secara fundamental bertentangan dengan Hukum Kanonik tradisional?",
+      "correctAnswer": "Tidak",
+      "correctExplanation": "Hukum Kanonik 1983 adalah perkembangan organik dari hukum kanonik tradisional, disesuaikan dengan ajaran Konsili Vatikan II. Tidak ada kontradiksi fundamental dengan prinsip-prinsip hukum kanonik (Hukum Kanonik 1983, Konstitusi Apostolik Sacrae Disciplinae Leges)."
+    }
+  ]
+}];
+
+  let currentQuestion = 0;
+  let detectedHeresies = [];
+  let selectedQuestions = [];
+  let userAnswers = [];
+  let incorrectAnswerCount = 0;
+
+  let questionText = document.getElementById("question-text");
+  let progressBar = document.getElementById("progress-bar");
+  let progressText = document.getElementById("progress-text");
+  let btnYes = document.getElementById("btn-Iya");
+  let btnNo = document.getElementById("btn-Tidak");
+  let quizContainer = document.getElementById("quiz-container");
+
+  function initializeQuestions() {
+    selectedQuestions = [];
+    sedevacantismQuestions.forEach(function(pair) {
+      pair.variations.forEach(function(variation) {
+        selectedQuestions.push({
+          text: variation.text,
+          correctAnswer: variation.correctAnswer,
+          correctExplanation: variation.correctExplanation,
+          heresy: pair.heresy,
+          century: pair.century,
+          detail: pair.detail
+        });
+      });
+    });
+    selectedQuestions.sort(function() { return Math.random() - 0.5; });
+  }
+
+  function progressBarUpdate() {
+    const progress = Math.round((currentQuestion / selectedQuestions.length) * 100);
+    progressBar = document.getElementById("progress-bar");
+    progressText = document.getElementById("progress-text");
+    if (progressBar && progressText) {
+      progressBar.style.width = progress + "%";
+      progressText.textContent = progress + "%";
+      if (progress < 5) {
+        progressText.style.left = "4px";
+        progressText.style.color = "#000";
+      } else {
+        progressText.style.left = (progress - 4.5) + "%";
+        progressText.style.color = "#fff";
+      }
+    }
+  }
+
+  function nextQuestion(answer) {
+    const currentQ = selectedQuestions[currentQuestion];
+    const isCorrect = answer === currentQ.correctAnswer;
+    userAnswers.push({
+      question: currentQ.text,
+      userAnswer: answer,
+      correctExplanation: currentQ.correctExplanation,
+      correctAnswer: currentQ.correctAnswer,
+      isCorrect: isCorrect
+    });
+    if (!isCorrect) {
+      incorrectAnswerCount++;
+      detectedHeresies.push(currentQ);
+    }
+    currentQuestion++;
+    progressBarUpdate();
+    if (currentQuestion < selectedQuestions.length) {
+      questionText.textContent = selectedQuestions[currentQuestion].text;
+    } else {
+      showResults();
+    }
+  }
+
+  function combineHeresies(heresies) {
+    const combined = {};
+    heresies.forEach(function(heresy) {
+      if (!combined[heresy.heresy]) {
+        combined[heresy.heresy] = { heresy: heresy.heresy, century: heresy.century, details: [heresy.detail] };
+      } else if (combined[heresy.heresy].details.indexOf(heresy.detail) === -1) {
+        combined[heresy.heresy].details.push(heresy.detail);
+      }
+    });
+    return Object.values(combined).sort(function(a, b) {
+      const centuryA = parseInt(a.century.match(/\d+/)[0], 10);
+      const centuryB = parseInt(b.century.match(/\d+/)[0], 10);
+      return centuryA - centuryB;
+    });
+  }
+
+  function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+  function showResults() {
+    const totalQuestions = selectedQuestions.length;
+    const correctAnswers = totalQuestions - incorrectAnswerCount;
+    const scorePercentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+    let alertClass, alertIcon, resultTitle, resultMessage, recommendations;
+
+    if (incorrectAnswerCount === 0) {
+      alertClass = "success";
+      alertIcon = "✅";
+      resultTitle = "Sempurna! Iman Katolik yang Sangat Sehat";
+      resultMessage = "Anda memiliki pemahaman yang sangat baik tentang ajaran Gereja Katolik mengenai otoritas papal, Konsili Vatikan II, dan kontinuitas ajaran Gereja.";
+      recommendations = [];
+    } else if (incorrectAnswerCount <= 2) {
+      alertClass = "info";
+      alertIcon = "ℹ️";
+      resultTitle = "Baik! Iman Katolik yang Sehat dengan Sedikit Klarifikasi";
+      resultMessage = "Anda memiliki pemahaman yang umumnya ortodoks tentang ajaran Gereja Katolik. Hanya " + incorrectAnswerCount + " dari " + totalQuestions + " jawaban yang perlu klarifikasi lebih lanjut.";
+      recommendations = [
+        "Pelajari lebih lanjut tentang topik-topik spesifik yang dijawab kurang tepat",
+        "Konsultasikan dengan imam atau katekis untuk klarifikasi minor",
+        "Baca dokumen-dokumen Konsili Vatikan II untuk pemahaman yang lebih mendalam"
+      ];
+    } else if (incorrectAnswerCount <= 4) {
+      alertClass = "warning";
+      alertIcon = "⚠️";
+      resultTitle = "Perhatian: Beberapa Kekeliruan dalam Pemahaman";
+      resultMessage = "Anda menunjukkan beberapa kekeliruan dalam memahami ajaran Gereja Katolik (" + incorrectAnswerCount + " dari " + totalQuestions + " jawaban kurang tepat). Ini memerlukan perhatian dan pembelajaran lebih lanjut.";
+      recommendations = [
+        "Pelajari secara mendalam tentang otoritas Gereja dan Konsili Vatikan II",
+        "Konsultasikan dengan imam atau teolog Katolik yang kompeten",
+        "Ikuti kelas katekese atau studi Alkitab untuk memperdalam iman",
+        "Baca Katekismus Gereja Katolik tentang topik-topik yang relevan"
+      ];
+    } else {
+      alertClass = "danger";
+      alertIcon = "🚨";
+      resultTitle = "Peringatan: Kecenderungan Sedevacantisme Terdeteksi";
+      resultMessage = "Jawaban Anda menunjukkan kecenderungan yang signifikan terhadap pandangan Sedevacantisme (" + incorrectAnswerCount + " dari " + totalQuestions + " jawaban tidak sesuai dengan ajaran Gereja Katolik). Sedevacantisme adalah pandangan yang menolak legitimasi para Paus pasca-Konsili Vatikan II dan tidak sesuai dengan ajaran Gereja Katolik.";
+      recommendations = [
+        "Segera konsultasikan dengan imam atau teolog Katolik yang kompeten",
+        "Pelajari secara mendalam dokumen-dokumen resmi Gereja tentang kontinuitas ajaran",
+        "Baca ensiklik dan dokumen papal untuk memahami otoritas Gereja",
+        "Hindari sumber-sumber yang mempromosikan pandangan sedevacantis",
+        "Pertimbangkan untuk mengikuti retreat atau program pembinaan iman"
+      ];
+    }
+
+    let html = "<div class=\"results-container\">";
+
+    html += "<div class=\"alert-box " + alertClass + "\">";
+    html += "<div class=\"text-center\">";
+    html += "<h2>" + alertIcon + " " + esc(resultTitle) + "</h2>";
+    html += "<div class=\"score-badge\">Skor: " + correctAnswers + "/" + totalQuestions + " (" + scorePercentage + "%)</div>";
+    html += "<p>" + esc(resultMessage) + "</p>";
+    html += "</div></div>";
+
+    if (recommendations.length > 0) {
+      html += "<div class=\"reading-list\">";
+      html += "<div class=\"reading-list-header\">📋 Rekomendasi untuk Anda</div>";
+      recommendations.forEach(function(rec) {
+        html += "<div style=\"padding:0.75rem 1rem;border-bottom:1px solid var(--color-dkc-border);font-size:0.9rem;\">• " + esc(rec) + "</div>";
+      });
+      html += "</div>";
+    }
+
+    html += "<h3 class=\"text-center mb-4 font-bold text-dkc-gold\">Hasil Jawaban Anda</h3>";
+    html += "<div class=\"mb-6\">";
+
+    userAnswers.forEach(function(qa, index) {
+      const isCorrect = qa.userAnswer === qa.correctAnswer;
+      const cls = isCorrect ? "correct" : "wrong";
+      const label = isCorrect ? "Benar" : "Salah";
+      html += "<div class=\"answer-card " + cls + "\">";
+      html += "<div class=\"answer-card-header\"><span>Pertanyaan " + (index + 1) + "</span><span class=\"badge\">" + label + "</span></div>";
+      html += "<div class=\"answer-card-body\">";
+      html += "<h5>" + esc(qa.question) + "</h5>";
+      html += "<div class=\"grid grid-cols-2 gap-2 mb-3\">";
+      html += "<div class=\"user-answer\"><div class=\"answer-label\">Jawaban Anda:</div><div class=\"answer-value\">" + esc(qa.userAnswer) + "</div></div>";
+      html += "<div class=\"correct-answer\"><div class=\"answer-label\">Jawaban Benar:</div><div class=\"answer-value\" style=\"color:#4caf50\">" + esc(qa.correctAnswer) + "</div></div>";
+      html += "</div>";
+      html += "<div class=\"explanation\"><strong>Penjelasan:</strong> " + qa.correctExplanation + "</div>";
+      html += "</div></div>";
+    });
+
+    html += "</div>";
+
+    html += "<div class=\"reading-list\">";
+    html += "<div class=\"reading-list-header\">📚 Bacaan Lebih Lanjut</div>";
+    html += "<a href=\"/blog/mengkritisi-orang-katolik-yang-berjiwa-sspx\" target=\"_blank\"><span>📚</span><span>Mengkritisi Orang Katolik yang Berjiwa SSPX</span></a>";
+    html += "<a href=\"/blog/masih-perlukah-paus-theovlogychannel-live-61-05-2025\" target=\"_blank\"><span>📚</span><span>Masih Perlukah Paus?</span></a>";
+    html += "<a href=\"/blog/takhta-petrus-mengapa-fondasi-roma\" target=\"_blank\"><span>📚</span><span>Takhta Petrus — Mengapa Fondasi di Roma?</span></a>";
+    html += "</div>";
+
+    html += "<button class=\"retry-btn\" id=\"retry-button\">🔄 Diagnosa Ulang</button>";
+    html += "</div>";
+
+    html = html.replace(/KGK (\d+)/g, function(match, id) {
+      return "<a href=\"/katekismus?q=" + id + "\" target=\"_blank\">KGK " + id + "</a>";
+    });
+
+    quizContainer.innerHTML = html;
+    document.getElementById("retry-button").addEventListener("click", resetQuiz);
+  }
+
+  function resetQuiz() {
+    currentQuestion = 0;
+    detectedHeresies = [];
+    userAnswers = [];
+    incorrectAnswerCount = 0;
+    initializeQuestions();
+
+    quizContainer.innerHTML = 
+      "<h1 class=\"text-center text-2xl md:text-3xl font-bold text-dkc-gold mb-4\">DIAGNOSA SEDEVACANTISME</h1>" +
+      "<h4 class=\"text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed\">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman Katolik anda.</h4>" +
+      "<div class=\"relative h-8 bg-dkc-surface rounded-full mb-6 overflow-hidden border border-dkc-border\">" +
+      "<div id=\"progress-bar\" class=\"h-full rounded-full transition-all duration-300 ease-in-out\" style=\"width: 0%; background: linear-gradient(90deg, #c9a84c, #a88630);\"></div>" +
+      "<div id=\"progress-text\" class=\"absolute top-1/2 -translate-y-1/2 text-sm font-bold transition-all duration-300\" style=\"left: 4px; color: #000;\">0%</div>" +
+      "</div>" +
+      "<div id=\"question-text\" class=\"text-center text-dkc-text text-base md:text-lg leading-relaxed mb-8 min-h-[80px] flex items-center justify-center\"></div>" +
+      "<div class=\"grid grid-cols-2 gap-4 max-w-md mx-auto\">" +
+      "<button id=\"btn-Iya\" class=\"py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110\" style=\"background: linear-gradient(135deg, #2d7d46, #1a5c2e); color: white;\">Iya [1]</button>" +
+      "<button id=\"btn-Tidak\" class=\"py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110\" style=\"background: linear-gradient(135deg, #c0392b, #962d22); color: white;\">Tidak [2]</button>" +
+      "</div>";
+
+    questionText = document.getElementById("question-text");
+    progressBar = document.getElementById("progress-bar");
+    progressText = document.getElementById("progress-text");
+    btnYes = document.getElementById("btn-Iya");
+    btnNo = document.getElementById("btn-Tidak");
+
+    btnYes.addEventListener("click", function() { nextQuestion("Iya"); });
+    btnNo.addEventListener("click", function() { nextQuestion("Tidak"); });
+    questionText.textContent = selectedQuestions[0].text;
+    progressBarUpdate();
+  }
+
+  initializeQuestions();
+  btnYes.addEventListener("click", function() { nextQuestion("Iya"); });
+  btnNo.addEventListener("click", function() { nextQuestion("Tidak"); });
+  questionText.textContent = selectedQuestions[0].text;
+  progressBarUpdate();
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "1" || event.key === "NumPad1") { nextQuestion("Iya"); }
+    else if (event.key === "2" || event.key === "NumPad2") { nextQuestion("Tidak"); }
+  });
+</script>
+</BaseLayout>

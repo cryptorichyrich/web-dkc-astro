@@ -28,17 +28,28 @@ jobs:
       - name: Run scrape script
         run: node scripts/scrape-renungan-mirifica.cjs
 
-      - name: Commit & Push if new renungan
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python deps
+        run: pip install pyyaml
+
+      - name: Generate renungan index
+        run: python scripts/generate-renungan-index.py
+
+      - name: Commit & Push if anything new
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          NEW_FILES=$(git ls-files --others --exclude-standard src/content/blog/)
-          if [ -z "$NEW_FILES" ]; then
-            echo "Gak ada renungan baru, skip commit."
+          
+          # Check for new renungan articles or changed index
+          git add src/content/blog/ public/assets/data/renungan-index.json
+          
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan, skip commit."
           else
-            echo "Renungan baru:"
-            echo "$NEW_FILES"
-            git add src/content/blog/
-            git commit -m "content: add renungan harian $(date +'%Y-%m-%d')"
+            git commit -m "content: update renungan harian & index $(date +'%Y-%m-%d')"
             git push
           fi

@@ -20,7 +20,7 @@ import Footer from "@/components/Footer.astro";
       <p class="text-dkc-muted text-sm mt-1">Lihat <strong class="text-dkc-text">bacaan harian</strong>, warna liturgi, peringatan orang kudus, dan panduan ibadat harian</p>
     </div>
 
-    <!-- Bacaan Hari Ini panel -->
+    <!-- Bacaan Hari Ini panel — always visible, shows today's full data -->
     <div id="cal-today-panel" class="glass-card p-5 mb-6">
       <h2 id="cal-today-title" class="text-dkc-gold font-bold text-lg mb-3">Bacaan Hari Ini</h2>
       <div class="space-y-2.5 text-sm">
@@ -35,8 +35,9 @@ import Footer from "@/components/Footer.astro";
           <span class="text-dkc-muted">BcO</span>
           <p id="cal-today-bco" class="text-dkc-text mt-0.5"></p>
         </div>
-        <div>
+        <div class="flex items-center gap-4 flex-wrap">
           <span id="cal-today-warna" class="text-dkc-gold font-semibold text-xs"></span>
+          <a id="cal-today-renungan" href="#" target="_blank" class="hidden text-xs text-dkc-gold hover:underline">📿 Baca Renungan Hari Ini →</a>
         </div>
       </div>
     </div>
@@ -48,7 +49,7 @@ import Footer from "@/components/Footer.astro";
       <button id="cal-next" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">→</button>
     </div>
 
-    <!-- Detail panel — shows selected date info (hidden by default, appears on click) -->
+    <!-- Detail panel — shows selected date info on click -->
     <div id="cal-detail" class="glass-card p-5 mb-4 hidden">
       <div class="flex items-start justify-between mb-3">
         <h3 id="cal-detail-date" class="text-dkc-gold font-bold text-lg"></h3>
@@ -118,19 +119,27 @@ import Footer from "@/components/Footer.astro";
 </BaseLayout>
 
 <script is:inline>
+  // --- Constants ---
   const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
   const MONTHS_SHORT = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 
   let liturgicalData = {};
+  let renunganIndex = [];
   let viewYear, viewMonth;
 
+  // --- Data loading ---
   async function loadData() {
     try {
       const res = await fetch('/assets/data/liturgical-' + new Date().getFullYear() + '.json');
       if (res.ok) liturgicalData = await res.json();
       else console.warn('Liturgical data not available');
     } catch(e) { console.warn('Error loading liturgical data:', e); }
+
+    try {
+      const res = await fetch('/assets/data/renungan-index.json');
+      if (res.ok) renunganIndex = await res.json();
+    } catch(e) { console.warn('Error loading renungan index:', e); }
   }
 
   function getLiturgicalInfo(date) {
@@ -138,12 +147,96 @@ import Footer from "@/components/Footer.astro";
     return liturgicalData[key] || null;
   }
 
-  // --- Today's panel ---
+  // --- Port of Python parse_bacaan_to_links + process_verse_range ---
+  function processVerseRange(book, chapter, verseRange) {
+    // Cross-chapter: "29-7:25" → ["book6:29-999", "book7:1-25"]
+    const crossMatch = verseRange.match(/^(\d+[a-z]?)-(\d+):(\d+[a-z]?)$/i);
+    if (crossMatch) {
+      const startV = crossMatch[1], endCh = crossMatch[2], endV = crossMatch[3];
+      return { parts: [`${book}${chapter}:${startV}-999`, `${book}${endCh}:1-${endV}`], newChapter: endCh };
+    }
+    // New chapter: "3:1-4" 
+    const newChMatch = verseRange.match(/^(\d+):(\S+)$/i);
+    if (newChMatch) {
+      const newCh = newChMatch[1], vs = newChMatch[2];
+      const innerCross = vs.match(/^(\d+[a-z]?)-(\d+):(\d+[a-z]?)$/i);
+      if (innerCross) {
+        return { parts: [`${book}${newCh}:${innerCross[1]}-999`, `${book}${innerCross[2]}:1-${innerCross[3]}`], newChapter: innerCross[2] };
+      }
+      return { parts: [`${book}${newCh}:${vs}`], newChapter: newCh };
+    }
+    // Same chapter range: "4-5" or single verse "4"
+    return { parts: [`${book}${chapter}:${verseRange}`], newChapter: null };
+  }
+
+  function parseBacaanToLinks(bacaan) {
+    if (!bacaan) return '';
+    const parts = bacaan.split(';');
+    const linked = [];
+    let lastBook = null;
+
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (!trimmed || trimmed === '.') continue;
+
+      // Match: "2Ptr 3:12-15a.17-18" or "mzm. 90:2.3-4" etc.
+      const match = trimmed.match(/^([a-z]+\.?)\s*(\d+):(\S+)/i);
+      
+      if (match) {
+        let book = match[1].replace('.', '').toLowerCase();
+        let chapter = match[2];
+        let verses = match[3];
+        lastBook = book;
+
+        const verseRanges = verses.split(',').map(v => v.trim());
+        const queryParts = [];
+        let currentCh = chapter;
+
+        for (const vr of verseRanges) {
+          const result = processVerseRange(book, currentCh, vr);
+          queryParts.push(...result.parts);
+          if (result.newChapter) currentCh = result.newChapter;
+        }
+
+        const query = queryParts.join(';');
+        linked.push(`<a href="/kitabsuci/pbtb2/?q=${encodeURIComponent(query)}" class="text-dkc-gold hover:underline" target="_blank">${trimmed}</a>`);
+      } else {
+        // Continuation reference: "8:1-5" (chapter:verse without book)
+        const contMatch = trimmed.match(/^(\d+):(\S+)/i);
+        if (contMatch && lastBook) {
+          let chapter = contMatch[1], verses = contMatch[2];
+          const verseRanges = verses.split(',').map(v => v.trim());
+          const queryParts = [];
+          let currentCh = chapter;
+
+          for (const vr of verseRanges) {
+            const result = processVerseRange(lastBook, currentCh, vr);
+            queryParts.push(...result.parts);
+            if (result.newChapter) currentCh = result.newChapter;
+          }
+
+          const query = queryParts.join(';');
+          linked.push(`<a href="/kitabsuci/pbtb2/?q=${encodeURIComponent(query)}" class="text-dkc-gold hover:underline" target="_blank">${trimmed}</a>`);
+        } else {
+          linked.push(trimmed);
+        }
+      }
+    }
+    return linked.join('; ');
+  }
+
+  // --- Find today's renungan ---
+  function findTodayRenungan() {
+    const now = new Date();
+    const key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const match = renunganIndex.find(r => r.date === key);
+    return match || null;
+  }
+
+  // --- Render panels ---
   function renderTodayPanel() {
     const now = new Date();
     const info = getLiturgicalInfo(now);
-
-    // Title: "Bacaan Hari Ini, 2 JUNI 2026"
     const dateStr = `${now.getDate()} ${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`;
     document.getElementById('cal-today-title').textContent = `Bacaan Hari Ini, ${dateStr}`;
 
@@ -152,80 +245,71 @@ import Footer from "@/components/Footer.astro";
 
       const bacaanWrap = document.getElementById('cal-today-bacaan-wrap');
       if (info.bacaan) {
-        document.getElementById('cal-today-bacaan').textContent = info.bacaan;
+        document.getElementById('cal-today-bacaan').innerHTML = parseBacaanToLinks(info.bacaan);
+        bacaanWrap.style.display = '';
       } else {
         bacaanWrap.style.display = 'none';
       }
 
       const bcoWrap = document.getElementById('cal-today-bco-wrap');
       if (info.bco) {
-        document.getElementById('cal-today-bco').textContent = info.bco;
+        document.getElementById('cal-today-bco').innerHTML = parseBacaanToLinks(info.bco);
+        bcoWrap.style.display = '';
       } else {
         bcoWrap.style.display = 'none';
       }
 
       document.getElementById('cal-today-warna').textContent = 'Warna Liturgi ' + (info.warna || 'Hijau');
+    }
+
+    // Renungan link
+    const renungan = findTodayRenungan();
+    const renunganEl = document.getElementById('cal-today-renungan');
+    if (renungan) {
+      renunganEl.href = renungan.url;
+      renunganEl.classList.remove('hidden');
     } else {
-      document.getElementById('cal-today-perayaan').textContent = 'Waktu Biasa';
-      document.getElementById('cal-today-bacaan-wrap').style.display = 'none';
-      document.getElementById('cal-today-bco-wrap').style.display = 'none';
-      document.getElementById('cal-today-warna').textContent = 'Warna Liturgi Hijau';
+      renunganEl.classList.add('hidden');
     }
   }
 
-  // --- Detail panel (on date click) ---
   function showDetail(date) {
     const info = getLiturgicalInfo(date);
     const sel = document.getElementById('cal-detail');
     sel.classList.remove('hidden');
 
-    const dateStr = `${DAYS_ID[date.getDay()]}, ${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
-    document.getElementById('cal-detail-date').textContent = dateStr;
-
+    document.getElementById('cal-detail-date').textContent = 
+      `${DAYS_ID[date.getDay()]}, ${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
     document.getElementById('cal-detail-perayaan').textContent = info ? (info.perayaan || '') : 'Hari Biasa';
 
     const bacaanDiv = document.getElementById('cal-detail-bacaan');
-    const bacaanText = document.getElementById('cal-detail-bacaan-text');
     if (info && info.bacaan) {
       bacaanDiv.classList.remove('hidden');
-      bacaanText.textContent = info.bacaan;
+      document.getElementById('cal-detail-bacaan-text').innerHTML = parseBacaanToLinks(info.bacaan);
     } else {
       bacaanDiv.classList.add('hidden');
     }
 
     const bcoDiv = document.getElementById('cal-detail-bco');
-    const bcoText = document.getElementById('cal-detail-bco-text');
     if (info && info.bco) {
       bcoDiv.classList.remove('hidden');
-      bcoText.textContent = info.bco;
+      document.getElementById('cal-detail-bco-text').innerHTML = parseBacaanToLinks(info.bco);
     } else {
       bcoDiv.classList.add('hidden');
     }
 
-    const warna = info ? (info.warna || 'Hijau') : 'Hijau';
-    document.getElementById('cal-detail-warna').textContent = 'Warna Liturgi ' + warna;
-
+    document.getElementById('cal-detail-warna').textContent = 'Warna Liturgi ' + (info ? (info.warna || 'Hijau') : 'Hijau');
     sel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  document.getElementById('cal-detail-close').addEventListener('click', () => {
-    document.getElementById('cal-detail').classList.add('hidden');
-  });
-
   // --- Calendar grid ---
-  const colorMap = {
-    'Putih':'border-white/40 bg-white/5', 'Hijau':'border-green-600/40 bg-green-900/10',
-    'Ungu':'border-purple-600/40 bg-purple-900/10', 'Merah':'border-red-600/40 bg-red-900/10',
-    'Hitam':'border-gray-600/40 bg-gray-900/10',
-  };
   const dotColorMap = {
     'Putih':'bg-white/60', 'Hijau':'bg-green-600/60', 'Ungu':'bg-purple-600/60',
     'Merah':'bg-red-600/60', 'Hitam':'bg-gray-600/60',
   };
 
   function renderCalendar() {
-    const title = document.getElementById('cal-month-title');
-    title.textContent = `${MONTHS_ID[viewMonth]} ${viewYear}`;
+    document.getElementById('cal-month-title').textContent = `${MONTHS_ID[viewMonth]} ${viewYear}`;
     const firstDay = new Date(viewYear, viewMonth, 1);
     const lastDay = new Date(viewYear, viewMonth + 1, 0);
     const startDow = firstDay.getDay();
@@ -255,7 +339,6 @@ import Footer from "@/components/Footer.astro";
     }
     grid.innerHTML = html;
 
-    // Click handlers
     grid.querySelectorAll('.cal-day').forEach(el => {
       el.addEventListener('click', () => {
         const dk = el.dataset.date;
@@ -267,7 +350,11 @@ import Footer from "@/components/Footer.astro";
     });
   }
 
-  // --- Month nav ---
+  // --- Events ---
+  document.getElementById('cal-detail-close').addEventListener('click', () => {
+    document.getElementById('cal-detail').classList.add('hidden');
+  });
+
   document.getElementById('cal-prev').addEventListener('click', () => {
     viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} renderCalendar();
   });

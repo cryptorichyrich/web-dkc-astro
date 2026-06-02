@@ -10,18 +10,27 @@ import Footer from "@/components/Footer.astro";
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
     <div class="glass-card p-6 md:p-8" id="quiz-container">
       <h1 class="text-center text-2xl md:text-3xl font-bold text-dkc-gold mb-4">DIAGNOSA AJARAN BIDAT</h1>
-      <h4 class="text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman kekristenan anda.</h4>
+      <h4 class="text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman kekristenen anda.</h4>
       
-      <div class="relative h-8 bg-dkc-surface rounded-full mb-6 overflow-hidden border border-dkc-border">
-        <div id="progress-bar" class="h-full rounded-full transition-all duration-300 ease-in-out" style="width: 0%; background: linear-gradient(90deg, #c9a84c, #a88630);"></div>
-        <div id="progress-text" class="absolute top-1/2 -translate-y-1/2 text-sm font-bold transition-all duration-300" style="left: 4px; color: #000;">0%</div>
+      <!-- Loading skeleton - shown instantly while data loads -->
+      <div id="quiz-loading" class="text-center py-8">
+        <div class="inline-block w-8 h-8 border-3 border-dkc-gold border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-dkc-muted mt-3 text-sm">Memuat pertanyaan...</p>
       </div>
-      
-      <div id="question-text" class="text-center text-dkc-text text-base md:text-lg leading-relaxed mb-8 min-h-[80px] flex items-center justify-center"></div>
-      
-      <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
-        <button id="btn-Iya" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #2d7d46, #1a5c2e); color: white;">Iya [1]</button>
-        <button id="btn-Tidak" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #c0392b, #962d22); color: white;">Tidak [2]</button>
+
+      <!-- Quiz UI - hidden until data loads -->
+      <div id="quiz-ui" style="display:none">
+        <div class="relative h-8 bg-dkc-surface rounded-full mb-6 overflow-hidden border border-dkc-border">
+          <div id="progress-bar" class="h-full rounded-full transition-all duration-300 ease-in-out" style="width: 0%; background: linear-gradient(90deg, #c9a84c, #a88630);"></div>
+          <div id="progress-text" class="absolute top-1/2 -translate-y-1/2 text-sm font-bold transition-all duration-300" style="left: 4px; color: #000;">0%</div>
+        </div>
+        
+        <div id="question-text" class="text-center text-dkc-text text-base md:text-lg leading-relaxed mb-8 min-h-[80px] flex items-center justify-center"></div>
+        
+        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <button id="btn-Iya" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #2d7d46, #1a5c2e); color: white;">Iya [1]</button>
+          <button id="btn-Tidak" class="py-4 rounded-xl text-lg font-bold transition-all active:scale-95 hover:brightness-110" style="background: linear-gradient(135deg, #c0392b, #962d22); color: white;">Tidak [2]</button>
+        </div>
       </div>
     </div>
   </main>
@@ -50,11 +59,13 @@ import Footer from "@/components/Footer.astro";
   </section>
 
   <Footer />
+</BaseLayout>
 
 <slot name="head">
   <title>Diagnosa Ajaran Bidat dalam Perspektif Katolik — Damai Kasih Channel</title>
   <meta name="description" content="Pelajari cara mengenali ajaran yang menyimpang dari iman Katolik berdasarkan Kitab Suci, Tradisi Suci, Magisterium, dan Katekismus Gereja Katolik." />
   <meta name="keywords" content="ajaran bidat, bidat dalam Gereja Katolik, diagnosa ajaran sesat, apologetika Katolik, ajaran Gereja Katolik" />
+  <link rel="preload" href="/assets/data/diagnosa-quiz.json" as="fetch" crossorigin />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -73,734 +84,49 @@ import Footer from "@/components/Footer.astro";
 <style is:global>
   .heresy-card { background: var(--color-dkc-surface); border: 1px solid #ef5350; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
   .heresy-card-header { background: linear-gradient(135deg, #c0392b, #962d22); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
-  .heresy-card-header h3 { color: white; font-weight: 700; font-size: 1rem; margin: 0; }
-  .century-badge { background: white; color: #c0392b; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-  .heresy-card-body { padding: 1rem; color: var(--color-dkc-text); font-size: 0.875rem; line-height: 1.6; }
-  .answer-card { background: var(--color-dkc-surface); border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; }
-  .answer-card.correct { border: 1px solid #2d7d46; }
-  .answer-card.wrong { border: 1px solid #c0392b; }
-  .answer-card-header { padding: 0.6rem 1rem; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.875rem; }
-  .answer-card.correct .answer-card-header { background: linear-gradient(135deg, #2d7d46, #1a5c2e); color: white; }
-  .answer-card.wrong .answer-card-header { background: linear-gradient(135deg, #c0392b, #962d22); color: white; }
-  .answer-card-header .badge { background: white; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
-  .answer-card.correct .badge { color: #2d7d46; }
-  .answer-card.wrong .badge { color: #c0392b; }
-  .answer-card-body { padding: 1rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-dkc-text); }
-  .answer-card-body .user-answer, .answer-card-body .correct-answer { background: rgba(0,0,0,0.3); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.5rem; }
-  .answer-card-body .answer-label { font-size: 0.75rem; color: var(--color-dkc-muted); margin-bottom: 0.25rem; }
-  .answer-card-body .answer-value { font-weight: 700; }
-  .answer-card.correct .answer-value { color: #4caf50; }
-  .answer-card.wrong .answer-value { color: #ef5350; }
-  .answer-card-body .explanation { color: var(--color-dkc-muted); margin-top: 0.75rem; }
-  .answer-card-body .explanation strong { color: var(--color-dkc-text); }
-  .alert-box { border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem; text-align: center; }
-  .alert-box.danger { background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.3); color: #ef5350; }
-  .alert-box.success { background: rgba(45,125,70,0.15); border: 1px solid rgba(45,125,70,0.3); color: #4caf50; }
-  .alert-box.warning { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: #c9a84c; }
-  .alert-box h2, .alert-box p { margin: 0; font-weight: 700; }
-  .reading-list { background: var(--color-dkc-surface); border: 1px solid var(--color-dkc-border); border-radius: 0.75rem; overflow: hidden; margin-bottom: 1.5rem; }
-  .reading-list-header { background: linear-gradient(135deg, #c9a84c, #a88630); padding: 0.75rem 1rem; color: #000; font-weight: 700; }
-  .reading-list a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; color: var(--color-dkc-text); text-decoration: none; border-bottom: 1px solid var(--color-dkc-border); font-size: 0.85rem; transition: all 0.15s; }
-  .reading-list a:last-child { border-bottom: none; }
-  .reading-list a:hover { background: rgba(201,168,76,0.1); color: var(--color-dkc-gold); }
-  .retry-btn { width: 100%; padding: 1rem; border-radius: 0.75rem; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #c9a84c, #a88630); color: #000; border: none; cursor: pointer; transition: all 0.2s; }
-  .retry-btn:hover { filter: brightness(1.1); }
+  .heresy-card-header h3 { color: white; font-weight: bold; margin: 0; font-size: 1.1rem; }
+  .century-badge { background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 9999px; color: white; font-size: 0.8rem; }
+  .heresy-card-body { padding: 1rem; color: var(--color-dkc-text); line-height: 1.7; }
+  .alert-box { padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1.5rem; text-align: center; }
+  .alert-box.success { background: linear-gradient(135deg, #1a5c2e, #2d7d46); color: white; border: 1px solid #4caf50; }
+  .alert-box.success h2 { color: white; }
+  .alert-box.danger { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: white; border: 1px solid #ef5350; }
+  .alert-box.danger h2 { color: white; }
+  .answer-card { border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden; border: 1px solid var(--color-dkc-border); }
+  .answer-card.correct { border-color: #4caf50; }
+  .answer-card.wrong { border-color: #ef5350; }
+  .answer-card-header { padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+  .answer-card.correct .answer-card-header { background: rgba(76, 175, 80, 0.15); color: #4caf50; }
+  .answer-card.wrong .answer-card-header { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
+  .answer-card-header .badge { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; }
+  .answer-card.correct .badge { background: #4caf50; color: white; }
+  .answer-card.wrong .badge { background: #ef5350; color: white; }
+  .answer-card-body { padding: 1rem; background: var(--color-dkc-surface); }
+  .answer-label { font-size: 0.75rem; color: var(--color-dkc-muted); margin-bottom: 0.25rem; }
+  .answer-value { font-weight: bold; color: var(--color-dkc-text); }
+  .explanation { background: rgba(201, 168, 76, 0.1); border-left: 3px solid var(--color-dkc-gold); padding: 0.75rem 1rem; border-radius: 0 0.5rem 0.5rem 0; margin-top: 0.75rem; line-height: 1.7; color: var(--color-dkc-text); font-size: 0.9rem; }
+  .reading-list { margin-top: 1.5rem; padding: 1.5rem; background: var(--color-dkc-surface); border-radius: 0.75rem; border: 1px solid var(--color-dkc-border); }
+  .reading-list-header { font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem; color: var(--color-dkc-gold); }
+  .reading-list a { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(201, 168, 76, 0.05); transition: background 0.2s; text-decoration: none; color: var(--color-dkc-text); }
+  .reading-list a:hover { background: rgba(201, 168, 76, 0.15); }
+  .retry-btn { display: block; width: 100%; max-width: 300px; margin: 2rem auto 0; padding: 1rem; border: none; border-radius: 0.75rem; font-size: 1.1rem; font-weight: bold; cursor: pointer; background: linear-gradient(135deg, #c9a84c, #a88630); color: #000; transition: transform 0.2s, box-shadow 0.2s; }
+  .retry-btn:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3); }
   .retry-btn:active { transform: scale(0.98); }
   .results-container a { color: var(--color-dkc-gold); text-decoration: underline; }
   .results-container a:hover { opacity: 0.8; }
 </style>
 
 <script is:inline>
-  const questionPairs = [
-   {
-    "heresy": "Pelagianisme",
-    "century": "Abad 5",
-    "detail": "Pelagianisme mengajarkan bahwa manusia dapat mencapai keselamatan hanya melalui usaha sendiri, tanpa perlu rahmat Allah.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa manusia dapat mencapai keselamatan hanya melalui usaha sendiri?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Keselamatan hanya dapat dicapai melalui iman dan rahmat Allah, bukan hanya melalui usaha manusia sendiri. St. Agustinus dalam bukunya 'De natura et gratia' mengajarkan bahwa rahmat Allah adalah perlu untuk mencapai keselamatan. (KGK 1996)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa rahmat Allah tidaklah perlu untuk mencapai keselamatan?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Rahmat Allah adalah perlu untuk mencapai keselamatan, karena manusia tidak dapat menyelamatkan diri sendiri. St. Paulus dalam suratnya kepada jemaat Efesus mengajarkan bahwa rahmat Allah adalah perlu untuk mencapai keselamatan (<a href='/kitabsuci/?q=ef2:8-9' target=_blank>Efesus 2:8-9</a>). (KGK 1996)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa dosa asal tidak ada dan manusia lahir dalam keadaan suci?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Dosa asal memang ada dan manusia lahir dalam keadaan berdosa, sehingga perlu diselamatkan oleh Allah. St. Agustinus dalam bukunya 'De peccato originali' mengajarkan bahwa dosa asal memang ada dan manusia lahir dalam keadaan berdosa. (KGK 404)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa manusia dapat hidup tanpa dosa?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Manusia tidak dapat hidup tanpa dosa, karena manusia memiliki natur dosa yang berasal dari dosa asal. St. Paulus dalam suratnya kepada jemaat Roma mengajarkan bahwa manusia tidak dapat hidup tanpa dosa (Roma 7:14-25). (KGK 405)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa rahmat Allah hanya diberikan kepada orang-orang yang telah melakukan perbuatan baik?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia, tetapi hanya karena anugerah Allah. St. Paulus dalam suratnya kepada jemaat Roma mengajarkan bahwa rahmat Allah diberikan secara cuma-cuma dan tidak tergantung pada perbuatan manusia (<a href='/kitabsuci/?q=rm11:6' target=_blank>Roma 11:6</a>). (KGK 1996)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa keselamatan hanya dapat dicapai melalui iman dan rahmat Allah?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Keselamatan hanya dapat dicapai melalui iman dan rahmat Allah, bukan hanya melalui usaha manusia sendiri. KGK 1996 mengajarkan bahwa keselamatan hanya dapat dicapai melalui iman dan rahmat Allah. (KGK 1996)"
-       }
-     ]
-  },
-    {
-      "heresy": "Peputians",
-      "century": "Abad 2",
-      "detail": "Peputians mengizinkan penahbisan wanita sebagai imam dan uskup, yang bertentangan dengan tradisi gereja awal.",
-      "variations": [
-        {
-          "text": "Apakah Anda setuju bahwa wanita dapat ditahbiskan sebagai imam atau uskup?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Gereja Katolik berpegang pada tradisi apostolik yang menegaskan bahwa hanya laki-laki yang dapat ditahbiskan sebagai imam atau uskup, sebagaimana diajarkan oleh Santo Yohanes Paulus II dalam ensiklik 'Ordinatio Sacerdotalis' dan ditegaskan dalam Katekismus Gereja Katolik (KGK 1577)."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa hanya laki-laki yang dipanggil untuk pelayanan imamat dalam gereja?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Panggilan untuk pelayanan imamat hanya diberikan kepada laki-laki, sesuai dengan tradisi gereja dan ajaran para Bapa Gereja seperti Santo Agustinus, yang menekankan peran laki-laki dalam imamat, dan ditegaskan dalam KGK 1577."
-        },
-        {
-          "text": "Apakah Anda menolak gagasan bahwa wanita memiliki otoritas rohani yang sama dengan laki-laki dalam hierarki gereja?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Menurut ajaran Gereja Katolik, wanita dan laki-laki memiliki peran yang berbeda dalam hierarki gereja, sebagaimana diajarkan oleh Santo Tomas Aquinas dan ditegaskan dalam Magisterium Gereja, bahwa otoritas imamat adalah hak prerogatif laki-laki (KGK 1577)."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa tradisi gereja awal melarang wanita menjadi imam?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Tradisi gereja awal, yang didukung oleh para Bapa Gereja seperti Santo Ignatius dari Antiokhia, melarang penahbisan wanita sebagai imam, dan ajaran ini tetap dipegang teguh oleh Gereja Katolik sebagaimana tertuang dalam KGK 1577."
-        }
-      ]
-    },
-    {
-      "heresy": "Helvidians",
-      "century": "Abad 4",
-      "detail": "Helvidius mengajarkan bahwa Maria tidak tetap perawan setelah kelahiran Yesus, bertentangan dengan dogma Katolik.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak kepercayaan akan keperawanan abadi Maria?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Keperawanan abadi Maria adalah ajaran yang ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh Katekismus Gereja Katolik (KGK 499, KGK 510), yang menyatakan bahwa Maria tetap perawan sebelum, selama, dan setelah kelahiran Yesus. Ini adalah elemen penting dalam iman Katolik yang menegaskan kelahiran Yesus secara ilahi. (KGK 499)"
-        },
-        {
-          "text": "Apakah Anda percaya bahwa Maria tetap perawan sepanjang hidupnya?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Maria tetap perawan sepanjang hidupnya, sebuah dogma yang ditegaskan oleh Konsili Lateran IV dan didukung oleh KGK 499, KGK 510, yang menyatakan bahwa keperawanannya adalah tanda kesetiaan dan penyerahan total kepada kehendak Allah, serta menunjukkan peran uniknya dalam rencana keselamatan. (KGK 499)"
-        },
-        {
-          "text": "Apakah Anda percaya bahwa keperawanan Maria hanya berlaku sampai kelahiran Yesus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Keperawanan Maria tidak hanya berlaku sampai kelahiran Yesus, tetapi terus berlanjut selamanya, sebagaimana dijelaskan oleh Santo Ambrosius dan dikukuhkan dalam KGK 499. Ini menegaskan peran khusus Maria dalam misteri Inkarnasi. (KGK 499)"
-        },
-        {
-          "text": "Apakah Anda setuju bahwa dogma Katolik tentang keperawanan abadi Maria adalah penting untuk iman Kristen?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Dogma Katolik tentang keperawanan abadi Maria adalah penting untuk iman Kristen, sebagaimana ditegaskan oleh Konsili Lateran IV dan didukung oleh Katekismus Gereja Katolik (KGK 499, KGK 510), yang menekankan peran unik Maria dalam misteri Inkarnasi dan kesetiaan totalnya kepada kehendak Allah."
-        }
-      ]
-      },
-    {
-      "heresy": "Antidicomarianites",
-      "century": "Abad 4",
-      "detail": "Antidicomarianites menolak status khusus Maria sebagai ibu Yesus dan keperawanannya yang abadi, serta menganggap Maria memiliki anak lain dengan Yusuf.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak penghormatan khusus kepada Maria sebagai ibu Yesus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Penghormatan khusus kepada Maria sebagai ibu Yesus telah ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh tradisi Gereja, yang menekankan peran unik Maria dalam misteri Inkarnasi (KGK 487)."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa Maria layak dihormati karena perannya dalam rencana keselamatan?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Maria layak dihormati karena perannya dalam rencana keselamatan Allah, sebagaimana ditekankan oleh Konsili Efesus dan dijelaskan dalam KGK 487, yang menegaskan peran Maria sebagai ibu Yesus dalam misteri Inkarnasi."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa Maria memiliki anak lain selain Yesus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Tradisi Gereja mengajarkan bahwa Maria tidak memiliki anak lain setelah Yesus, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Hieronimus dan didukung oleh KGK 500, yang menyatakan bahwa istilah 'saudara-saudara Yesus' dalam Alkitab merujuk pada kerabat dekat, bukan saudara kandung. Ini adalah ajaran penting dalam iman Katolik yang menegaskan status keperawanan Maria yang abadi, sebagaimana dijelaskan dalam KGK 500 (KGK 501)."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa keperawanan abadi Maria adalah ajaran yang benar?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Keperawanan abadi Maria adalah ajaran yang benar, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Ambrosius dan didukung oleh KGK 499, yang menegaskan peran unik Maria dalam misteri Inkarnasi dan menekankan kesetiaan totalnya kepada kehendak Allah (KGK 504)."
-        },
-        {
-          "text": "Apakah Anda menolak pandangan bahwa Yusuf dan Maria memiliki hubungan perkawinan biasa setelah kelahiran Yesus?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Pandangan yang menegaskan bahwa Yusuf dan Maria memiliki hubungan perkawinan biasa setelah kelahiran Yesus bertentangan dengan tradisi Gereja yang menegaskan bahwa Maria tetap perawan sepanjang hidupnya, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh KGK 499 (KGK 510)."
-        }
-      ]
-    },
-    {
-      "heresy": "Ikonoklasme",
-      "century": "Abad 7-8",
-      "detail": "Ikonoklasme menolak penghormatan terhadap ikon suci, yang dianggap bertentangan dengan ajaran gereja.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak penggunaan ikon dalam ibadah Kristen?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Penggunaan ikon dalam ibadah Kristen adalah suatu praktik yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili Nicea II tahun 787 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/katekismus?q=1160-1162/' target=_blank>1160-1162</a>."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa ikon dapat digunakan untuk membantu umat berdoa dan mengingat Tuhan?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Ikon dapat digunakan sebagai sarana untuk membantu umat berdoa dan mengingat Tuhan, sebagaimana ditegaskan oleh Santo Yohanes Damaskus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1159."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa penghormatan ikon adalah bentuk penyembahan berhala?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Penghormatan terhadap ikon bukanlah bentuk penyembahan berhala, melainkan suatu cara untuk menghormati dan memuliakan Tuhan, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 2132."
-        },
-        {
-          "text": "Apakah Anda mendukung keputusan Konsili Nicea II tahun 787 yang membela penggunaan ikon?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Keputusan Konsili Nicea II tahun 787 yang membela penggunaan ikon adalah suatu keputusan yang sah dan sesuai dengan ajaran Gereja, sebagaimana ditegaskan oleh Konsili tersebut dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK <a href='/katekismus?q=1159-1162/' target=_blank>1159-1162</a> ."
-        }
-      ]
-    },
-    {
-    "heresy": "Arianisme",
-    "century": "Abad 4",
-    "detail": "Arianisme mengajarkan bahwa Yesus Kristus bukanlah Allah yang sejati, melainkan makhluk ciptaan Allah.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa Yesus Kristus adalah Allah yang sejati?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Yesus Kristus adalah Allah yang sejati, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Athanasius dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Yesus Kristus adalah makhluk ciptaan Allah?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Yesus Kristus bukanlah makhluk ciptaan Allah, melainkan Allah yang sejati, sebagaimana ditegaskan oleh Konsili Nicea tahun 325 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Yesus Kristus memiliki sifat Allah yang sama dengan Allah Bapa?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Yesus Kristus memiliki sifat Allah yang sama dengan Allah Bapa, sebagaimana ditegaskan oleh Santo Yohanes Krisostomus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Yesus Kristus lebih rendah dari pada Allah Bapa?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Yesus Kristus tidak lebih rendah dari pada Allah Bapa, melainkan sama dengan Allah Bapa dalam sifat dan keilahian, sebagaimana ditegaskan oleh Konsili Konstantinopel tahun 381 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      }
-    ]
-  },
-  {
-    "heresy": "Modalisme",
-    "century": "Abad 3",
-    "detail": "Modalisme mengajarkan bahwa Allah memiliki tiga mode atau peran yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, namun tidak memiliki tiga pribadi yang berbeda.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa Allah memiliki tiga pribadi yang berbeda?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Allah memiliki tiga pribadi yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, sebagaimana ditegaskan oleh Konsili Nicea tahun 325 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Allah hanya memiliki satu pribadi dengan tiga mode atau peran yang berbeda?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Allah tidak hanya memiliki satu pribadi dengan tiga mode atau peran yang berbeda, melainkan memiliki tiga pribadi yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, sebagaimana ditegaskan oleh Konsili Konstantinopel tahun 381 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Bapa menjadi Anak pada saat tertentu, dan kemudian menjadi Roh Kudus pada waktu lain?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Bapa tidak menjadi Anak pada saat tertentu, dan kemudian menjadi Roh Kudus pada waktu lain, melainkan tiga pribadi tersebut memiliki sifat Allah yang sama dan berbeda sejak semula, sebagaimana ditegaskan oleh Santo Athanasius dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya Bapa, Putra dan Roh Kudus adalah satu pribadi?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Bapa, Putra, dan Roh Kudus bukanlah satu pribadi, melainkan tiga pribadi yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, sebagaimana ditegaskan oleh Konsili Nicea tahun 325 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      }
-    ]
-  },
-  {
-    "heresy": "Tritheisme",
-    "century": "Abad 6",
-    "detail": "Tritheisme mengajarkan bahwa Allah terdiri dari tiga allah yang terpisah, yaitu Bapa, Anak, dan Roh Kudus. Dapat memperkenalkan pada polytheisme, kepercayaan akan banyak allah yang berbeda tidak satu.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa Bapa, Anak, dan Roh Kudus adalah tiga allah yang terpisah?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Bapa, Anak, dan Roh Kudus bukanlah tiga allah yang terpisah, melainkan tiga pribadi yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, sebagaimana ditegaskan oleh Konsili Nicea tahun 325 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Allah adalah satu esensi dengan tiga pribadi yang berbeda, bukan tiga allah?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Allah adalah satu esensi dengan tiga pribadi yang berbeda, bukan tiga allah, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Bapa, Anak, dan Roh Kudus masing-masing adalah allah yang berdiri sendiri?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Bapa, Anak, dan Roh Kudus bukanlah allah yang berdiri sendiri, melainkan tiga pribadi yang berbeda, yaitu Bapa, Anak, dan Roh Kudus, sebagaimana ditegaskan oleh Konsili Nicea tahun 325 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa hanya ada satu Allah sejati, bukan tiga allah yang terpisah?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Hanya ada satu Allah sejati, bukan tiga allah yang terpisah, sebagaimana ditegaskan oleh Santo Yohanes Krisostomus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Bapa, Anak, dan Roh Kudus memiliki esensi yang sama, bukan esensi yang terpisah?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Bapa, Anak, dan Roh Kudus memiliki esensi yang sama, bukan esensi yang terpisah, sebagaimana ditegaskan oleh Santo Athanasius dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 242."
-      }
-    ]
-  },
-    {
-      "heresy": "Claudius dari Turin",
-      "century": "Abad 8",
-      "detail": "Claudius menentang penggunaan gambar suci, penghormatan kepada orang kudus, dan salib, yang dianggap menyimpang dari iman sejati.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak penghormatan kepada orang kudus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Menghormati orang kudus adalah bagian dari tradisi Kristen mula-mula, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1173."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa salib layak dihormati sebagai simbol pengorbanan Kristus?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Salib adalah simbol pengorbanan Kristus dan menjadi bagian dari iman Kristen, sebagaimana ditegaskan oleh Santo Yohanes Krisostomus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 616."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa gambar suci tidak boleh digunakan dalam gereja?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Gereja Katolik memperbolehkan penggunaan gambar suci dalam gereja, sebagaimana ditegaskan oleh Konsili Trente tahun 1562 dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1161."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa menghormati orang kudus adalah bagian dari tradisi Kristen mula-mula?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Menghormati orang kudus adalah bagian dari tradisi Kristen mula-mula, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1173."
-        }
-      ]
-    },
-    {
-      "heresy": "Gottschalk dari Orbais",
-      "century": "Abad 9",
-      "detail": "Gottschalk mengajarkan doktrin pembenaran hanya karena iman dan double predestinasi, yang ditentang oleh gereja.",
-      "variations": [
-        {
-          "text": "Apakah Anda percaya bahwa keselamatan hanya bergantung pada iman tanpa perbuatan?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Keselamatan bergantung pada iman dan perbuatan, sebagaimana ditegaskan oleh Santo Yakobus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 161."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa Tuhan telah menentukan nasib semua orang sebelumnya (double predestinasi)?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Gereja Katolik menolak pandangan double predestinasi, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1036."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa perbuatan baik berperan dalam keselamatan bersama iman?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Perbuatan baik berperan dalam keselamatan bersama iman, sebagaimana ditegaskan oleh Santo Yakobus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 161."
-        },
-        {
-          "text": "Apakah Anda menolak pandangan bahwa Tuhan hanya memilih beberapa orang untuk diselamatkan?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Gereja Katolik menolak pandangan bahwa Tuhan hanya memilih beberapa orang untuk diselamatkan, sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1036."
-        }
-      ]
-    },
-    {
-      "heresy": "Bogomilisme",
-      "century": "Abad 10",
-      "detail": "Bogomilisme menolak banyak doktrin gereja seperti Perjanjian Lama, inkarnasi, Ekaristi, dan hierarki gereja.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak kitab Perjanjian Lama dalam iman Kristen?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Perjanjian Lama adalah bagian integral dari Kitab Suci yang diilhamkan, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 121."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa Yesus benar-benar menjadi manusia melalui inkarnasi?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Inkarnasi Yesus adalah kebenaran iman yang ditegaskan oleh Konsili Efesus dan didukung oleh Bapa Gereja seperti Santo Athanasius, serta ditegaskan dalam KGK 464."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa Ekaristi adalah sakramen yang sah?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Ekaristi adalah sakramen yang ditegaskan oleh Konsili Trente sebagai kehadiran nyata Kristus, didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1374."
-        },
-        {
-          "text": "Apakah Anda menolak hierarki gereja sebagai bagian dari rencana Tuhan?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Hierarki gereja adalah bagian dari rencana Allah untuk mengatur Gereja-Nya, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 874."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa penghormatan kepada Maria dan orang kudus adalah penting?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Penghormatan kepada Maria dan orang kudus adalah bagian dari tradisi Gereja yang ditegaskan oleh Konsili Trente dan didukung oleh Bapa Gereja seperti Santo Agustinus, serta ditegaskan dalam KGK 971."
-        }
-      ]
-    },
-    {
-      "heresy": "Berengarius dari Tour",
-      "century": "Abad 10",
-      "detail": "Berengarius menolak transubstansiasi dan menganggap Ekaristi hanya simbolis, bukan tubuh dan darah Kristus yang sejati.",
-      "variations": [
-        {
-          "text": "Apakah Anda percaya bahwa roti dan anggur dalam Ekaristi benar-benar menjadi tubuh dan darah Kristus?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Roti dan anggur dalam Ekaristi benar-benar menjadi tubuh dan darah Kristus sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1374."
-        },
-        {
-          "text": "Apakah Anda menolak doktrin transubstansiasi?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Transubstansiasi adalah doktrin yang ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1376."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa Ekaristi hanyalah simbol, bukan kehadiran nyata Kristus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Ekaristi bukan hanya simbol, tapi kehadiran nyata Kristus sebagaimana ditegaskan oleh Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1374."
-        },
-        {
-          "text": "Apakah Anda mendukung ajaran gereja bahwa Ekaristi adalah sakramen yang mengandung tubuh Kristus?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Ekaristi adalah sakramen yang mengandung tubuh Kristus sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1374."
-        }
-      ]
-    },
-    {
-      "heresy": "Petrobrussians",
-      "century": "Abad 12",
-      "detail": "Petrobrussians menolak baptisan bayi, penghormatan salib, dan Ekaristi sebagai kurban Misa.",
-      "variations": [
-        {
-          "text": "Apakah Anda percaya bahwa baptisan bayi adalah sah dan bermanfaat?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Baptisan bayi adalah sah dan bermanfaat, sebagaimana ditegaskan oleh Konsili Kartago dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1250."
-        },
-        {
-          "text": "Apakah Anda menolak penghormatan terhadap salib sebagai simbol iman?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Penghormatan terhadap salib sebagai simbol iman telah ditegaskan oleh Bapa Gereja seperti Santo Athanasius dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 617."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa Ekaristi adalah kurban yang sejati?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Ekaristi adalah kurban yang sejati sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1365."
-        },
-        {
-          "text": "Apakah Anda menolak gagasan bahwa baptisan harus menunggu sampai usia dewasa?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Baptisan tidak harus menunggu sampai usia dewasa, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1282."
-        }
-      ]
-    },
-    {
-      "heresy": "Arnold dari Brescia",
-      "century": "Abad 12",
-      "detail": "Arnold menentang otoritas biarawan, imam, uskup, dan bahkan Paus, yang dianggap sebagai penyimpangan.",
-      "variations": [
-        {
-          "text": "Apakah Anda menolak otoritas hierarki gereja seperti uskup dan Paus?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Otoritas hierarki gereja merupakan bagian dari rencana Allah untuk mengatur Gereja-Nya, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam Katekismus Gereja Katolik (KGK 874)."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa Paus memiliki otoritas tertinggi dalam gereja?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Paus memiliki otoritas tertinggi dalam Gereja sebagai penerus Santo Petrus, yang ditegaskan oleh Konsili Vatikan I dan didukung oleh Bapa Gereja seperti Santo Agustinus, serta ditegaskan dalam KGK 882."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa biarawan dan imam tidak memiliki peran sah dalam gereja?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Biarawan dan imam memiliki peran penting dalam pelayanan Gereja, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1536."
-        },
-        {
-          "text": "Apakah Anda mendukung struktur gereja yang hierarkis?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Struktur gereja yang hierarkis adalah bagian dari tatanan ilahi yang diatur oleh Allah, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh Bapa Gereja seperti Santo Ignatius dari Antiokhia, serta ditegaskan dalam KGK 874."
-        }
-      ]
-    },
-    {
-      "heresy": "Tanquelinus",
-      "century": "Abad 12",
-      "detail": "Tanquelinus mengajarkan bahwa Ekaristi dan pelayanan imam tidak berguna untuk keselamatan.",
-      "variations": [
-        {
-          "text": "Apakah Anda percaya bahwa Ekaristi penting untuk keselamatan?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Ekaristi adalah sakramen yang paling tinggi dan penting untuk keselamatan, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1327."
-        },
-        {
-          "text": "Apakah Anda menolak peran imam dalam pelayanan sakramen?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Peran imam dalam pelayanan sakramen adalah penting dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Ignatius dari Antiokhia dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1536."
-        },
-        {
-          "text": "Apakah Anda setuju bahwa pelayanan gereja tidak relevan untuk iman?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Pelayanan gereja adalah bagian penting dari iman dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1119."
-        },
-        {
-          "text": "Apakah Anda mendukung pandangan bahwa sakramen ditetapkan oleh Kristus?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Sakramen ditetapkan oleh Kristus sendiri dan diperintahkan untuk dilakukan oleh murid-Nya, sebagaimana ditegaskan oleh Santo Yohanes Paulus II dalam ensiklik 'Ecclesia de Eucharistia' dan ditegaskan dalam KGK 1114."
-        }
-      ]
-    },
-    {
-      "heresy": "Waldenses",
-      "century": "Abad 12",
-      "detail": "Waldenses hanya menerima dua sakramen, menolak baptisan bayi, indulgensi, dan tradisi gereja Roma.",
-      "variations": [
-        {
-          "text": "Apakah Anda percaya bahwa baptisan bayi adalah sah?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Baptisan bayi adalah sah dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1250."
-        },
-        {
-          "text": "Apakah Anda menolak penggunaan tujuh sakramen dalam gereja?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Tujuh sakramen adalah bagian dari iman dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1113."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa indulgensi dapat membantu mengurangi hukuman dosa?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Indulgensi dapat membantu mengurangi hukuman dosa, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-          },
-          {
-          "text": "Apakah Anda setuju bahwa indulgensi hanya dapat diberikan oleh Gereja Katolik?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Indulgensi hanya dapat diberikan oleh Gereja Katolik, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-          },
-          {
-          "text": "Apakah Anda percaya bahwa indulgensi dapat membantu membersihkan dosa-dosa yang telah dilakukan?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Indulgensi dapat membantu membersihkan dosa-dosa yang telah dilakukan, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-          },
-          {
-          "text": "Apakah Anda setuju bahwa indulgensi tidak dapat dibeli atau dijual?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Indulgensi tidak dapat dibeli atau dijual, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-          },
-          {
-          "text": "Apakah Anda percaya bahwa indulgensi hanya dapat diberikan kepada orang-orang yang telah melakukan perbuatan baik?",
-          "correctAnswer": "Tidak",
-          "correctExplanation": "Indulgensi dapat diberikan kepada orang-orang yang telah melakukan perbuatan baik maupun tidak, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-          },
-          {
-          "text": "Apakah Anda setuju bahwa indulgensi adalah cara untuk memperoleh penghapusan hukuman atau siksa dosa sementara?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Indulgensi adalah cara untuk memperoleh penghapusan hukuman atau siksa dosa sementara, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1471."
-
-
-        },
-        {
-          "text": "Apakah Anda mendukung tradisi suci gereja sebagai bagian dari iman?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Tradisi suci gereja adalah bagian dari iman dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 120."
-        },
-        {
-          "text": "Apakah Anda percaya bahwa penghormatan salib adalah praktik yang sah?",
-          "correctAnswer": "Iya",
-          "correctExplanation": "Penghormatan salib adalah praktik yang sah dan diperlukan untuk keselamatan, sebagaimana ditegaskan oleh Bapa Gereja seperti Santo Agustinus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 2130."
-        }
-      ]
-    },
-    {
-    "heresy": "Protestantisme",
-    "century": "Abad 16",
-    "detail": "Protestantisme menolak beberapa ajaran Gereja Katolik, seperti otoritas Paus, sakramen, dan tradisi.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa otoritas Paus adalah sah dan perlu dihormati?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Otoritas Paus sebagai penerus Santo Petrus ditegaskan dalam Konsili Vatikan I dan didukung oleh Bapa Gereja seperti Santo Agustinus, serta ditegaskan dalam Katekismus Gereja Katolik (KGK 882)."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Gereja berotoritas untuk menafsirkan Kitab Suci?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Gereja memiliki otoritas untuk menafsirkan Kitab Suci karena Gereja diberikan Roh Kudus untuk menafsirkan Kitab Suci, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 85."
-      },    
-      {
-        "text": "Apakah Anda percaya bahwa Kitab Suci memiliki otoritas diatas Gereja?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Gereja adalah penjaga dan penafsir Kitab Suci yang sah, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 85."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa sakramen-sakramen seperti baptisan dan ekaristi adalah penting bagi keselamatan?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Sakramen adalah sarana rahmat yang ditegaskan oleh Kristus dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 1129."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa tradisi Gereja Katolik tidaklah penting bagi iman Kristen?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Tradisi Suci adalah bagian dari wahyu ilahi dan diperlukan untuk iman, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 78."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa hanya Kitab Suci saja yang menjadi sumber ajaran Kristen?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Gereja mengajarkan bahwa wahyu ilahi terdiri dari Kitab Suci dan Tradisi Suci, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 80."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Gereja Katolik telah menambahkan ajaran-ajaran yang tidak ada dalam Kitab Suci?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Ajaran Gereja berasal dari wahyu ilahi yang diterima dari Kristus dan para Rasul, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 120."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa otoritas (kuasa) Gereja Katolik berasal dari Kristus sendiri?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Gereja didirikan oleh Kristus dan diberi kuasa untuk mengajar, menguduskan, dan memimpin, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 763."
-      }
-    ]
-  },  
-  {
-    "heresy": "Konciliarisme",
-    "century": "Abad 15",
-    "detail": "Konciliarisme mengajarkan bahwa otoritas tertinggi dalam Gereja Katolik ada pada Konsili Ekumenis, bukan pada Paus.",
-    "variations": [
-      {
-        "text": "Apakah Anda setuju bahwa Konsili Ekumenis memiliki otoritas yang lebih tinggi daripada Paus?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Otoritas tertinggi dalam Gereja ada pada Paus sebagai penerus Santo Petrus, sebagaimana ditegaskan oleh Konsili Vatikan I dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 883."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Paus dapat membuat keputusan yang salah dan harus dioreksi oleh Konsili Ekumenis?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Paus memiliki karunia ketidakbersalahan ketika mengajarkan ajaran iman dan moral, sebagaimana ditegaskan oleh Konsili Vatikan I dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 891."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Konsili Ekumenis dapat menggantikan Paus sebagai pemimpin Gereja Katolik?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Paus adalah kepala tertinggi Gereja di bumi, sebagaimana ditegaskan oleh Konsili Vatikan I dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 882."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Paus memiliki otoritas untuk mengambil keputusan tanpa persetujuan Konsili Ekumenis?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Paus memiliki otoritas penuh dan tertinggi atas seluruh Gereja, sebagaimana ditegaskan oleh Konsili Vatikan I dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 937."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Konsili Ekumenis harus memiliki peran yang lebih besar dalam pengambilan keputusan Gereja Katolik?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Konsili Ekumenis bekerja sama dengan Paus, namun tidak memiliki otoritas lebih besar darinya, sebagaimana ditegaskan oleh Konsili Vatikan I dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 883."
-      }
-    ]
-  },
-    {
-    "heresy": "Prosperity Gospel",
-    "century": "Abad 20",
-    "detail": "Prosperity Gospel mengajarkan bahwa Tuhan ingin semua orang Kristen menjadi kaya dan sukses secara finansial.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa Tuhan ingin semua orang Kristen menjadi kaya dan sukses secara finansial?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Tuhan tidak menjanjikan kekayaan finansial kepada umat-Nya, melainkan kehidupan yang berkelimpahan dalam iman. Sebagaimana ditegaskan oleh Santo Agustinus, kebahagiaan sejati ditemukan dalam Tuhan, bukan dalam kekayaan duniawi. (KGK 1723)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa memberikan uang kepada gereja atau hamba Tuhan akan menjamin kemakmuran finansial?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Berderma adalah tindakan iman yang baik, namun tidak menjamin kemakmuran finansial. Santo Yakobus mengingatkan kita bahwa iman tanpa perbuatan adalah mati. (Yakobus 2:17, KGK 2002)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa kesulitan finansial adalah tanda bahwa seseorang tidak memiliki iman yang cukup?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Kesulitan finansial bukanlah tanda kurangnya iman. Santo Paulus mengajarkan kita untuk bersyukur dalam segala keadaan, karena iman diuji melalui berbagai cobaan. (1 Tesalonika 5:18, KGK 1808)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Tuhan hanya ingin orang Kristen memiliki kekayaan materi?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Tuhan mengutamakan kekayaan rohani seperti iman, harapan, dan kasih. Santo Paulus menasihati kita untuk mencari kekayaan yang tidak dapat binasa. (1 Korintus 4:20, KGK 1720)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Prosperity Gospel adalah ajaran yang sesuai dengan ajaran Kitab Suci?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Prosperity Gospel tidak sesuai dengan ajaran Kitab Suci. Santo Lukas mengingatkan kita untuk mencari Kerajaan Allah dan kebenarannya sebagai prioritas. (Lukas 12:31, KGK 2632)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa orang Kristen harus fokus pada kemakmuran finansial sebagai tujuan utama hidup mereka?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Kehidupan Kristen harus berfokus pada kekayaan spiritual dan tujuan yang lebih tinggi, bukan hanya kemakmuran finansial. Santo Matius mengingatkan kita untuk menimbun harta di surga. (<a href='/kitabsuci/?q=mat6:19-20' target=_blank>Matius 6:19-20</a>, KGK 2544)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa hidup sederhana dan tidak terlalu mengutamakan harta duniawi adalah nilai yang penting dalam kehidupan Kristen?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Hidup sederhana dan melepaskan keterikatan pada harta duniawi adalah bagian penting dari kehidupan Kristen. Santo Agustinus menekankan kesederhanaan sebagai jalan menuju kesucian. (KGK 2544)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa kekayaan materi tidaklah penting dalam hidup Kristen?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Kekayaan materi tidaklah penting dalam hidup Kristen. Santo Paulus mengingatkan kita untuk mencari kekayaan yang tidak dapat binasa. (<a href='/kitabsuci/?q=1kor4:20' target=_blank>1 Korintus 4:20</a>, KGK 1720)"
-       }
-     ]
-    },{
-    "heresy": "Montanism",
-    "century": "Abad 2",
-    "detail": "Montanism mengajarkan bahwa nabi-nabi baru dapat menerima wahyu langsung dari Roh Kudus, dan bahwa Gereja harus dipimpin oleh nabi-nabi ini.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa nabi-nabi baru/moderen dapat mengaku menerima wahyu langsung dari Roh Kudus?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Nabi-nabi baru/moderen tidak dapat mengaku menerima wahyu langsung dari Roh Kudus, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 66."
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Gereja harus dipimpin oleh nabi-nabi baru/moderen yang mengaku menerima wahyu langsung dari Roh Kudus?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Gereja tidak harus dipimpin oleh nabi-nabi baru/moderen yang mengaku menerima wahyu langsung dari Roh Kudus, tapi harus dipimpin oleh para uskup yang dipilih oleh gereja dan dipimpin oleh Roh Kudus, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 880."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Alkitab tidaklah lengkap dan bahwa nabi-nabi baru/moderen dapat menambahkan ajaran-ajaran baru?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Alkitab adalah Kitab Suci yang lengkap dan tidak perlu ditambahkan ajaran-ajaran baru, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 120."
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Gereja harus menerima ajaran-ajaran baru yang diterima oleh nabi-nabi baru/moderen setelah kebangkitan Yesus?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Gereja tidak harus menerima ajaran-ajaran baru yang diterima oleh nabi-nabi baru/moderen setelah kebangkitan Yesus, tapi harus menerima ajaran-ajaran yang diajarkan oleh Yesus dan para rasul, sebagaimana ditegaskan oleh Konsili Vatikan II dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 66."
-      }]},
-      {
-    "heresy": "Marcionisme",
-    "century": "Abad 2",
-    "detail": "Marcionisme mengajarkan bahwa Allah Perjanjian Lama adalah dewa yang jahat dan berbeda dengan Allah Perjanjian Baru yang baik.",
-    "variations": [
-      {
-        "text": "Apakah Anda percaya bahwa Allah Perjanjian Lama adalah jahat?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Allah Perjanjian Lama adalah Allah yang sama dengan Allah Perjanjian Baru, yaitu Allah yang Maha Kuasa, Maha Pengasih, dan Maha Adil. Allah tidak pernah berubah dan Ia tetap sama sejak semula. St. Agustinus dalam bukunya 'De natura boni' mengajarkan bahwa Allah adalah sumber segala kebaikan dan tidak pernah berbuat jahat. (KGK 205)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Allah Perjanjian Baru berbeda dengan Allah Perjanjian Lama?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Allah Perjanjian Baru tidak berbeda dengan Allah Perjanjian Lama, karena Allah adalah satu dan sama sejak semula. St. Yohanes Krisostomus dalam homilinya tentang Surat Roma mengajarkan bahwa Allah adalah satu dan sama, baik dalam Perjanjian Lama maupun Perjanjian Baru. (KGK 242)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Perjanjian Lama tidaklah relevan bagi iman orang-orang Kristen?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Perjanjian Lama tetap relevan bagi iman orang-orang Kristen, karena Perjanjian Lama mengandung ajaran-ajaran yang penting dan berharga tentang Allah dan keselamatan. Konsili Vatikan II dalam deklarasi 'Nostra Aetate' mengajarkan bahwa Perjanjian Lama memiliki nilai yang penting bagi iman orang-orang Kristen. (KGK 121)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Yesus Kristus tidaklah memiliki sifat manusia?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Yesus Kristus memiliki sifat manusia yang lengkap dan sempurna, sebagaimana ditegaskan oleh Konsili Efesus dan didukung oleh Bapa Gereja seperti Santo Agustinus dan Santo Tomas Aquinas. (KGK 464)"
-      },
-      {
-        "text": "Apakah Anda percaya bahwa Gereja harus menolak Perjanjian Lama dan hanya mengikuti Perjanjian Baru?",
-        "correctAnswer": "Tidak",
-        "correctExplanation": "Gereja tidak harus menolak Perjanjian Lama dan hanya mengikuti Perjanjian Baru, karena Perjanjian Lama dan Perjanjian Baru adalah bagian integral dari Kitab Suci yang diilhamkan. St. Irenaeus dalam bukunya 'Adversus haereses' mengajarkan bahwa Gereja harus menerima dan menghormati baik Perjanjian Lama maupun Perjanjian Baru. (KGK 137)"
-      },
-      {
-        "text": "Apakah Anda setuju bahwa Allah adalah satu dan sama, baik dalam Perjanjian Lama maupun Perjanjian Baru?",
-        "correctAnswer": "Iya",
-        "correctExplanation": "Allah adalah satu dan sama, baik dalam Perjanjian Lama maupun Perjanjian Baru, sebagaimana ditegaskan oleh Konsili Trente dan didukung oleh tradisi Gereja, serta ditegaskan dalam KGK 205."
-       }
-     ]
-  }
-  ];
-
+  // Quiz data loaded async from external JSON — saves ~42KB from initial HTML
+  let questionPairs = null;
   let currentQuestion = 0;
   let detectedHeresies = [];
   let selectedQuestions = [];
   let userAnswers = [];
 
-  let questionText = document.getElementById("question-text");
-  let progressBar = document.getElementById("progress-bar");
-  let progressText = document.getElementById("progress-text");
-  let btnYes = document.getElementById("btn-Iya");
-  let btnNo = document.getElementById("btn-Tidak");
-  let quizContainer = document.getElementById("quiz-container");
+  let questionText, progressBar, progressText, btnYes, btnNo, quizContainer;
+
+  function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 
   function initializeQuestions() {
     selectedQuestions = [];
@@ -876,8 +202,6 @@ import Footer from "@/components/Footer.astro";
     });
   }
 
-  function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-
   function showResults() {
     let html = "<div class=\"results-container\">";
 
@@ -950,7 +274,7 @@ import Footer from "@/components/Footer.astro";
 
     quizContainer.innerHTML = 
       "<h1 class=\"text-center text-2xl md:text-3xl font-bold text-dkc-gold mb-4\">DIAGNOSA AJARAN BIDAT</h1>" +
-      "<h4 class=\"text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed\">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman kekristenan anda.</h4>" +
+      "<h4 class=\"text-center text-dkc-muted mb-6 text-sm md:text-base leading-relaxed\">Harap baca dengan seksama dan jawab dengan jujur sesuai keyakinan iman kekristenen anda.</h4>" +
       "<div class=\"relative h-8 bg-dkc-surface rounded-full mb-6 overflow-hidden border border-dkc-border\">" +
       "<div id=\"progress-bar\" class=\"h-full rounded-full transition-all duration-300 ease-in-out\" style=\"width: 0%; background: linear-gradient(90deg, #c9a84c, #a88630);\"></div>" +
       "<div id=\"progress-text\" class=\"absolute top-1/2 -translate-y-1/2 text-sm font-bold transition-all duration-300\" style=\"left: 4px; color: #000;\">0%</div>" +
@@ -973,16 +297,42 @@ import Footer from "@/components/Footer.astro";
     progressBarUpdate();
   }
 
-  // Init
-  initializeQuestions();
-  btnYes.addEventListener("click", function() { nextQuestion("Iya"); });
-  btnNo.addEventListener("click", function() { nextQuestion("Tidak"); });
-  questionText.textContent = selectedQuestions[0].text;
-  progressBarUpdate();
+  function initQuiz(data) {
+    questionPairs = data;
+    quizContainer = document.getElementById("quiz-container");
 
-  document.addEventListener("keydown", function(event) {
-    if (event.key === "1" || event.key === "NumPad1") { nextQuestion("Iya"); }
-    else if (event.key === "2" || event.key === "NumPad2") { nextQuestion("Tidak"); }
-  });
+    // Show quiz UI, hide loading
+    const loading = document.getElementById("quiz-loading");
+    const quizUI = document.getElementById("quiz-ui");
+    if (loading) loading.style.display = "none";
+    if (quizUI) quizUI.style.display = "block";
+
+    questionText = document.getElementById("question-text");
+    progressBar = document.getElementById("progress-bar");
+    progressText = document.getElementById("progress-text");
+    btnYes = document.getElementById("btn-Iya");
+    btnNo = document.getElementById("btn-Tidak");
+
+    initializeQuestions();
+    btnYes.addEventListener("click", function() { nextQuestion("Iya"); });
+    btnNo.addEventListener("click", function() { nextQuestion("Tidak"); });
+    questionText.textContent = selectedQuestions[0].text;
+    progressBarUpdate();
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "1" || event.key === "NumPad1") { nextQuestion("Iya"); }
+      else if (event.key === "2" || event.key === "NumPad2") { nextQuestion("Tidak"); }
+    });
+  }
+
+  // Async load quiz data — non-blocking, cacheable by CDN
+  fetch("/assets/data/diagnosa-quiz.json")
+    .then(function(r) { return r.json(); })
+    .then(initQuiz)
+    .catch(function(err) {
+      console.error("Failed to load quiz data:", err);
+      var loading = document.getElementById("quiz-loading");
+      if (loading) loading.innerHTML = '<p class="text-red-400">Gagal memuat data quiz. Silakan refresh halaman.</p>';
+    });
 </script>
 </BaseLayout>

@@ -283,7 +283,7 @@ function activeClass(href: string): string {
 
 <!-- ==================== BOTTOM NAV QUICK POPUPS ==================== -->
 <!-- Popup: Devosi -->
-<div id="popup-devosi" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+<div id="popup-devosi" class="md:hidden fixed left-0 right-0 bottom-[56px] z-[55] max-h-[44vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
   <div class="flex items-center gap-2 px-1 pb-2">
     <span class="text-xs">📿</span>
     <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Devosi</h4>
@@ -326,7 +326,7 @@ function activeClass(href: string): string {
 </div>
 
 <!-- Popup: Artikel -->
-<div id="popup-artikel" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+<div id="popup-artikel" class="md:hidden fixed left-0 right-0 bottom-[56px] z-[55] max-h-[44vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
   <div class="flex items-center gap-2 px-1 pb-2">
     <span class="text-xs">📝</span>
     <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Artikel</h4>
@@ -361,7 +361,7 @@ function activeClass(href: string): string {
 </div>
 
 <!-- Popup: Kitab Suci -->
-<div id="popup-kitabsuci" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+<div id="popup-kitabsuci" class="md:hidden fixed left-0 right-0 bottom-[56px] z-[55] max-h-[44vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
   <div class="flex items-center gap-2 px-1 pb-2">
     <span class="text-xs">📖</span>
     <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Kitab Suci</h4>
@@ -396,7 +396,7 @@ function activeClass(href: string): string {
 </div>
 
 <!-- Popup: Dokumen -->
-<div id="popup-dokumen" class="md:hidden fixed left-0 right-0 bottom-[60px] z-[55] max-h-[40vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
+<div id="popup-dokumen" class="md:hidden fixed left-0 right-0 bottom-[56px] z-[55] max-h-[44vh] overflow-y-auto overscroll-contain bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60 rounded-t-xl p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] hidden" style="padding-bottom: max(env(safe-area-inset-bottom), 1rem);">
   <div class="flex items-center gap-2 px-1 pb-2">
     <span class="text-xs">📕</span>
     <h4 class="text-dkc-gold font-serif font-bold text-xs tracking-wide uppercase">Dokumen</h4>
@@ -436,38 +436,39 @@ function activeClass(href: string): string {
 
 <!-- ==================== MOBILE BOTTOM NAV ==================== -->
 <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-dkc-surface/95 backdrop-blur-xl border-t border-dkc-border/60" style="padding-bottom: max(env(safe-area-inset-bottom), 4px); transform: translateZ(0); -webkit-transform: translateZ(0);">
-  <div class="flex justify-around items-center px-1 pt-1.5 pb-1">
+  <div class="grid grid-cols-5 items-end px-2 pt-1.5 pb-1">
     <!-- Devosi -->
-    <button type="button" data-bnav="devosi" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath === "/rosario" || currentPath === "/jalan-salib" || currentPath === "/kalender-liturgi" || currentPath === "/renungan" || currentPath === "/doa-tobat" || currentPath === "/doa-malaikat-tuhan" || currentPath === "/doa-ratu-surga" || currentPath === "/koronka-kerahiman-ilahi" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="devosi" class:list={["flex flex-col items-center justify-center gap-0.5 py-1 transition-colors bg-transparent border-0 cursor-pointer", currentPath === "/rosario" || currentPath === "/jalan-salib" || currentPath === "/kalender-liturgi" || currentPath === "/renungan" || currentPath === "/doa-tobat" || currentPath === "/doa-malaikat-tuhan" || currentPath === "/doa-ratu-surga" || currentPath === "/koronka-kerahiman-ilahi" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
       <span class="text-[10px] leading-none">Devosi</span>
     </button>
     <!-- Artikel -->
-    <button type="button" data-bnav="artikel" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/blog") || currentPath === "/search" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="artikel" class:list={["flex flex-col items-center justify-center gap-0.5 py-1 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/blog") || currentPath === "/search" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
       <span class="text-[10px] leading-none">Artikel</span>
     </button>
-    <!-- Center: Logo (home) — direct link, no megamenu -->
-    <a href="/" class="flex flex-col items-center -mt-4">
-      <div class="relative">
-        <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md"></div>
-        <img src="/assets/img/channels4_profile.webp" alt="Home" class:list={["relative w-11 h-11 rounded-full border-2 shadow-lg shadow-dkc-gold/10 transition-all", currentPath === "/" ? "border-dkc-gold" : "border-dkc-gold/50"]} />
-      </div>
-    </a>
+    <!-- Center: Logo spacer (visual logo is outside nav for z-index layering) -->
+    <div class="flex flex-col items-center justify-end"></div>
     <!-- Kitab Suci -->
-    <button type="button" data-bnav="kitabsuci" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/kitabsuci") || currentPath === "/vulgata" || currentPath === "/interlinear-greek" || currentPath === "/kamus-kitab-suci" ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="kitabsuci" class:list={["flex flex-col items-center justify-center gap-0.5 py-1 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/kitabsuci") || currentPath === "/vulgata" || currentPath === "/interlinear-greek" || currentPath === "/kamus-kitab-suci" ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
       <span class="text-[10px] leading-none">Kitab Suci</span>
     </button>
     <!-- Dokumen -->
-    <button type="button" data-bnav="dokumen" class:list={["flex flex-col items-center gap-0.5 py-1 px-2 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/katekismus") || currentPath.startsWith("/khk") || currentPath.startsWith("/kvii") || currentPath.startsWith("/summa") || currentPath.startsWith("/diagnosa") ? "text-dkc-gold" : "text-dkc-muted"]}>
+    <button type="button" data-bnav="dokumen" class:list={["flex flex-col items-center justify-center gap-0.5 py-1 transition-colors bg-transparent border-0 cursor-pointer", currentPath.startsWith("/katekismus") || currentPath.startsWith("/khk") || currentPath.startsWith("/kvii") || currentPath.startsWith("/summa") || currentPath.startsWith("/diagnosa") ? "text-dkc-gold" : "text-dkc-muted"]}>
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
       <span class="text-[10px] leading-none">Dokumen</span>
     </button>
   </div>
 </nav>
 
-<!-- ==================== BOTTOM NAV MEGAMENU PANEL ==================== -->
+<!-- Floating center logo — outside nav for highest z-index layering -->
+<a href="/" class:list={["md:hidden fixed z-[60] left-1/2 -translate-x-1/2", currentPath === "/" ? "" : ""]} style="bottom: calc(max(env(safe-area-inset-bottom), 4px) + 28px);">
+  <div class="relative">
+    <div class="absolute inset-0 bg-dkc-gold/20 rounded-full blur-md"></div>
+    <img src="/assets/img/channels4_profile.webp" alt="Home" class:list={["relative w-11 h-11 rounded-full border-2 shadow-lg shadow-dkc-gold/10 transition-all", currentPath === "/" ? "border-dkc-gold" : "border-dkc-gold/50"]} />
+  </div>
+</a>
 <div id="bnav-megamenu" class="md:hidden fixed inset-0 z-[55] pointer-events-none" style="opacity:0; transition: opacity 0.25s ease;">
   <!-- Backdrop -->
   <div id="bnav-megamenu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>

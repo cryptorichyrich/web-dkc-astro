@@ -270,7 +270,77 @@ import Footer from "@/components/Footer.astro";
     currentFilter = filter;
     filterTabs.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("filter-tab-active"));
     btn.classList.add("filter-tab-active");
-    if (searchInput.value.trim()) doSearch(searchInput.value);
+
+    const query = searchInput.value.trim();
+    if (query) {
+      doSearch(query);
+    } else if (filter !== "all") {
+      // No search text — show all articles matching this tag
+      doTagBrowse(filter);
+    } else {
+      // "Semua" with no text — reset to empty state
+      searchResults.classList.add("hidden");
+      searchStatus.classList.add("hidden");
+      noResults.classList.add("hidden");
+      emptyState.classList.remove("hidden");
+    }
+  }
+
+  // Browse all articles matching a tag (no text query needed)
+  function doTagBrowse(tag: string) {
+    if (!allDocs.length) return;
+    emptyState.classList.add("hidden");
+    noResults.classList.add("hidden");
+
+    const matched = allDocs.filter((doc: any) => {
+      const tags = (doc.tags || "").toLowerCase();
+      return tags.split(",").map((t: string) => t.trim()).includes(tag.toLowerCase());
+    });
+
+    if (!matched.length) {
+      searchResults.classList.add("hidden");
+      searchStatus.classList.add("hidden");
+      noResults.classList.remove("hidden");
+      noResultsQuery.textContent = tag;
+      return;
+    }
+
+    searchStatus.classList.remove("hidden");
+    resultCount.textContent = String(matched.length);
+
+    let html = "";
+    for (const item of matched.slice(0, 50)) {
+      const title = escapeHtml(item.title);
+      const subtitle = item.subtitle ? `<p class="text-dkc-muted text-xs mt-1 line-clamp-1">${escapeHtml(item.subtitle)}</p>` : "";
+      const tags = item.tags
+        ? `<div class="flex gap-1 mt-2 flex-wrap">${item.tags.split(",").map((t: string) => t.trim()).filter(Boolean).slice(0, 4).map((t: string) =>
+            `<span class="px-2 py-0.5 rounded-full bg-dkc-surface text-dkc-muted text-[10px] border border-dkc-border">${escapeHtml(t)}</span>`
+          ).join("")}</div>`
+        : "";
+      const date = item.publishedAt ? `<span class="text-dkc-muted/60 text-[10px]">${item.publishedAt}</span>` : "";
+      const coverImg = item.coverImage
+        ? `<img src="${item.coverImage}" alt="" class="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" onerror="this.style.display='none'" />`
+        : "";
+      const isRef = !item.publishedAt;
+      const linkHref = isRef ? `/${item.slug}` : `/blog/${item.slug}`;
+      const refBadge = isRef ? `<span class="inline-block px-2 py-0.5 rounded-full bg-dkc-gold/10 text-dkc-gold text-[10px] border border-dkc-gold/20 ml-1">📖 Dokumen</span>` : "";
+
+      html += `<a href="${linkHref}" class="result-card block glass-card p-3.5 border border-dkc-border transition-all duration-200">
+        <div class="flex gap-3">
+          ${coverImg}
+          <div class="min-w-0 flex-1">
+            <h3 class="text-sm font-medium text-dkc-text leading-tight">${title}${refBadge}</h3>
+            ${subtitle}
+            <div class="flex items-center gap-2 mt-1.5">
+              ${date}
+            </div>
+            ${tags}
+          </div>
+        </div>
+      </a>`;
+    }
+    searchResults.innerHTML = html;
+    searchResults.classList.remove("hidden");
   }
 
   // "Semua" tab

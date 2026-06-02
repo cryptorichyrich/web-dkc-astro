@@ -390,12 +390,12 @@ const encodedTitle = encodeURIComponent(post.data.title);
 
     var utterance = new SpeechSynthesisUtterance(chunks[index]);
     utterance.lang = 'id-ID';
-    utterance.rate = 0.9;
+    utterance.rate = 1.0;
     utterance.pitch = 1;
     var voice = getIndonesianVoice();
     if (voice) utterance.voice = voice;
 
-    // Keepalive: pause/resume SYNCHRONOUSLY every 10s — exact ReferenceReader pattern
+    // Keepalive: pause/resume SYNCHRONOUSLY every 5s — more aggressive for long articles
     utterance.onstart = function() {
       if (ttsResumeTimer) clearInterval(ttsResumeTimer);
       ttsResumeTimer = setInterval(function() {
@@ -403,17 +403,19 @@ const encodedTitle = encodeURIComponent(post.data.title);
           window.speechSynthesis.pause();
           window.speechSynthesis.resume();
         }
-      }, 10000);
+      }, 5000);
     };
 
     utterance.onend = function() {
       if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
-      speakChunks(chunks, index + 1);
+      // Small gap to prevent engine lockup on Android
+      setTimeout(function() { speakChunks(chunks, index + 1); }, 50);
     };
 
-    utterance.onerror = function() {
+    utterance.onerror = function(e) {
       if (ttsResumeTimer) { clearInterval(ttsResumeTimer); ttsResumeTimer = null; }
-      speakChunks(chunks, index + 1);
+      // Skip to next on error — don't stop entirely
+      setTimeout(function() { speakChunks(chunks, index + 1); }, 50);
     };
 
     window.speechSynthesis.speak(utterance);

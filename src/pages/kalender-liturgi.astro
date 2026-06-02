@@ -16,8 +16,29 @@ import Footer from "@/components/Footer.astro";
   <main class="max-w-4xl mx-auto px-4 pt-8 pb-24">
     <div class="text-center mb-6">
       <span class="text-4xl">📅</span>
-      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Kalender Liturgi 2026</h1>
-      <p class="text-dkc-muted text-sm mt-1">Kalender liturgi Gereja Katolik Ritus Romawi</p>
+      <h1 class="text-2xl md:text-3xl font-bold text-dkc-gold mt-3">Kalender Liturgi Katolik</h1>
+      <p class="text-dkc-muted text-sm mt-1">Lihat <strong class="text-dkc-text">bacaan harian</strong>, warna liturgi, peringatan orang kudus, dan panduan ibadat harian</p>
+    </div>
+
+    <!-- Bacaan Hari Ini panel -->
+    <div id="cal-today-panel" class="glass-card p-5 mb-6">
+      <h2 id="cal-today-title" class="text-dkc-gold font-bold text-lg mb-3">Bacaan Hari Ini</h2>
+      <div class="space-y-2.5 text-sm">
+        <div>
+          <span id="cal-today-perayaan" class="text-dkc-text font-semibold"></span>
+        </div>
+        <div id="cal-today-bacaan-wrap">
+          <span class="text-dkc-muted">Bacaan</span>
+          <p id="cal-today-bacaan" class="text-dkc-text mt-0.5 leading-relaxed"></p>
+        </div>
+        <div id="cal-today-bco-wrap">
+          <span class="text-dkc-muted">BcO</span>
+          <p id="cal-today-bco" class="text-dkc-text mt-0.5"></p>
+        </div>
+        <div>
+          <span id="cal-today-warna" class="text-dkc-gold font-semibold text-xs"></span>
+        </div>
+      </div>
     </div>
 
     <!-- Month navigation -->
@@ -27,27 +48,26 @@ import Footer from "@/components/Footer.astro";
       <button id="cal-next" class="glass-card px-3 py-2 text-sm text-dkc-muted hover:text-dkc-gold transition-colors">→</button>
     </div>
 
-    <!-- Detail panel — shows selected date info -->
-    <div id="cal-detail" class="glass-card p-4 mb-4 hidden">
+    <!-- Detail panel — shows selected date info (hidden by default, appears on click) -->
+    <div id="cal-detail" class="glass-card p-5 mb-4 hidden">
       <div class="flex items-start justify-between mb-3">
-        <div>
-          <h3 id="cal-detail-date" class="text-dkc-gold font-semibold text-lg"></h3>
-          <p id="cal-detail-perayaan" class="text-dkc-text text-sm mt-1"></p>
-        </div>
-        <button id="cal-detail-close" class="text-dkc-muted hover:text-dkc-gold text-lg leading-none">&times;</button>
+        <h3 id="cal-detail-date" class="text-dkc-gold font-bold text-lg"></h3>
+        <button id="cal-detail-close" class="text-dkc-muted hover:text-dkc-gold text-xl leading-none">&times;</button>
       </div>
-      <div class="space-y-2 text-sm">
+      <div class="space-y-2.5 text-sm">
+        <div>
+          <span id="cal-detail-perayaan" class="text-dkc-text font-semibold"></span>
+        </div>
         <div id="cal-detail-bacaan" class="hidden">
           <span class="text-dkc-muted">Bacaan</span>
-          <p id="cal-detail-bacaan-text" class="text-dkc-text mt-0.5"></p>
+          <p id="cal-detail-bacaan-text" class="text-dkc-text mt-0.5 leading-relaxed"></p>
         </div>
         <div id="cal-detail-bco" class="hidden">
           <span class="text-dkc-muted">BcO</span>
           <p id="cal-detail-bco-text" class="text-dkc-text mt-0.5"></p>
         </div>
-        <div id="cal-detail-warna">
-          <span class="text-dkc-muted">Warna Liturgi</span>
-          <p id="cal-detail-warna-text" class="text-dkc-text mt-0.5 font-medium"></p>
+        <div>
+          <span id="cal-detail-warna" class="text-dkc-gold font-semibold text-xs"></span>
         </div>
       </div>
     </div>
@@ -71,23 +91,45 @@ import Footer from "@/components/Footer.astro";
       <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span> Emas</span>
       <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-800 inline-block"></span> Hitam</span>
     </div>
+
+    <!-- SEO content -->
+    <div class="mt-12 space-y-6 text-sm text-dkc-muted leading-relaxed">
+      <div>
+        <h2 class="text-dkc-gold font-semibold text-base mb-2">Warna Liturgi dan Masa Liturgi</h2>
+        <p>Gereja Katolik menggunakan warna liturgi yang berbeda untuk setiap masa liturgi: putih (Natal dan Paskah), ungu (Adven dan Prapaskah), hijau (waktu biasa), merah (Pesta Salib Suci, para martir), dan merah muda (Gaudete dan Laetare).</p>
+      </div>
+      <div>
+        <h2 class="text-dkc-gold font-semibold text-base mb-2">Peringatan Orang Kudus</h2>
+        <p>Kalender liturgi juga mencatat peringatan para santo dan santa sepanjang tahun. Setiap hari dapat memiliki pesta, peringatan wajib, peringatan bebas, atau opsional untuk mengenang kehidupan orang kudus.</p>
+      </div>
+      <div>
+        <h2 class="text-dkc-gold font-semibold text-base mb-2">Halaman Terkait</h2>
+        <ul class="space-y-1">
+          <li><a href="/renungan" class="text-dkc-gold hover:underline">Renungan Harian Katolik</a></li>
+          <li><a href="/kitab-suci" class="text-dkc-gold hover:underline">Kitab Suci Katolik Online</a></li>
+          <li><a href="/rosario" class="text-dkc-gold hover:underline">Doa Rosario</a></li>
+          <li><a href="/jalan-salib" class="text-dkc-gold hover:underline">Jalan Salib</a></li>
+          <li><a href="/katekismus" class="text-dkc-gold hover:underline">Katekismus Gereja Katolik</a></li>
+        </ul>
+      </div>
+    </div>
   </main>
   <Footer />
 </BaseLayout>
 
 <script is:inline>
-  // --- liturgical data loader ---
   const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const MONTHS_SHORT = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 
   let liturgicalData = {};
-  let viewYear = 2026, viewMonth = 5; // default June
+  let viewYear, viewMonth;
 
   async function loadData() {
     try {
-      const res = await fetch('/assets/data/liturgical-2026.json');
+      const res = await fetch('/assets/data/liturgical-' + new Date().getFullYear() + '.json');
       if (res.ok) liturgicalData = await res.json();
-      else console.warn('Liturgical data not available, using computed seasons');
+      else console.warn('Liturgical data not available');
     } catch(e) { console.warn('Error loading liturgical data:', e); }
   }
 
@@ -96,44 +138,52 @@ import Footer from "@/components/Footer.astro";
     return liturgicalData[key] || null;
   }
 
-  // --- computed season fallback ---
-  function computeEaster(y) {
-    const a=y%19, b=Math.floor(y/100), c=y%100;
-    const d=Math.floor(b/4), e=b%4, f=Math.floor((b+8)/25);
-    const g=Math.floor((b-f+1)/3), h=(19*a+b-d-g+15)%30;
-    const i=Math.floor(c/4), k=c%4, l=(32+2*e+2*i-h-k)%7;
-    const m=Math.floor((a+11*h+22*l)/451);
-    const month=Math.floor((h+l-7*m+114)/31);
-    const day=((h+l-7*m+114)%31)+1;
-    return new Date(y, month-1, day);
+  // --- Today's panel ---
+  function renderTodayPanel() {
+    const now = new Date();
+    const info = getLiturgicalInfo(now);
+
+    // Title: "Bacaan Hari Ini, 2 JUNI 2026"
+    const dateStr = `${now.getDate()} ${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById('cal-today-title').textContent = `Bacaan Hari Ini, ${dateStr}`;
+
+    if (info) {
+      document.getElementById('cal-today-perayaan').textContent = info.perayaan || '';
+
+      const bacaanWrap = document.getElementById('cal-today-bacaan-wrap');
+      if (info.bacaan) {
+        document.getElementById('cal-today-bacaan').textContent = info.bacaan;
+      } else {
+        bacaanWrap.style.display = 'none';
+      }
+
+      const bcoWrap = document.getElementById('cal-today-bco-wrap');
+      if (info.bco) {
+        document.getElementById('cal-today-bco').textContent = info.bco;
+      } else {
+        bcoWrap.style.display = 'none';
+      }
+
+      document.getElementById('cal-today-warna').textContent = 'Warna Liturgi ' + (info.warna || 'Hijau');
+    } else {
+      document.getElementById('cal-today-perayaan').textContent = 'Waktu Biasa';
+      document.getElementById('cal-today-bacaan-wrap').style.display = 'none';
+      document.getElementById('cal-today-bco-wrap').style.display = 'none';
+      document.getElementById('cal-today-warna').textContent = 'Warna Liturgi Hijau';
+    }
   }
 
-  function getSeasonFallback(date) {
-    const y=date.getFullYear();
-    const easter=computeEaster(y);
-    const ashWed=new Date(easter); ashWed.setDate(easter.getDate()-46);
-    const pentecost=new Date(easter); pentecost.setDate(easter.getDate()+49);
-    const christmas=new Date(y,11,25);
-    const adventSun1=new Date(christmas); adventSun1.setDate(christmas.getDate()-(christmas.getDay()===0?28:21+christmas.getDay()));
-    if (date>=ashWed&&date<easter) return {name:'Prapaskah',color:'purple'};
-    if (date>=easter&&date<pentecost) return {name:'Masa Paskah',color:'white'};
-    if (date>=adventSun1&&date<new Date(y,11,25)) return {name:'Adven',color:'purple'};
-    if ((date.getMonth()===11&&date.getDate()>=25)||(date.getMonth()===0&&date.getDate()<=6)) return {name:'Masa Natal',color:'white'};
-    return {name:'Waktu Biasa',color:'green'};
-  }
-
-  // --- detail panel ---
+  // --- Detail panel (on date click) ---
   function showDetail(date) {
     const info = getLiturgicalInfo(date);
-    const fallback = getSeasonFallback(date);
     const sel = document.getElementById('cal-detail');
     sel.classList.remove('hidden');
-    document.getElementById('cal-detail-date').textContent = 
-      `${DAYS_ID[date.getDay()]}, ${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
-    
-    const perayaan = info ? info.perayaan : fallback.name;
-    document.getElementById('cal-detail-perayaan').textContent = '✝️ ' + perayaan;
-    
+
+    const dateStr = `${DAYS_ID[date.getDay()]}, ${date.getDate()} ${MONTHS_ID[date.getMonth()]} ${date.getFullYear()}`;
+    document.getElementById('cal-detail-date').textContent = dateStr;
+
+    document.getElementById('cal-detail-perayaan').textContent = info ? (info.perayaan || '') : 'Hari Biasa';
+
     const bacaanDiv = document.getElementById('cal-detail-bacaan');
     const bacaanText = document.getElementById('cal-detail-bacaan-text');
     if (info && info.bacaan) {
@@ -142,7 +192,7 @@ import Footer from "@/components/Footer.astro";
     } else {
       bacaanDiv.classList.add('hidden');
     }
-    
+
     const bcoDiv = document.getElementById('cal-detail-bco');
     const bcoText = document.getElementById('cal-detail-bco-text');
     if (info && info.bco) {
@@ -151,18 +201,18 @@ import Footer from "@/components/Footer.astro";
     } else {
       bcoDiv.classList.add('hidden');
     }
-    
-    const warna = info ? info.warna : (fallback.color==='white'?'Putih':fallback.color==='purple'?'Ungu':fallback.color==='red'?'Merah':'Hijau');
-    document.getElementById('cal-detail-warna-text').textContent = warna;
-    
-    sel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const warna = info ? (info.warna || 'Hijau') : 'Hijau';
+    document.getElementById('cal-detail-warna').textContent = 'Warna Liturgi ' + warna;
+
+    sel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   document.getElementById('cal-detail-close').addEventListener('click', () => {
     document.getElementById('cal-detail').classList.add('hidden');
   });
 
-  // --- render ---
+  // --- Calendar grid ---
   const colorMap = {
     'Putih':'border-white/40 bg-white/5', 'Hijau':'border-green-600/40 bg-green-900/10',
     'Ungu':'border-purple-600/40 bg-purple-900/10', 'Merah':'border-red-600/40 bg-red-900/10',
@@ -190,11 +240,9 @@ import Footer from "@/components/Footer.astro";
     for (let d=1; d<=daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
       const info = getLiturgicalInfo(date);
-      const season = getSeasonFallback(date);
-      const nama = info ? info.perayaan : season.name;
-      const warna = info ? info.warna : (season.color==='white'?'Putih':season.color==='purple'?'Ungu':season.color==='red'?'Merah':'Hijau');
-      const baseWarna = warna.split('/')[0].split(' ')[0]; // handle "Ungu pagi Putih Vigili"
-      const borderClass = colorMap[baseWarna] || 'border-dkc-border';
+      const nama = info ? info.perayaan : 'Hari Biasa';
+      const warna = info ? info.warna : 'Hijau';
+      const baseWarna = warna.split('/')[0].split(' ')[0];
       const dotClass = dotColorMap[baseWarna] || 'bg-dkc-muted/40';
       const isToday = isCurrentMonth && d===today.getDate();
       const dateKey = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -219,7 +267,7 @@ import Footer from "@/components/Footer.astro";
     });
   }
 
-  // --- nav ---
+  // --- Month nav ---
   document.getElementById('cal-prev').addEventListener('click', () => {
     viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} renderCalendar();
   });
@@ -227,13 +275,12 @@ import Footer from "@/components/Footer.astro";
     viewMonth++; if(viewMonth>11){viewMonth=0;viewYear++;} renderCalendar();
   });
 
-  // --- init ---
+  // --- Init ---
   const now = new Date();
   viewYear = now.getFullYear();
   viewMonth = now.getMonth();
   loadData().then(() => {
+    renderTodayPanel();
     renderCalendar();
-    // Auto-show today
-    setTimeout(() => showDetail(now), 100);
   });
 </script>

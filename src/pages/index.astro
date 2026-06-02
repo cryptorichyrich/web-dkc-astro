@@ -204,6 +204,40 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
           <a href="/rosario" class="block text-center text-xs text-dkc-gold hover:underline mt-3">Doa Rosario Lengkap →</a>
         </div>
 
+
+        <!-- Widget: Kalender Liturgi -->
+        <div class="glass-card p-4" id="widget-liturgi">
+          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
+            <span>📅</span> Kalender Liturgi
+          </h3>
+          <div id="liturgi-today">
+            <p id="liturgi-date" class="text-dkc-gold font-semibold text-sm mb-2"></p>
+            <div class="space-y-1.5 text-xs">
+              <div id="liturgi-perayaan-wrap" class="hidden">
+                <span class="text-dkc-muted">Perayaan</span>
+                <p id="liturgi-perayaan" class="text-dkc-text font-medium"></p>
+              </div>
+              <div id="liturgi-bacaan-wrap" class="hidden">
+                <span class="text-dkc-muted">Bacaan</span>
+                <p id="liturgi-bacaan" class="text-dkc-text leading-relaxed"></p>
+              </div>
+              <div id="liturgi-bco-wrap" class="hidden">
+                <span class="text-dkc-muted">BcO</span>
+                <p id="liturgi-bco" class="text-dkc-text"></p>
+              </div>
+              <div>
+                <span class="text-dkc-muted">Warna Liturgi</span>
+                <p id="liturgi-color" class="text-dkc-text font-medium flex items-center gap-1.5">
+                  <span id="liturgi-color-dot" class="w-2.5 h-2.5 rounded-full inline-block"></span>
+                  <span id="liturgi-color-text"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <a href="/kalender-liturgi" class="block text-center text-xs text-dkc-gold hover:underline mt-3 pt-2 border-t border-dkc-border/30">📅 Kalender Lengkap →</a>
+        </div>
+
+
         <!-- Widget: YouTube Channel -->
         <div class="glass-card p-4">
           <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
@@ -343,18 +377,6 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
           <span class="text-dkc-gold text-xs mt-2 block group-hover:underline">Mulai diagnosa →</span>
         </a>
 
-        <!-- Widget: Kalender Liturgi -->
-        <div class="glass-card p-4" id="widget-liturgi">
-          <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
-            <span>📅</span> Kalender Liturgi
-          </h3>
-          <div id="liturgi-today" class="text-center py-2">
-            <p id="liturgi-date" class="text-dkc-gold font-semibold"></p>
-            <p id="liturgi-season" class="text-dkc-text text-sm mt-1"></p>
-            <p id="liturgi-color" class="text-dkc-muted text-xs mt-1"></p>
-          </div>
-          <a href="/kalender-liturgi" class="block text-center text-xs text-dkc-gold hover:underline mt-2">Kalender Lengkap →</a>
-        </div>
 
       </aside>
     </div>
@@ -531,48 +553,74 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
   setInterval(updatePrayerTime, 1000);
 
   // === KALENDER LITURGI ===
-  function computeLiturgi() {
+  const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const WARNA_DOT = {
+    'Putih':'bg-white/80','Hijau':'bg-green-500','Ungu':'bg-purple-500',
+    'Merah':'bg-red-500','Merah Muda':'bg-rose-300','Hitam':'bg-gray-700','Emas':'bg-yellow-400',
+  };
+
+  async function loadLiturgiWidget() {
     const now = new Date();
-    const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    const dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+    // Date header
     document.getElementById("liturgi-date").textContent =
-      `${dayNames[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+      `${DAYS_ID[now.getDay()]}, ${now.getDate()} ${MONTHS_ID[now.getMonth()]} ${now.getFullYear()}`;
 
-    // Compute liturgical season based on Easter
-    const year = now.getFullYear();
+    // Try loading from JSON
+    try {
+      const res = await fetch('/assets/data/liturgical-' + now.getFullYear() + '.json');
+      if (!res.ok) throw new Error('no data');
+      const data = await res.json();
+      const info = data[key];
+
+      if (info) {
+        // Perayaan
+        if (info.perayaan) {
+          document.getElementById('liturgi-perayaan-wrap').classList.remove('hidden');
+          document.getElementById('liturgi-perayaan').textContent = info.perayaan;
+        }
+        // Bacaan
+        if (info.bacaan) {
+          document.getElementById('liturgi-bacaan-wrap').classList.remove('hidden');
+          document.getElementById('liturgi-bacaan').textContent = info.bacaan;
+        }
+        // BcO
+        if (info.bco) {
+          document.getElementById('liturgi-bco-wrap').classList.remove('hidden');
+          document.getElementById('liturgi-bco').textContent = info.bco;
+        }
+        // Warna liturgi
+        const warna = info.warna || 'Hijau';
+        document.getElementById('liturgi-color-text').textContent = 'Warna Liturgi ' + warna;
+        const dot = document.getElementById('liturgi-color-dot');
+        dot.className = 'w-2.5 h-2.5 rounded-full inline-block ' + (WARNA_DOT[warna] || 'bg-dkc-muted');
+        return;
+      }
+    } catch(e) { console.warn('Liturgical data unavailable:', e); }
+
+    // Fallback: computed season
     function computeEaster(y) {
-      const a = y % 19, b = Math.floor(y / 100), c = y % 100;
-      const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
-      const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
-      const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
-      const m = Math.floor((a + 11 * h + 22 * l) / 451);
-      const month = Math.floor((h + l - 7 * m + 114) / 31);
-      const day = ((h + l - 7 * m + 114) % 31) + 1;
-      return new Date(y, month - 1, day);
+      const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);
+      const g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4;
+      const l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451);
+      return new Date(y,Math.floor((h+l-7*m+114)/31)-1,((h+l-7*m+114)%31)+1);
     }
-    const easter = computeEaster(year);
-    const ashWednesday = new Date(easter); ashWednesday.setDate(easter.getDate() - 46);
-    const christmas = new Date(year, 11, 25);
-    const adventStart = new Date(christmas); adventStart.setDate(christmas.getDate() - (christmas.getDay() === 0 ? 28 : 21 + christmas.getDay()));
-
-    let season = "Waktu Biasa";
-    let color = "Hijau";
-    if (now >= ashWednesday && now < easter) {
-      season = "Prapaskah"; color = "Ungu";
-    } else if (now >= easter && now < new Date(easter.getTime() + 50 * 86400000)) {
-      season = "Paskah"; color = "Putih";
-    } else if (now >= adventStart && now < christmas) {
-      season = "Adven"; color = "Ungu";
-    } else if (now >= christmas && now < new Date(year, 0, 6)) {
-      season = "Natal"; color = "Putih";
-    }
-    // Christmas to Epiphany
-    if (now.getMonth() === 11 && now.getDate() >= 25 || (now.getMonth() === 0 && now.getDate() <= 6)) {
-      season = "Natal"; color = "Putih";
-    }
-
-    document.getElementById("liturgi-season").textContent = season;
-    document.getElementById("liturgi-color").textContent = `Warna liturgi: ${color}`;
+    const easter=computeEaster(now.getFullYear());
+    const ashWed=new Date(easter);ashWed.setDate(easter.getDate()-46);
+    const pent=new Date(easter);pent.setDate(easter.getDate()+49);
+    const xmas=new Date(now.getFullYear(),11,25);
+    const adv1=new Date(xmas);adv1.setDate(xmas.getDate()-(xmas.getDay()===0?28:21+xmas.getDay()));
+    let season='Waktu Biasa',warna='Hijau';
+    if(now>=ashWed&&now<easter){season='Prapaskah';warna='Ungu';}
+    else if(now>=easter&&now<pent){season='Masa Paskah';warna='Putih';}
+    else if(now>=adv1&&now<xmas){season='Adven';warna='Ungu';}
+    else if((now.getMonth()===11&&now.getDate()>=25)||(now.getMonth()===0&&now.getDate()<=6)){season='Masa Natal';warna='Putih';}
+    document.getElementById('liturgi-perayaan-wrap').classList.remove('hidden');
+    document.getElementById('liturgi-perayaan').textContent = season;
+    document.getElementById('liturgi-color-text').textContent = 'Warna Liturgi ' + warna;
+    document.getElementById('liturgi-color-dot').className = 'w-2.5 h-2.5 rounded-full inline-block ' + (WARNA_DOT[warna]||'bg-dkc-muted');
   }
-  computeLiturgi();
+  loadLiturgiWidget();
 </script>

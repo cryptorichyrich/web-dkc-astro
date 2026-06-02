@@ -38,7 +38,7 @@ const navGroups = [
     style: "kitabsuci",
     submenu: [
       { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
-      { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+      { href: "/kitabsuci/pbtb2/", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
       { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
       { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
       { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },
@@ -368,6 +368,10 @@ function activeClass(href: string): string {
       <span class="text-sm shrink-0">📖</span>
       <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Alkitab TB</span><span class="text-[9px] text-dkc-muted block leading-tight">Deuterokanonika</span></div>
     </a>
+    <a href="/kitabsuci/pbtb2/" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
+      <span class="text-sm shrink-0">📚</span>
+      <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Alkitab TB2</span><span class="text-[9px] text-dkc-muted block leading-tight">Versi TB alternatif</span></div>
+    </a>
     <a href="/vulgata" class="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-dkc-gold/5 active:scale-[0.98] transition-all">
       <span class="text-sm shrink-0">🏛️</span>
       <div class="min-w-0"><span class="text-[11px] font-medium text-dkc-text block leading-tight">Vulgata Latin</span><span class="text-[9px] text-dkc-muted block leading-tight">Alkitab bahasa Latin</span></div>
@@ -669,7 +673,7 @@ function activeClass(href: string): string {
     ]},
     { id: "kitabsuci", label: "Kitab Suci", href: "/kitabsuci", hasSubmenu: true, style: "kitabsuci", submenu: [
       { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
-      { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+      { href: "/kitabsuci/pbtb2/", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
       { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
       { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
       { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },
@@ -851,7 +855,7 @@ function activeClass(href: string): string {
       title: "Kitab Suci",
       items: [
         { href: "/kitabsuci", icon: "📖", label: "Alkitab TB (Deuterokanonika)", desc: "Terjemahan Baru lengkap" },
-        { href: "/kitabsuci", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
+        { href: "/kitabsuci/pbtb2/", icon: "📚", label: "Alkitab TB2", desc: "Versi TB alternatif" },
         { href: "/vulgata", icon: "🏛️", label: "Vulgata (Latin)", desc: "Alkitab bahasa Latin" },
         { href: "/interlinear-greek", icon: "🔤", label: "Interlinear Greek", desc: "Teks Yunani asli" },
         { href: "/kamus-kitab-suci", icon: "📖", label: "Kamus Kitab Suci", desc: "Kamus alkitabiah lengkap" },

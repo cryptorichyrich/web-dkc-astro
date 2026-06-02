@@ -20,6 +20,17 @@ const allPosts = await getCollection("blog", ({ data }) => data.publishedAt <= n
 const sorted = allPosts.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 const pageSize = 12;
 const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
+
+// Build truncated page list: first, last, current ±1, with ellipsis gaps
+const delta = 1;
+const pageNumbers: (number | string)[] = [];
+for (let i = 1; i <= totalPages; i++) {
+  if (i === 1 || i === totalPages || (i >= pageNum - delta && i <= pageNum + delta)) {
+    pageNumbers.push(i);
+  } else if (pageNumbers[pageNumbers.length - 1] !== '...') {
+    pageNumbers.push('...');
+  }
+}
 ---
 
 <BaseLayout>
@@ -80,24 +91,28 @@ const posts = sorted.slice((pageNum - 1) * pageSize, pageNum * pageSize);
     )}
 
     {totalPages > 1 && (
-      <nav class="flex justify-center items-center gap-4 mt-8">
-        {pageNum > 1 && <a href={pageNum === 2 ? '/blog/1' : `/blog/${pageNum - 1}`} class="text-dkc-gold hover:underline">← Sebelumnya</a>}
+      <nav class="flex justify-center items-center gap-2 sm:gap-4 mt-8 overflow-x-auto">
+        {pageNum > 1 && <a href={pageNum === 2 ? '/blog/1' : `/blog/${pageNum - 1}`} class="text-dkc-gold hover:underline whitespace-nowrap text-sm">← Sebelumnya</a>}
         <div class="flex items-center gap-1.5">
-          {Array.from({length: totalPages}, (_, i) => (
-            <a
-              href={i === 0 ? '/blog/1' : `/blog/${i + 1}`}
-              class:list={[
-                "w-8 h-8 rounded-lg text-sm flex items-center justify-center transition-colors",
-                i + 1 === pageNum
-                  ? "bg-dkc-gold text-dkc-surface font-semibold"
-                  : "text-dkc-muted hover:text-dkc-gold hover:bg-dkc-gold/10"
-              ]}
-            >
-              {i + 1}
-            </a>
+          {pageNumbers.map((p) => (
+            p === '...' ? (
+              <span class="w-8 h-8 flex items-center justify-center text-dkc-muted text-sm select-none">…</span>
+            ) : (
+              <a
+                href={p === 1 ? '/blog/1' : `/blog/${p}`}
+                class:list={[
+                  "w-8 h-8 rounded-lg text-sm flex items-center justify-center transition-colors shrink-0",
+                  p === pageNum
+                    ? "bg-dkc-gold text-dkc-surface font-semibold"
+                    : "text-dkc-muted hover:text-dkc-gold hover:bg-dkc-gold/10"
+                ]}
+              >
+                {p}
+              </a>
+            )
           ))}
         </div>
-        {pageNum < totalPages && <a href={`/blog/${pageNum + 1}`} class="text-dkc-gold hover:underline">Selanjutnya →</a>}
+        {pageNum < totalPages && <a href={`/blog/${pageNum + 1}`} class="text-dkc-gold hover:underline whitespace-nowrap text-sm">Selanjutnya →</a>}
       </nav>
     )}
   </main>

@@ -633,7 +633,7 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
       if (res.ok) renunganIndex = await res.json();
     } catch(e) { console.warn('Renungan index:', e); }
   }
-  loadRenunganIndex();
+  var renunganReady = loadRenunganIndex();
 
   function findTodayRenungan() {
     var now = new Date();
@@ -645,6 +645,9 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
   }
 
   async function loadLiturgiWidget() {
+    // Wait for renungan index before we try to link
+    await renunganReady;
+
     var now = new Date();
     var key = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
 

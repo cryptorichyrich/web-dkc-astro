@@ -4,8 +4,8 @@ subtitle: "Bedah kritis atas tuduhan bahwa Gereja Katolik mencuci otak umat mela
 author: "Tim DKC"
 publishedAt: '2026-06-05'
 tags: [Apologetika, Magisterium, Katolik, Gereja, Dogma, Heresi]
-coverImage: "/assets/img/bertahan-dengan-kehaluan-buktikan-suksesi-otoritas-mu.webp"
-thumbnailImage: "/assets/img/bertahan-dengan-kehaluan-buktikan-suksesi-otoritas-mu.webp"
+coverImage: "/assets/img/menyingkap-tabir-kesalahpahaman-otoritas-magisterium.webp"
+thumbnailImage: "/assets/img/menyingkap-tabir-kesalahpahaman-otoritas-magisterium.webp"
 toc: true
 ---
 

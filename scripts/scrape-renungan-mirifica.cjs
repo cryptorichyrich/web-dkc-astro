@@ -31,7 +31,7 @@ function formatDateISO(date) {
 
 (async () => {
     try {
-        const categoryUrl = 'https://www.mirifica.net/category/jendela-alkitab/harian/';
+        const categoryUrl = 'https://www.mirifica.net/category/jendela-alkitab/';
         const res = await axios.get(categoryUrl);
         const $ = cheerio.load(res.data);
 

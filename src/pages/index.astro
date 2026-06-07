@@ -76,10 +76,10 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
       </div>
     </section>
 
-    <!-- 2-column layout: on mobile, sidebar (widgets) renders above articles -->
+    <!-- 2-column layout -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main: Articles -->
-      <div class="lg:col-span-2 order-2 lg:order-1">
+      <div class="lg:col-span-2">
         <section>
           <div class="flex items-center justify-between mb-4">
             <h2 class="section-title mb-0">Artikel Terbaru</h2>
@@ -129,11 +129,11 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
         </section>
       </div>
 
-      <!-- Sidebar: Widgets (order-1 on mobile = above articles) -->
-      <aside class="space-y-4 order-1 lg:order-2">
+      <!-- Sidebar: display:contents on mobile so children are grid items, lg:block for desktop sidebar -->
+      <aside class="contents lg:block lg:space-y-4">
 
-        <!-- Widget: Doa Berdasarkan Waktu -->
-        <div class="glass-card p-4" id="widget-doa">
+        <!-- Widget: Doa Berdasarkan Waktu — order-first on mobile (above articles) -->
+        <div class="glass-card p-4 order-first lg:order-none" id="widget-doa">
           <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
             <span>🕊️</span> Doa Berdasarkan Waktu
           </h3>
@@ -183,8 +183,8 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
           </div>
         </div>
 
-        <!-- Widget: Kalender Liturgi -->
-        <div class="glass-card p-4" id="widget-liturgi">
+        <!-- Widget: Kalender Liturgi — order-first on mobile (above articles) -->
+        <div class="glass-card p-4 order-first lg:order-none" id="widget-liturgi">
           <h3 class="text-dkc-gold font-semibold text-sm flex items-center gap-2 mb-3">
             <span>📅</span> Kalender Liturgi
           </h3>

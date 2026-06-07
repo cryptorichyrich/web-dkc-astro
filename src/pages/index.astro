@@ -76,10 +76,10 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
       </div>
     </section>
 
-    <!-- 2-column layout: Widgets + Articles -->
+    <!-- 2-column layout: on mobile, sidebar (widgets) renders above articles -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main: Articles -->
-      <div class="lg:col-span-2">
+      <div class="lg:col-span-2 order-2 lg:order-1">
         <section>
           <div class="flex items-center justify-between mb-4">
             <h2 class="section-title mb-0">Artikel Terbaru</h2>
@@ -129,8 +129,8 @@ const mysteryIcon = { gembira: "🌟", terang: "☀️", sedih: "💔", mulia: "
         </section>
       </div>
 
-      <!-- Sidebar: Widgets -->
-      <aside class="space-y-4">
+      <!-- Sidebar: Widgets (order-1 on mobile = above articles) -->
+      <aside class="space-y-4 order-1 lg:order-2">
 
         <!-- Widget: Doa Berdasarkan Waktu -->
         <div class="glass-card p-4" id="widget-doa">

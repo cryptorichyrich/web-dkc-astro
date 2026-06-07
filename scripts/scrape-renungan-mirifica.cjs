@@ -44,6 +44,14 @@ function formatDateISO(date) {
             }
         });
 
+        // Also grab links from Custom Facebook Feed widget
+        $('.cff-link-title a, .cff-text-link a').each((i, el) => {
+            const href = $(el).attr('href');
+            if (href && href.includes('mirifica.net') && !href.includes('/author/') && !href.includes('/category/')) {
+                postLinks.add(href);
+            }
+        });
+
         $('article .entry-title a, .td-module-thumb a, .td-big-grid-post a').each((i, el) => {
             const href = $(el).attr('href');
             if (href && !href.includes('/author/') && !href.includes('/category/')) {

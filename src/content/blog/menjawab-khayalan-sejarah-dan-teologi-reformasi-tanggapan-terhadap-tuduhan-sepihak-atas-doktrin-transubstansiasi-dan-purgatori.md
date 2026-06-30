@@ -4,8 +4,8 @@ subtitle: "Pembelaan teologis menyeluruh atas doktrin Purgatori dan Transubstans
 author: "Tim DKC"
 publishedAt: '2026-06-30'
 tags: [Apologetika, Teologi, Purgatori, Ekaristi, Reformasi, Transubstansiasi, Katolik]
-coverImage: "/assets/img/ekaristi-merayakan-kasih-Allah.webp"
-thumbnailImage: "/assets/img/ekaristi-merayakan-kasih-Allah.webp"
+coverImage: "/assets/img/menjawab-khayalan-sejarah-teologi-reformasi.webp"
+thumbnailImage: "/assets/img/menjawab-khayalan-sejarah-teologi-reformasi.webp"
 toc: true
 ---
 ## Pendahuluan

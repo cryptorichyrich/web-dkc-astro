@@ -6,7 +6,7 @@ const path = require('path');
 const GREEN_API_URL = 'https://1103.api.green-api.com';
 const ID_INSTANCE = '1103676791';
 const API_TOKEN = '491b374c9c004749b9f0315ba15310cd80403ea9ee8b4ddcbb';
-const CHAT_ID = '6281398253186@c.us';   // ← ganti ke group ID untuk production
+const CHAT_ID = '120363426481370485@g.us';   // ← ganti ke group ID untuk production
 // ─────────────────────────────────────────────────────────────────
 
 /**

@@ -162,24 +162,18 @@ function bodyToWhatsApp(md) {
   // 5. Build message — FULL readings with styled sections
   const waBody = bodyToWhatsApp(bodyRaw);
 
-  const siteUrl = 'https://damaikasihchannel.com';
-  const fullUrl = `${siteUrl}${entry.url}`;
-
   const message =
     `📖 *${title}*\n\n` +
-    `${waBody}\n\n` +
-    `▸ ${fullUrl}`;
+    `${waBody}`;
 
   // Safety: GreenAPI limit is 20 000 chars
   const MAX = 19_500;
   let finalMessage = message;
   if (message.length > MAX) {
-    const overhead = message.length - waBody.length;
-    const maxBody = MAX - overhead;
     // Truncate body at last complete line
-    let truncated = waBody.slice(0, maxBody - 3);
+    let truncated = waBody.slice(0, MAX - 3);
     truncated = truncated.replace(/\n[^\n]*$/, '');
-    finalMessage = message.replace(waBody, truncated + '\n…');
+    finalMessage = `📖 *${title}*\n\n${truncated}\n…`;
     console.warn(`⚠️  Truncated from ${message.length} → ${finalMessage.length} chars`);
   }
 

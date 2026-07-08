@@ -1,0 +1,28 @@
+name: Send Renungan WhatsApp
+
+on:
+  schedule:
+    # 22:00 UTC = 05:00 GMT+7 (Jakarta)
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+    # Manual trigger for testing
+
+jobs:
+  send:
+    name: Send Renungan to WhatsApp Group
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-save axios
+
+      - name: Send renungan to WhatsApp
+        run: node scripts/send-renungan-whatsapp.cjs

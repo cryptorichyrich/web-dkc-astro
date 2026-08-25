@@ -222,5 +222,6 @@ featured: false
 
     } catch (error) {
         console.error('Fatal:', error.message);
+        process.exit(1); // ponytail: gagal total = workflow gagal, biar GHA kirim notifikasi (insiden 403 2026-08-25 lolos sebagai "success")
     }
 })();

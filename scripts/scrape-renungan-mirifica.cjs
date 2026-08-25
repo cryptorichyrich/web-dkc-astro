@@ -32,10 +32,27 @@ function formatDateISO(date) {
 (async () => {
     try {
         const categoryUrl = 'https://www.mirifica.net/category/jendela-alkitab/';
-        const res = await axios.get(categoryUrl);
-        const $ = cheerio.load(res.data);
+        const REST_LIST = 'https://www.mirifica.net/wp-json/wp/v2/posts?categories=6&per_page=30&_embed';
+        const slugOf = (u) => u.replace(/#.*$/, '').replace(/\/+$/, '').split('/').pop();
+        const decodeHtml = (s) => cheerio.load('<div>' + s + '</div>')('div').text();
+        // ponytail: REST fallback — Cloudflare mirifica kadang blokir IP runner GHA dengan 403 (insiden 2026-08-25).
+        // Ceiling: kalau wp-json ikut diblokir, balik ke prosedur recovery lokal (skill web-dkc-prd).
+        const restToArticle = (post) => ({
+            post$: cheerio.load('<div class="td-post-content td-pb-padding-side">' + post.content.rendered + '</div>'),
+            rawTitle: decodeHtml(post.title.rendered),
+            heroImageUrl: ((((post._embedded || {})['wp:featuredmedia']) || [])[0] || {}).source_url || '',
+            pubDateStr: post.date
+        });
 
-        const postLinks = new Set();
+        let uniqueUrls = [];
+        const restBySlug = {};
+
+        if (!process.env.DKC_FORCE_REST) {
+        try {
+            const res = await axios.get(categoryUrl);
+            const $ = cheerio.load(res.data);
+
+            const postLinks = new Set();
 
         $('#tdi_9 .td-image-wrap, #tdi_9 h3 a').each((i, el) => {
             const href = $(el).attr('href');
@@ -59,8 +76,19 @@ function formatDateISO(date) {
             }
         });
 
-        const uniqueUrls = Array.from(postLinks);
-        console.log(`Ketemu ${uniqueUrls.length} renungan unik.`);
+            uniqueUrls = Array.from(postLinks);
+            console.log(`Ketemu ${uniqueUrls.length} renungan unik.`);
+        } catch (listErr) {
+            console.log('Halaman kategori gagal: ' + listErr.message + ' — fallback ke WordPress REST API.');
+        }
+        }
+
+        if (!uniqueUrls.length) {
+            const r = await axios.get(REST_LIST);
+            r.data.forEach((p) => { restBySlug[p.slug] = p; });
+            uniqueUrls = r.data.map((p) => p.link);
+            console.log(`Ketemu ${uniqueUrls.length} renungan unik (via REST API).`);
+        }
 
         const dir = path.join(__dirname, '..', 'src', 'content', 'blog');
         if (!fs.existsSync(dir)) {
@@ -70,14 +98,24 @@ function formatDateISO(date) {
         for (const postUrl of uniqueUrls) {
             try {
                 console.log(`Scraping: ${postUrl}`);
-                const postRes = await axios.get(postUrl);
-                const post$ = cheerio.load(postRes.data);
-
-                const rawTitle = post$('h1.entry-title').text().trim() || 'Renungan Harian Mirifica';
-
-                let heroImageUrl = post$('div.td-post-featured-image img, figure img.entry-thumb, .td-module-thumb img').attr('src') || '';
-
-                let pubDateStr = post$('time.entry-date').attr('datetime');
+                let post$, rawTitle, heroImageUrl, pubDateStr;
+                const restPost = restBySlug[slugOf(postUrl)];
+                if (restPost) {
+                    ({ post$, rawTitle, heroImageUrl, pubDateStr } = restToArticle(restPost));
+                } else {
+                    try {
+                        const postRes = await axios.get(postUrl);
+                        post$ = cheerio.load(postRes.data);
+                        rawTitle = post$('h1.entry-title').text().trim() || 'Renungan Harian Mirifica';
+                        heroImageUrl = post$('div.td-post-featured-image img, figure img.entry-thumb, .td-module-thumb img').attr('src') || '';
+                        pubDateStr = post$('time.entry-date').attr('datetime');
+                    } catch (artErr) {
+                        console.log('Artikel gagal via HTML: ' + artErr.message + ' — coba REST per-slug.');
+                        const r = await axios.get('https://www.mirifica.net/wp-json/wp/v2/posts?_embed&slug=' + slugOf(postUrl));
+                        if (!r.data.length) throw artErr;
+                        ({ post$, rawTitle, heroImageUrl, pubDateStr } = restToArticle(r.data[0]));
+                    }
+                }
                 if (!pubDateStr) throw new Error('Tanggal gak ketemu');
                 let pubDate = new Date(pubDateStr);
                 let formattedDate = formatDateISO(pubDate);

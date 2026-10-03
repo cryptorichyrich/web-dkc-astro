@@ -4,6 +4,8 @@ subtitle: "Latar belakang, tokoh-tokoh utama, jalannya pertempuran, dan warisan 
 author: "Tim DKC"
 publishedAt: '2026-10-03'
 tags: [Lepanto, Sejarah, Liga Suci, Utsmani, Rosario, Paus Pius V]
+coverImage: "/assets/img/perang-lepanto-1571.webp"
+thumbnailImage: "/assets/img/perang-lepanto-1571.webp"
 toc: true
 featured: true
 ---

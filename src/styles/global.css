@@ -239,4 +239,51 @@
   .prose-gold li {
     @apply mb-1;
   }
+
+  /* ===== Tables — clean bordered grid, readable in dark & light ===== */
+  .prose-gold table {
+    width: 100%;
+    margin: 1.75rem 0;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    border: 1px solid var(--color-dkc-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .prose-gold thead th {
+    background: color-mix(in srgb, var(--color-dkc-gold) 16%, transparent);
+    color: color-mix(in srgb, var(--color-dkc-gold) 75%, var(--color-dkc-text));
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-align: left;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid var(--color-dkc-border);
+    border-bottom: 2px solid color-mix(in srgb, var(--color-dkc-gold) 50%, var(--color-dkc-border));
+  }
+  .prose-gold tbody td {
+    padding: 0.65rem 0.95rem;
+    border: 1px solid var(--color-dkc-border);
+    vertical-align: top;
+  }
+  .prose-gold tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--color-dkc-text) 5%, transparent);
+  }
+  /* First column = label column: slightly emphasized */
+  .prose-gold tbody td:first-child {
+    font-weight: 600;
+    color: var(--color-dkc-text);
+  }
+  @media (max-width: 767px) {
+    .prose-gold table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .prose-gold table th,
+    .prose-gold table td {
+      min-width: 130px;
+    }
+  }
 }

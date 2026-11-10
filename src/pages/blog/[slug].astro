@@ -34,6 +34,10 @@ const relatedPosts = allPosts
 const pageUrl = new URL(`/blog/${post.id}`, Astro.site).href;
 const encodedUrl = encodeURIComponent(pageUrl);
 const encodedTitle = encodeURIComponent(post.data.title);
+// ponytail: coverImage bisa absolut (mirifica CDN) atau relatif (/assets/...). Jangan tempel domain ke URL absolut.
+const ogImage = /^https?:\/\//.test(post.data.coverImage || '')
+  ? post.data.coverImage
+  : new URL(post.data.coverImage || '/assets/img/renungan.webp', Astro.site).href;
 ---
 
 <BaseLayout>
@@ -47,7 +51,7 @@ const encodedTitle = encodeURIComponent(post.data.title);
     <meta property="og:title" content={post.data.title} />
     <meta property="og:description" content={post.data.subtitle || post.data.title} />
     <meta property="og:url" content={pageUrl} />
-    <meta property="og:image" content={`https://damaikasihchannel.com${post.data.coverImage}`} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:site_name" content="Damai Kasih Channel" />
     <meta property="article:published_time" content={post.data.publishedAt} />
     {post.data.tags.map(tag => <meta property="article:tag" content={tag} />)}
@@ -55,7 +59,7 @@ const encodedTitle = encodeURIComponent(post.data.title);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={post.data.title} />
     <meta name="twitter:description" content={post.data.subtitle || post.data.title} />
-    <meta name="twitter:image" content={`https://damaikasihchannel.com${post.data.coverImage}`} />
+    <meta name="twitter:image" content={ogImage} />
 
     <!-- JSON-LD for Article -->
     <script type="application/ld+json" set:html={JSON.stringify({
